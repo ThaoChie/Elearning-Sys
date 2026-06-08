@@ -130,16 +130,46 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// ── Health endpoint (không cần auth, dùng để debug trên Render) ──────────────
+app.MapGet("/health", async (AppDbContext db) =>
+{
+    try
+    {
+        var canConnect = await db.Database.CanConnectAsync();
+        return Results.Ok(new { status = "ok", database = canConnect ? "connected" : "unreachable" });
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(
+            new { status = "degraded", database = "error", detail = ex.Message },
+            statusCode: 503);
+    }
+}).AllowAnonymous();
+
 // ── Migrate & Seed (chạy sau khi app được build, trước app.Run()) ────────────
 // MigrateAsync() PHẢI chạy trước SeedAsync() để đảm bảo tất cả bảng đã tồn tại.
 // Idempotent: EF Core tự bỏ qua migration đã được áp dụng.
 await using (var scope = app.Services.CreateAsyncScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync();   // ← tạo bảng nếu chưa có
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
+                     .CreateLogger("Startup");
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        logger.LogInformation("Applying EF Core migrations...");
+        await dbContext.Database.MigrateAsync();   // ← tạo bảng nếu chưa có
+        logger.LogInformation("Migrations applied. Running seeder...");
 
-    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-    await seeder.SeedAsync();
+        var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+        await seeder.SeedAsync();
+        logger.LogInformation("Seeder completed.");
+    }
+    catch (Exception ex)
+    {
+        // Log lỗi nhưng KHÔNG crash app – endpoint /health vẫn trả về
+        // thông tin để debug; các endpoint khác sẽ thất bại gracefully.
+        logger.LogError(ex, "Startup migration/seed failed: {Message}", ex.Message);
+    }
 }
 
 app.Run();
