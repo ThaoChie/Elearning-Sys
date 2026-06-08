@@ -153,12 +153,12 @@ Trong Render Dashboard → Logs, dùng ô **Filter** để tìm:
 
 ### Mẹo debug lỗi 500 phổ biến
 
-| Lỗi                                   | Nguyên nhân thường gặp                    |
-|---------------------------------------|-------------------------------------------|
-| `Connection refused`                  | Biến môi trường DB/Redis chưa set         |
-| `relation "Users" does not exist`     | Chưa chạy `ef database update`           |
-| `Invalid token`                       | Thiếu `Jwt__PrivateKeyPem` env var        |
-| `Object reference not set`            | Thiếu config section trong `appsettings` |
+| Lỗi                               | Nguyên nhân thường gặp                   |
+|-----------------------------------|------------------------------------------|
+| `Connection refused`              | Biến môi trường DB/Redis chưa set        |
+| `relation "Users" does not exist` | Chưa chạy `ef database update`           |
+| `Invalid token`                   | Thiếu `Jwt__PrivateKeyPem` env var       |
+| `Object reference not set`        | Thiếu config section trong `appsettings` |
 
 ---
 
