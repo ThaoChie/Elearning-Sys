@@ -30,6 +30,12 @@ RUN dotnet publish src/LMS.API/LMS.API.csproj \
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
+# Cài thư viện hệ thống thiếu (cần root, PHẢI trước USER appuser).
+# libgssapi-krb5-2: required by Npgsql/PostgreSQL native driver trên Debian.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+ && rm -rf /var/lib/apt/lists/*
+
 # Chạy với user non-root để tăng bảo mật.
 # Image dotnet/aspnet:10.0 dùng nền Debian nên phải dùng groupadd/useradd (không có addgroup/adduser Alpine)
 RUN groupadd --system appgroup \
