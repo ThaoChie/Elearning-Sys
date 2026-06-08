@@ -20,9 +20,15 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         // ── Database ──────────────────────────────────────────────────────────
+        // Hỗ trợ cả 2 định dạng connection string:
+        //   - Key=Value (EF Core chuẩn): "Host=...;Database=...;Username=...;Password=..."
+        //   - URL (Aiven/Render inject): "postgres://user:pass@host:port/db?sslmode=require"
+        var rawConnStr = configuration.GetConnectionString("DefaultConnection") ?? "";
+        var npgsqlConnStr = ConvertPostgresUrlToNpgsql(rawConnStr);
+
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection"),
+                npgsqlConnStr,
                 npgsql => npgsql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
             ));
 
@@ -93,5 +99,40 @@ public static class DependencyInjection
         services.AddScoped<DataSeeder>();
 
         return services;
+    }
+
+    /// <summary>
+    /// Chuyển đổi Postgres URL sang Npgsql Key=Value connection string.
+    /// Aiven inject dạng: postgres://user:pass@host:port/db?sslmode=require
+    /// Npgsql chỉ chấp nhận: Host=...;Port=...;Database=...;Username=...;Password=...;SSL Mode=Require
+    /// Nếu đầu vào đã là Key=Value thì trả về nguyên vẹn.
+    /// </summary>
+    private static string ConvertPostgresUrlToNpgsql(string connectionString)
+    {
+        if (string.IsNullOrWhiteSpace(connectionString))
+            return connectionString;
+
+        // Đã là Key=Value format → trả về nguyên
+        if (!connectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase)
+            && !connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+            return connectionString;
+
+        var uri = new Uri(connectionString.Split('?')[0]); // bỏ query string trước khi parse
+
+        var host     = uri.Host;
+        var port     = uri.Port > 0 ? uri.Port : 5432;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var userInfo = uri.UserInfo.Split(':', 2);
+        var username = Uri.UnescapeDataString(userInfo[0]);
+        var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+
+        // Lấy sslmode từ query string nếu có
+        var sslMode = "Require"; // Aiven luôn yêu cầu SSL
+        if (connectionString.Contains("sslmode=disable", StringComparison.OrdinalIgnoreCase))
+            sslMode = "Disable";
+        else if (connectionString.Contains("sslmode=prefer", StringComparison.OrdinalIgnoreCase))
+            sslMode = "Prefer";
+
+        return $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode={sslMode};Trust Server Certificate=true";
     }
 }
