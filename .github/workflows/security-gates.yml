@@ -86,16 +86,16 @@ jobs:
           path: vuln-report.txt
 
   # ─────────────────────────────────────────────
-  # JOB 3: DATABASE MIGRATION (Neon / Npgsql)
+  # JOB 3: DATABASE MIGRATION (Aiven / Npgsql)
   # ─────────────────────────────────────────────
   deploy-database:
-    name: EF Core Migration → Neon (PostgreSQL)
+    name: EF Core Migration → Aiven (PostgreSQL)
     runs-on: ubuntu-latest
     needs: [build-and-test, vulnerability-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     env:
-      ConnectionStrings__DefaultConnection: ${{ secrets.NEON_DATABASE_URL }}
+      ConnectionStrings__DefaultConnection: ${{ secrets.AIVEN_DB_CONNECTION_STRING }}
 
     steps:
       - name: Checkout source

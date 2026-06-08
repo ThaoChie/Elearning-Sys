@@ -3,7 +3,7 @@ services:
     name: lms-api
     runtime: docker
     rootDir: backend
-    dockerfilePath: backend/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     region: singapore
     branch: main
@@ -16,7 +16,7 @@ services:
       - key: ASPNETCORE_URLS
         value: http://+:8080
 
-      # ── Database (Neon PostgreSQL) ──────────────────
+      # ── Database (Aiven PostgreSQL) ─────────────────
       - key: ConnectionStrings__DefaultConnection
         sync: false   # Nhập thủ công trong Render Dashboard
 

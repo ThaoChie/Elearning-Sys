@@ -21,9 +21,9 @@ public static class DependencyInjection
     {
         // ── Database ──────────────────────────────────────────────────────────
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(
+            options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection"),
-                sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
+                npgsql => npgsql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
             ));
 
         // ── Redis ─────────────────────────────────────────────────────────────
