@@ -1,0 +1,40 @@
+## ── .NET / C# ────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.nupkg
+*.snupkg
+TestResults/
+coverage/
+*.trx
+
+## ── ASP.NET Core secrets ─────────────────────────
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+
+## ── Node / React / Vite ──────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+## ── Vercel ───────────────────────────────────────
+.vercel/
+
+## ── OS ───────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+## ── IDE ──────────────────────────────────────────
+.idea/
+.vscode/settings.json
+
+## ── Secrets / Keys ───────────────────────────────
+*.pem
+*.pfx
+*.p12
+*.key

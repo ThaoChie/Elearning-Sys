@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: lms-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    region: singapore
+    branch: main
+    healthCheckPath: /health
+
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+
+      # ── Database (Neon PostgreSQL) ──────────────────
+      - key: ConnectionStrings__DefaultConnection
+        sync: false   # Nhập thủ công trong Render Dashboard
+
+      # ── JWT RS256 Keys ─────────────────────────────
+      - key: Jwt__PrivateKeyPem
+        sync: false
+      - key: Jwt__PublicKeyPem
+        sync: false
+      - key: Jwt__Issuer
+        value: https://lms-api.onrender.com
+      - key: Jwt__Audience
+        value: lms-client
+
+      # ── Redis (Upstash hoặc Redis Cloud) ───────────
+      - key: Redis__ConnectionString
+        sync: false
+
+      # ── MinIO / Azure Blob ──────────────────────────
+      - key: Storage__Endpoint
+        sync: false
+      - key: Storage__AccessKey
+        sync: false
+      - key: Storage__SecretKey
+        sync: false
+      - key: Storage__BucketName
+        value: lms-content
+
+      # ── HMAC Audit Log Secret ───────────────────────
+      - key: Security__HmacAuditSecret
+        sync: false
+
+      # ── Signed URL HMAC Secret ──────────────────────
+      - key: Security__SignedUrlSecret
+        sync: false
+
+    autoDeploy: true
