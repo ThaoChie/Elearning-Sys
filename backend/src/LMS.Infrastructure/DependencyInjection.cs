@@ -31,8 +31,13 @@ public static class DependencyInjection
         var redisConn = configuration.GetConnectionString("Redis")
             ?? throw new InvalidOperationException("Thiếu ConnectionStrings:Redis trong cấu hình.");
 
+        var redisOptions = ConfigurationOptions.Parse(redisConn);
+        redisOptions.AbortOnConnectFail = false;   // không crash startup nếu Redis chưa sẵn sàng
+        redisOptions.ConnectRetry       = 3;
+        redisOptions.ReconnectRetryPolicy = new ExponentialRetry(5000);
+
         services.AddSingleton<IConnectionMultiplexer>(
-            ConnectionMultiplexer.Connect(redisConn));
+            ConnectionMultiplexer.Connect(redisOptions));
 
         // ── Auth Services ─────────────────────────────────────────────────────
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
