@@ -106,6 +106,14 @@ app.UseHttpsRedirection();
 // CORS phải đứng TRƯỚC Authentication/Authorization để preflight OPTIONS được xử lý đúng.
 app.UseCors("LmsPolicy");
 
+// Global exception handler – đặt sau UseCors để lỗi vẫn trả về CORS headers.
+app.UseExceptionHandler(errApp => errApp.Run(async ctx =>
+{
+    ctx.Response.StatusCode  = StatusCodes.Status500InternalServerError;
+    ctx.Response.ContentType = "application/json";
+    await ctx.Response.WriteAsJsonAsync(new { error = "internal_server_error", message = "Đã xảy ra lỗi phía server." });
+}));
+
 // Bắt FluentValidation.ValidationException → HTTP 400
 app.UseMiddleware<ValidationExceptionMiddleware>();
 

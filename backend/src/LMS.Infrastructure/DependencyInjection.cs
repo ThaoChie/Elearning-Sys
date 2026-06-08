@@ -28,8 +28,11 @@ public static class DependencyInjection
 
         // ── Redis ─────────────────────────────────────────────────────────────
         // Connection string ví dụ: "localhost:6379,password=secret,ssl=False,abortConnect=False"
+        // Fallback "localhost:6379" giúp app khởi động khi Redis chưa được cấu hình;
+        // AbortOnConnectFail=false đảm bảo không crash startup.
         var redisConn = configuration.GetConnectionString("Redis")
-            ?? throw new InvalidOperationException("Thiếu ConnectionStrings:Redis trong cấu hình.");
+                        ?? configuration["Redis:ConnectionString"]
+                        ?? "localhost:6379,abortConnect=False";
 
         var redisOptions = ConfigurationOptions.Parse(redisConn);
         redisOptions.AbortOnConnectFail = false;   // không crash startup nếu Redis chưa sẵn sàng

@@ -31,7 +31,8 @@ services:
         value: lms-client
 
       # ── Redis (Upstash hoặc Redis Cloud) ───────────
-      - key: Redis__ConnectionString
+      # GetConnectionString("Redis") đọc từ ConnectionStrings:Redis
+      - key: ConnectionStrings__Redis
         sync: false
 
       # ── MinIO / Azure Blob ──────────────────────────
