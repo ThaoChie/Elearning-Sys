@@ -81,6 +81,9 @@ public static class DependencyInjection
             configuration.GetSection(AuditLogOptions.SectionName));
         services.AddScoped<IAuditLogService, AuditLogService>();
 
+        // ── Data Seeder ───────────────────────────────────────────────────────
+        services.AddScoped<DataSeeder>();
+
         return services;
     }
 }

@@ -6,11 +6,19 @@ namespace LMS.Infrastructure.Persistence;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<User> Users => Set<User>();
-    public DbSet<ExamSession> ExamSessions => Set<ExamSession>();
-    public DbSet<Assignment> Assignments => Set<Assignment>();
+    public DbSet<User>                 Users                 => Set<User>();
+    public DbSet<ExamSession>          ExamSessions          => Set<ExamSession>();
+    public DbSet<Assignment>           Assignments           => Set<Assignment>();
     public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
-    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<AuditLog>             AuditLogs             => Set<AuditLog>();
+
+    // ── Course domain ─────────────────────────────────────────────────────────
+    public DbSet<Course>   Courses   => Set<Course>();
+    public DbSet<Module>   Modules   => Set<Module>();
+    public DbSet<Lecture>  Lectures  => Set<Lecture>();
+    public DbSet<Quiz>     Quizzes   => Set<Quiz>();
+    public DbSet<Question> Questions => Set<Question>();
+    public DbSet<Answer>   Answers   => Set<Answer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

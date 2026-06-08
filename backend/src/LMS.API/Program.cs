@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using LMS.Application;
 using LMS.Infrastructure;
 using LMS.Infrastructure.Auth;
+using LMS.Infrastructure.Persistence;
 using LMS.API.Middlewares;
 using LMS.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -98,5 +99,12 @@ app.UseMiddleware<JwtBlacklistMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// ── Migrate & Seed (chạy sau khi app được build, trước app.Run()) ────────────
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+    await seeder.SeedAsync();
+}
 
 app.Run();
