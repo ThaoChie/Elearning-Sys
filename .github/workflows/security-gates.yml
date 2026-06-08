@@ -93,10 +93,7 @@ jobs:
     name: EF Core Migration → Aiven (PostgreSQL)
     runs-on: ubuntu-latest
     needs: [build-and-test, vulnerability-scan]
-    if: |
-      github.ref == 'refs/heads/main' &&
-      github.event_name == 'push' &&
-      secrets.AIVEN_DB_CONNECTION_STRING != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     env:
       ConnectionStrings__DefaultConnection: ${{ secrets.AIVEN_DB_CONNECTION_STRING }}
@@ -118,7 +115,14 @@ jobs:
 
       - name: Apply EF Core migrations
         working-directory: backend
+        # Bỏ qua nếu connection string chưa được cấu hình
+        env:
+          DB_CONN: ${{ secrets.AIVEN_DB_CONNECTION_STRING }}
         run: |
+          if [ -z "$DB_CONN" ]; then
+            echo "⚠️  AIVEN_DB_CONNECTION_STRING chưa được set → bỏ qua migration."
+            exit 0
+          fi
           dotnet ef database update \
             --project src/LMS.Infrastructure/LMS.Infrastructure.csproj \
             --startup-project src/LMS.API/LMS.API.csproj \
@@ -131,10 +135,7 @@ jobs:
     name: Deploy Frontend → Vercel
     runs-on: ubuntu-latest
     needs: [build-and-test, vulnerability-scan]
-    if: |
-      github.ref == 'refs/heads/main' &&
-      github.event_name == 'push' &&
-      secrets.VERCEL_TOKEN != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
       - name: Checkout source
@@ -162,9 +163,15 @@ jobs:
 
       - name: Deploy to Vercel (Production)
         working-directory: frontend
+        env:
+          VERCEL_TOKEN_VAL: ${{ secrets.VERCEL_TOKEN }}
         run: |
+          if [ -z "$VERCEL_TOKEN_VAL" ]; then
+            echo "⚠️  VERCEL_TOKEN chưa được set → bỏ qua deploy Vercel."
+            exit 0
+          fi
           vercel deploy --prod \
-            --token=${{ secrets.VERCEL_TOKEN }} \
+            --token="$VERCEL_TOKEN_VAL" \
             --yes
 
   # ─────────────────────────────────────────────
@@ -175,15 +182,18 @@ jobs:
     name: Deploy Backend → Render
     runs-on: ubuntu-latest
     needs: [build-and-test, vulnerability-scan]
-    if: |
-      github.ref == 'refs/heads/main' &&
-      github.event_name == 'push' &&
-      secrets.RENDER_DEPLOY_HOOK_URL != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
       - name: Trigger Render deploy hook
+        env:
+          RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" \
+          if [ -z "$RENDER_HOOK" ]; then
+            echo "⚠️  RENDER_DEPLOY_HOOK_URL chưa được set → bỏ qua trigger Render."
+            exit 0
+          fi
+          curl -X POST "$RENDER_HOOK" \
             --fail \
             --silent \
             --show-error
