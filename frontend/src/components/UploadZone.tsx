@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback } from "react";
-import axios, { AxiosProgressEvent } from "axios";
+import axios from "axios";
+import type { AxiosProgressEvent } from "axios";
 
 type ScanStatus = "idle" | "uploading" | "scanning" | "safe" | "error";
 
