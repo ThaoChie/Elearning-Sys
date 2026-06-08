@@ -6,6 +6,7 @@ using LMS.Infrastructure.Persistence;
 using LMS.API.Middlewares;
 using LMS.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -101,8 +102,13 @@ app.UseAuthorization();
 app.MapControllers();
 
 // ── Migrate & Seed (chạy sau khi app được build, trước app.Run()) ────────────
+// MigrateAsync() PHẢI chạy trước SeedAsync() để đảm bảo tất cả bảng đã tồn tại.
+// Idempotent: EF Core tự bỏ qua migration đã được áp dụng.
 await using (var scope = app.Services.CreateAsyncScope())
 {
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();   // ← tạo bảng nếu chưa có
+
     var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
     await seeder.SeedAsync();
 }
