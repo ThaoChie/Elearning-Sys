@@ -1,7 +1,13 @@
 import axios from 'axios'
 
+// Production: VITE_API_URL trỏ đến Render backend (set trong vercel.json env).
+// Development: fallback về '/api' để Vite proxy forward sang localhost:5070.
+const baseURL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api'
+
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -21,7 +27,7 @@ apiClient.interceptors.response.use(
       original._retry = true
       try {
         const refreshToken = localStorage.getItem('refresh_token')
-        const { data } = await axios.post('/api/auth/refresh', { refreshToken })
+        const { data } = await axios.post(`${baseURL}/auth/refresh`, { refreshToken })
         localStorage.setItem('access_token', data.accessToken)
         localStorage.setItem('refresh_token', data.refreshToken)
         original.headers.Authorization = `Bearer ${data.accessToken}`
