@@ -17,7 +17,7 @@ public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 
         builder.Property(x => x.Timestamp)
             .IsRequired()
-            .HasColumnType("datetimeoffset(7)");
+            .HasColumnType("timestamptz");
 
         builder.Property(x => x.ActorID)
             .HasMaxLength(128);

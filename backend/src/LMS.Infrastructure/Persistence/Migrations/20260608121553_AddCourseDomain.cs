@@ -51,7 +51,7 @@ public partial class AddCourseDomain : Migration
                 columns: table => new
                 {
                     LogID = table.Column<Guid>(type: "uuid", nullable: false),
-                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset(7)", nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(type: "timestamptz", nullable: false),
                     ActorID = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     Action = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     IP = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: true),

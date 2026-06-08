@@ -157,7 +157,7 @@ namespace LMS.Infrastructure.Persistence.Migrations;
                         .HasColumnType("character varying(45)");
 
                     b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("datetimeoffset(7)");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("LogID");
 
