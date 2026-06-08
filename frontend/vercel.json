@@ -55,6 +55,6 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://lms-api.onrender.com"
+    "VITE_API_URL": "https://elearning-sys-fp7n.onrender.com"
   }
 }
