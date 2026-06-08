@@ -77,6 +77,24 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// ── CORS ──────────────────────────────────────────────────────────────────────
+// Đọc danh sách origin cho phép từ cấu hình (appsettings / env vars).
+// Production: set Cors__AllowedOrigins__0=https://... trong Render environment.
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LmsPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()       // Authorization, Content-Type, …
+              .AllowAnyMethod()       // GET, POST, PUT, DELETE, OPTIONS
+              .AllowCredentials();    // Cookie / Authorization header
+    });
+});
+
 // ── App Pipeline ──────────────────────────────────────────────────────────────
 var app = builder.Build();
 
@@ -84,6 +102,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
 app.UseHttpsRedirection();
+
+// CORS phải đứng TRƯỚC Authentication/Authorization để preflight OPTIONS được xử lý đúng.
+app.UseCors("LmsPolicy");
 
 // Bắt FluentValidation.ValidationException → HTTP 400
 app.UseMiddleware<ValidationExceptionMiddleware>();

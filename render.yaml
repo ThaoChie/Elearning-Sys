@@ -44,6 +44,10 @@ services:
       - key: Storage__BucketName
         value: lms-content
 
+      # ── CORS Origins ────────────────────────────────
+      - key: Cors__AllowedOrigins__0
+        value: https://elearning-sys-fcl7.vercel.app
+
       # ── HMAC Audit Log Secret ───────────────────────
       - key: Security__HmacAuditSecret
         sync: false
