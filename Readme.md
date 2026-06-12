@@ -55,8 +55,3 @@ Tất cả các tính năng được phát triển **BẮT BUỘC** phải tuân
 * `hooks/`: Custom React Hooks xử lý logic bảo mật (`useTabDetection`, `useFullscreen`, `useHeartbeat`).
 * `api/`: Cấu hình Axios, Interceptors xử lý tự động làm mới token (Token Refresh).
 
-## 4. QUY TẮC DÀNH CHO CLAUDE CODE CLI
-1.  **Mệnh Lệnh Cách Ly:** Tuân thủ chặt chẽ việc phân chia các tác vụ theo từng module nhỏ (Vertical Slices). Chỉ làm việc trong thư mục và file được chỉ định trong prompt. KHÔNG quét (read/ls) toàn bộ dự án nếu không được yêu cầu.
-2.  **Chấp hành Security Controls:** Mọi đoạn code sinh ra phải ngầm định áp dụng các nguyên tắc ở Phần 2. Không được phép bypass các cơ chế bảo mật (như hash mật khẩu hay JWT validation) vì bất kỳ lý do gì.
-3.  **Tối ưu Token:** Yêu cầu người dùng (User) sử dụng lệnh `/clear` sau khi hoàn thành một chức năng độc lập để dọn dẹp ngữ cảnh (context), giữ cho tốc độ xử lý nhanh và tiết kiệm chi phí.
-4.  **Báo cáo Lỗi Thiếu Sót:** Nếu User yêu cầu xây dựng một chức năng mà theo SRS cần kiểm tra quyền truy cập (RBAC) nhưng prompt lại thiếu, Claude phải chủ động bổ sung logic RBAC đó.
