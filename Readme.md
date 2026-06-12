@@ -4,7 +4,7 @@
 ## 1. TECH STACK VÀ KIẾN TRÚC
 * **Backend:** C# ASP.NET Core 8 Web API. Kiến trúc Layered (API, Application, Domain, Infrastructure) kết hợp CQRS (MediatR) và FluentValidation.
 * **Frontend:** ReactJS 18 (TypeScript, Vite). Styling bằng Tailwind CSS.
-* **Database:** SQL Server 2022 (Sử dụng Entity Framework Core 8).
+* **Database:** PostgreSQL
 * **Storage & Cache:** MinIO/Azure Blob Storage (Lưu trữ file an toàn), Redis 7 (Quản lý Session, Blacklist, Rate Limiting).
 * **Design Pattern Front-end:** Tách biệt Hook (logic) và Component (UI). Áp dụng phong cách Modern Education & Data Dashboard (Glassmorphism, Card-based layout).
 
