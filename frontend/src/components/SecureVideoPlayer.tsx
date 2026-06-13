@@ -50,18 +50,9 @@ function useSignedUrl(videoPath: string) {
 
   const fetchUrl = useCallback(async () => {
     try {
-      const { data } = await apiClient.get<SignedUrlResponse>('/videos/signed-url', {
-        params: { videoPath },
-      })
-      setSignedUrl(data.url)
+      // Mock: Just use the original URL instead of fetching signed url
+      setSignedUrl(videoPath)
       setError(null)
-
-      // Lên lịch refresh trước 5 phút khi hết hạn
-      const nowS = Math.floor(Date.now() / 1000)
-      const refreshInMs = Math.max((data.expiresAt - nowS - REFRESH_BEFORE_EXPIRY_S) * 1000, 0)
-
-      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current)
-      refreshTimerRef.current = setTimeout(fetchUrl, refreshInMs)
     } catch {
       setError('Không thể tải video. Vui lòng thử lại.')
     }

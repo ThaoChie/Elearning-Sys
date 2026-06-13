@@ -52,6 +52,7 @@ public static class DependencyInjection
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddSingleton<IPasswordHasher, Argon2idPasswordHasher>();
+        services.AddScoped<IProfileService, ProfileService>();
 
         // Blacklist: Singleton vì IConnectionMultiplexer là thread-safe
         services.AddSingleton<ITokenBlacklistService, RedisTokenBlacklistService>();
@@ -61,6 +62,7 @@ public static class DependencyInjection
         services.AddScoped<IExamSessionRepository, ExamSessionRepository>();
         services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         services.AddScoped<IAssignmentSubmissionRepository, AssignmentSubmissionRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         // ── Storage / Video Signing ────────────────────────────────────────────
         services.Configure<VideoSigningOptions>(

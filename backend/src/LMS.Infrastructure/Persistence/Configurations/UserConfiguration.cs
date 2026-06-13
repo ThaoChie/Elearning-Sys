@@ -29,6 +29,11 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.RefreshToken)
             .HasMaxLength(64); // UUID "N" format = 32 chars
 
+        // 2FA optional: mặc định false, người dùng tự bật/tắt trong Profile.
+        builder.Property(u => u.TwoFactorEnabled)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         // Role: lưu dưới dạng string ("Student" | "Instructor" | "Admin") để dễ đọc trong DB.
         // Mặc định Student để đảm bảo Least Privilege khi tạo tài khoản.
         builder.Property(u => u.Role)

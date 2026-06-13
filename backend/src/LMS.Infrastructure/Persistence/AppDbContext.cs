@@ -11,6 +11,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<Assignment>           Assignments           => Set<Assignment>();
     public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
     public DbSet<AuditLog>             AuditLogs             => Set<AuditLog>();
+    public DbSet<Notification>         Notifications         => Set<Notification>();
 
     // ── Course domain ─────────────────────────────────────────────────────────
     public DbSet<Course>   Courses   => Set<Course>();

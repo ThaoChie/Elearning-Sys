@@ -2,38 +2,27 @@ import { useState } from "react";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-interface AuditLogEntry {
-  logId: string;
-  timestamp: string;
-  actorId: string;
-  action: string;
-  ip: string;
-  hmacVerified: boolean;
-}
+import { RECENT_AUDIT_LOGS } from "./mockData";
+import type { AuditLogEntry } from "./mockData";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const ACTION_STYLES: Record<string, { bg: string; text: string; label?: string }> = {
   LOGIN_FAIL:    { bg: "bg-[#FCE4D6]", text: "text-[#C00000]" },
   LOGIN_SUCCESS: { bg: "bg-[#E2EFDA]", text: "text-[#375623]" },
+  LOGIN_OK:      { bg: "bg-[#E2EFDA]", text: "text-[#375623]" },
   LOGOUT:        { bg: "bg-[#E2EFDA]", text: "text-[#375623]" },
   UPDATE_ROLE:   { bg: "bg-purple-100",  text: "text-purple-800" },
+  ROLE_CHANGE:   { bg: "bg-purple-100",  text: "text-purple-800" },
+  EXAM_SUBMIT:   { bg: "bg-blue-100",    text: "text-blue-800" },
   SUBMIT_EXAM:   { bg: "bg-blue-100",    text: "text-blue-800" },
   UPDATE_GRADE:  { bg: "bg-[#FFEAD7]",  text: "text-[#C55A11]" },
-  FORCE_SUBMIT:  { bg: "bg-[#FCE4D6]",  text: "text-[#C00000]" },
+  GRADE_UPDATE:  { bg: "bg-[#FFEAD7]",  text: "text-[#C55A11]" },
+  ANTICHEAT:     { bg: "bg-[#FCE4D6]",  text: "text-[#C00000]" },
   FILE_UPLOAD:   { bg: "bg-blue-100",    text: "text-blue-800" },
+  COURSE_CREATE: { bg: "bg-indigo-100",  text: "text-indigo-800" },
+  ENROLL_COURSE: { bg: "bg-indigo-100",  text: "text-indigo-800" },
 };
-
-const MOCK_DATA: AuditLogEntry[] = [
-  { logId: "a1b2c3", timestamp: "2026-06-08T08:12:34Z", actorId: "usr_001", action: "LOGIN_FAIL",    ip: "192.168.1.10", hmacVerified: true },
-  { logId: "d4e5f6", timestamp: "2026-06-08T08:13:01Z", actorId: "usr_001", action: "LOGIN_SUCCESS", ip: "192.168.1.10", hmacVerified: true },
-  { logId: "g7h8i9", timestamp: "2026-06-08T09:05:22Z", actorId: "usr_042", action: "SUBMIT_EXAM",   ip: "10.0.0.55",    hmacVerified: true },
-  { logId: "j0k1l2", timestamp: "2026-06-08T10:44:15Z", actorId: "usr_007", action: "UPDATE_ROLE",   ip: "10.0.0.1",     hmacVerified: true },
-  { logId: "m3n4o5", timestamp: "2026-06-08T11:00:00Z", actorId: "usr_099", action: "FORCE_SUBMIT",  ip: "172.16.0.22",  hmacVerified: false },
-  { logId: "p6q7r8", timestamp: "2026-06-08T12:30:45Z", actorId: "usr_015", action: "UPDATE_GRADE",  ip: "10.0.0.2",     hmacVerified: true },
-  { logId: "s9t0u1", timestamp: "2026-06-08T13:18:09Z", actorId: "usr_033", action: "FILE_UPLOAD",   ip: "10.0.0.88",    hmacVerified: true },
-  { logId: "v2w3x4", timestamp: "2026-06-08T14:22:51Z", actorId: "usr_011", action: "LOGOUT",        ip: "192.168.1.55", hmacVerified: true },
-];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -76,11 +65,12 @@ export default function AuditLogViewer() {
   const [search, setSearch] = useState("");
   const [filterAction, setFilterAction] = useState("ALL");
 
-  // In production: replace MOCK_DATA with useQuery / useSWR / axios call
-  const logs: AuditLogEntry[] = MOCK_DATA;
+  // In production: replace RECENT_AUDIT_LOGS with useQuery / useSWR / axios call
+  const logs: AuditLogEntry[] = RECENT_AUDIT_LOGS;
 
   const filtered = logs.filter((log) => {
-    const matchAction = filterAction === "ALL" || log.action === filterAction;
+    const actionKey = log.actionType || log.action;
+    const matchAction = filterAction === "ALL" || actionKey === filterAction;
     const q = search.toLowerCase();
     const matchSearch =
       !q ||
@@ -169,7 +159,8 @@ export default function AuditLogViewer() {
                       {log.actorId}
                     </td>
                     <td className="px-5 py-4">
-                      <ActionTag action={log.action} />
+                      <ActionTag action={log.actionType} />
+                      <div className="text-xs text-gray-400 mt-1">{log.action}</div>
                     </td>
                     <td className="px-5 py-4 font-mono text-xs text-[#595959]">
                       {log.ip}

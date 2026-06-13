@@ -40,6 +40,18 @@ public class User
 
     public DateTime CreatedAt { get; private set; }
 
+    /// <summary>
+    /// Trạng thái 2FA (optional). false = tắt (mặc định). true = bật.
+    /// Người dùng tự bật/tắt trong mục "Cài đặt bảo mật" của Profile.
+    /// KHÔNG ảnh hưởng đến luồng login cơ bản.
+    /// </summary>
+    public bool TwoFactorEnabled { get; private set; } = false;
+
+    /// <summary>
+    /// Khóa bí mật dùng cho Google Authenticator (TOTP).
+    /// </summary>
+    public string? TwoFactorSecret { get; private set; }
+
     // EF Core cần constructor không tham số (private để tránh dùng ngoài)
     private User() { }
 
@@ -94,11 +106,45 @@ public class User
     public bool IsLockedOut() =>
         LockoutEnd.HasValue && LockoutEnd.Value > DateTime.UtcNow;
 
+    /// <summary>Cập nhật mật khẩu mới (đã được băm).</summary>
+    public void UpdatePassword(string newPasswordHash)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newPasswordHash);
+        PasswordHash = newPasswordHash;
+    }
+
     /// <summary>Lưu Refresh Token mới sau khi issue thành công.</summary>
     public void SetRefreshToken(string token, DateTime expiresAt)
     {
         RefreshToken = token;
         RefreshTokenExpiresAt = expiresAt;
+    }
+
+    /// <summary>
+    /// Bật hoặc tắt 2FA cho tài khoản này.
+    /// Chỉ được gọi từ Application layer sau khi xác thực quyền sở hữu.
+    /// </summary>
+    public void SetTwoFactor(bool isEnabled)
+    {
+        TwoFactorEnabled = isEnabled;
+    }
+
+    /// <summary>
+    /// Thiết lập Secret Key cho TOTP (Google Authenticator).
+    /// </summary>
+    public void SetTwoFactorSecret(string secret)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(secret);
+        TwoFactorSecret = secret;
+    }
+
+    /// <summary>
+    /// Tắt hoàn toàn 2FA, xóa secret key.
+    /// </summary>
+    public void DisableTwoFactor()
+    {
+        TwoFactorEnabled = false;
+        TwoFactorSecret = null;
     }
 
     /// <summary>Thu hồi Refresh Token (đăng xuất).</summary>

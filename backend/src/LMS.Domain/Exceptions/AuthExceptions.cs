@@ -21,3 +21,9 @@ public sealed class InvalidCredentialsException()
 /// </summary>
 public sealed class InvalidTokenException(string message)
     : Exception(message);
+
+/// <summary>
+/// Ném khi không tìm thấy User theo ID.
+/// </summary>
+public sealed class UserNotFoundException(Guid userId)
+    : Exception($"Không tìm thấy người dùng với ID: {userId}.");

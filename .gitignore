@@ -38,3 +38,11 @@ Thumbs.db
 *.pfx
 *.p12
 *.key
+
+## ── User Exclusions ─────────────────────────────────
+automation_tests/
+.env
+bug.md
+.claude/
+.cluade/
+test_data/
