@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Users, Search, MoreVertical, Lock, Unlock, Edit, ShieldAlert, X } from 'lucide-react'
+import apiClient from '../../api/apiClient'
 
 interface UserItem {
   id: string
@@ -10,28 +11,44 @@ interface UserItem {
   createdAt: string
 }
 
-const mockUsers: UserItem[] = [
-  { id: 'usr-001', fullName: 'Nguyen Van A', email: 'nva@truong.edu.vn', role: 'Student', status: 'Active', createdAt: '10/06/2026' },
-  { id: 'usr-002', fullName: 'Le Thi B', email: 'ltb@truong.edu.vn', role: 'Instructor', status: 'Active', createdAt: '09/06/2026' },
-  { id: 'usr-003', fullName: 'Tran Van C', email: 'tvc@truong.edu.vn', role: 'Student', status: 'Locked', createdAt: '08/06/2026' },
-]
-
 export default function UsersPage() {
-  const [users, setUsers] = useState<UserItem[]>(mockUsers)
+  const [users, setUsers] = useState<UserItem[]>([])
   const [search, setSearch] = useState('')
   const [showLockModal, setShowLockModal] = useState<UserItem | null>(null)
+  const [loading, setLoading] = useState(true)
   
   // User Form Modal State
   const [showUserForm, setShowUserForm] = useState(false)
   const [editingUser, setEditingUser] = useState<UserItem | null>(null)
   const [formData, setFormData] = useState({ fullName: '', email: '', role: 'Student' as const })
 
-  const filteredUsers = users.filter(u => u.fullName.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()))
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
-  const handleToggleLock = (user: UserItem) => {
-    const newStatus = user.status === 'Active' ? 'Locked' : 'Active'
-    setUsers(users.map(u => u.id === user.id ? { ...u, status: newStatus } : u))
-    setShowLockModal(null)
+  const fetchUsers = async () => {
+    setLoading(true)
+    try {
+      const res = await apiClient.get('/admin/users')
+      setUsers(res.data)
+    } catch (error) {
+      console.error('Failed to fetch users', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredUsers = users.filter(u => u.fullName?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase()))
+
+  const handleToggleLock = async (user: UserItem) => {
+    try {
+      const res = await apiClient.put(`/admin/users/${user.id}/toggle-lock`)
+      setUsers(users.map(u => u.id === user.id ? { ...u, status: res.data.status } : u))
+    } catch (error) {
+      console.error('Toggle lock failed', error)
+    } finally {
+      setShowLockModal(null)
+    }
   }
 
   const handleOpenCreate = () => {
@@ -46,8 +63,9 @@ export default function UsersPage() {
     setShowUserForm(true)
   }
 
-  const handleSaveUser = (e: React.FormEvent) => {
+  const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault()
+    // TODO: implement real POST/PUT users to backend
     if (editingUser) {
       setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...formData } : u))
     } else {

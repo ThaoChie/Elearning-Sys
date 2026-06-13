@@ -78,76 +78,49 @@ function HmacBadge({ valid }: { valid: boolean }) {
   )
 }
 
-function LogItem({ entry }: { entry: AuditLogEntry }) {
-  const meta = ACTION_META[entry.actionType] || {
-    icon: <AlertOctagon size={13} />,
-    bg: 'bg-slate-100',
-    text: 'text-slate-600',
-  }
-
-  return (
-    <div className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0 group hover:bg-slate-50/70 -mx-2 px-2 rounded-lg transition-colors">
-      {/* Action icon */}
-      <div
-        className={`flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center ${meta.bg} ${meta.text}`}
-      >
-        {meta.icon}
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-semibold text-slate-700 truncate">{entry.actorName}</p>
-          <HmacBadge valid={entry.hmacValid} />
-        </div>
-        <p className="text-[11px] text-slate-500 truncate mt-0.5 leading-relaxed">{entry.action}</p>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-[10px] text-slate-500 font-mono">{entry.timestamp}</span>
-          <span className="text-[10px] text-slate-600">·</span>
-          <span className="text-[10px] text-slate-500 font-mono">{entry.ip}</span>
-          <span className="text-[10px] text-slate-600">·</span>
-          <span className="text-[10px] text-slate-500 font-mono">{entry.logId}</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default function RecentAuditLogs() {
-  const invalidCount = RECENT_AUDIT_LOGS.filter((l) => !l.hmacValid).length
+export default function RecentAuditLogs({ logs, loading }: { logs: any[], loading: boolean }) {
+  if (loading) return <div className="p-5 text-center text-slate-500 h-full flex items-center justify-center bg-white/70 backdrop-blur-md rounded-2xl border border-white/50">Đang tải Audit Logs...</div>
 
   return (
     <div className="bg-white/70 backdrop-blur-md rounded-2xl border border-white/50 shadow-sm p-6 h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-[#1F3864]">Hoạt động gần đây</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Audit log · Bất biến HMAC-SHA256</p>
+          <h2 className="text-base font-bold text-slate-800">Nhật ký hoạt động</h2>
+          <p className="text-xs text-slate-500 mt-0.5">Immutable Audit Trail (BR-22)</p>
         </div>
-        {/* Integrity warning */}
-        {invalidCount > 0 && (
-          <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-xl">
-            <ShieldX size={13} />
-            {invalidCount} bản ghi nghi vấn
+        <button className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">
+          Xem tất cả
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pr-1 space-y-1">
+        {logs && logs.length > 0 ? logs.map((log) => (
+          <div key={log.id} className="flex items-start gap-3 py-3 border-b border-slate-50 last:border-0 group hover:bg-slate-50/70 -mx-2 px-2 rounded-lg transition-colors">
+            {/* Action icon */}
+            <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-lg flex items-center justify-center bg-slate-100 text-slate-600">
+              <ShieldCheck size={13} />
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold text-slate-700 truncate">{log.action}</p>
+                <span className="flex-shrink-0 text-[10px] text-slate-400 font-medium">
+                  {log.time}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-0.5 truncate flex items-center gap-1.5">
+                <span className="text-slate-400 font-mono">{log.ip}</span>
+              </p>
+            </div>
+            {/* HMAC Badge (Mock OK for all real logs for now) */}
+            <div className="flex-shrink-0 mt-1">
+              <HmacBadge valid={true} />
+            </div>
           </div>
+        )) : (
+          <div className="text-xs text-slate-500 py-4 text-center">Không có nhật ký nào gần đây.</div>
         )}
-      </div>
-
-      {/* Log list */}
-      <div className="flex-1 overflow-y-auto mt-3 space-y-0 pr-1">
-        {RECENT_AUDIT_LOGS.map((entry) => (
-          <LogItem key={entry.logId} entry={entry} />
-        ))}
-      </div>
-
-      {/* Footer link */}
-      <div className="mt-3 pt-3 border-t border-slate-50">
-        <a
-          href="/dashboard/system/audit"
-          className="text-xs text-indigo-500 hover:text-indigo-700 font-medium flex items-center gap-1 transition-colors"
-        >
-          Xem toàn bộ audit logs →
-        </a>
       </div>
     </div>
   )

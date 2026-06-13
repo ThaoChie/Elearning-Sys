@@ -108,7 +108,7 @@ public sealed class SubmitAssignmentCommandHandler
 
         // ── 7. Đổi tên thành UUID và upload lên Storage ────────────────────────
         // StorageKey = UUID ngẫu nhiên → không tiết lộ tên file gốc
-        var storageKey = $"assignments/{command.AssignmentId}/{Guid.NewGuid():N}.enc";
+        var storageKey = $"assignments/{command.AssignmentId}/{Guid.NewGuid()}.enc";
 
         await _storage.UploadAsync(
             storageKey,
@@ -133,7 +133,8 @@ public sealed class SubmitAssignmentCommandHandler
             OriginalFileName = submission.OriginalFileName,
             MimeType         = submission.MimeType,
             FileSizeBytes    = submission.FileSizeBytes,
-            SubmittedAt      = submission.SubmittedAt
+            SubmittedAt      = submission.SubmittedAt,
+            StorageKey       = submission.StorageKey
         };
     }
 }

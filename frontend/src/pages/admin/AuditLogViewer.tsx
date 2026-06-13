@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import apiClient from "../../api/apiClient";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
-
-import { RECENT_AUDIT_LOGS } from "./mockData";
-import type { AuditLogEntry } from "./mockData";
+export interface AuditLogEntry {
+  id: string;
+  action: string;
+  actorId: string;
+  ip: string;
+  timestamp: string;
+  hmacValid: boolean;
+}
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -50,11 +56,6 @@ function IntegrityBadge({ verified }: { verified: boolean }) {
   );
 }
 
-function formatTimestamp(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "medium" });
-}
-
 // ─── Filters ─────────────────────────────────────────────────────────────────
 
 const ALL_ACTIONS = ["ALL", ...Object.keys(ACTION_STYLES)];
@@ -64,19 +65,33 @@ const ALL_ACTIONS = ["ALL", ...Object.keys(ACTION_STYLES)];
 export default function AuditLogViewer() {
   const [search, setSearch] = useState("");
   const [filterAction, setFilterAction] = useState("ALL");
+  const [logs, setLogs] = useState<AuditLogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // In production: replace RECENT_AUDIT_LOGS with useQuery / useSWR / axios call
-  const logs: AuditLogEntry[] = RECENT_AUDIT_LOGS;
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const fetchLogs = async () => {
+    try {
+      const res = await apiClient.get('/admin/audit-logs');
+      setLogs(res.data);
+    } catch (error) {
+      console.error('Failed to fetch audit logs', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = logs.filter((log) => {
-    const actionKey = log.actionType || log.action;
+    const actionKey = log.action;
     const matchAction = filterAction === "ALL" || actionKey === filterAction;
     const q = search.toLowerCase();
     const matchSearch =
       !q ||
       log.actorId.toLowerCase().includes(q) ||
       log.ip.includes(q) ||
-      log.logId.toLowerCase().includes(q);
+      log.id.toLowerCase().includes(q);
     return matchAction && matchSearch;
   });
 
@@ -146,21 +161,20 @@ export default function AuditLogViewer() {
               ) : (
                 filtered.map((log) => (
                   <tr
-                    key={log.logId}
+                    key={log.id}
                     className="transition-colors hover:bg-[#F8F9FA]"
                   >
                     <td className="px-5 py-4 font-mono text-xs text-gray-500">
-                      {log.logId}
+                      {log.id}
                     </td>
                     <td className="whitespace-nowrap px-5 py-4 text-[#1F3864]">
-                      {formatTimestamp(log.timestamp)}
+                      {log.timestamp}
                     </td>
                     <td className="px-5 py-4 font-medium text-[#1F3864]">
                       {log.actorId}
                     </td>
                     <td className="px-5 py-4">
-                      <ActionTag action={log.actionType} />
-                      <div className="text-xs text-gray-400 mt-1">{log.action}</div>
+                      <ActionTag action={log.action} />
                     </td>
                     <td className="px-5 py-4 font-mono text-xs text-[#595959]">
                       {log.ip}

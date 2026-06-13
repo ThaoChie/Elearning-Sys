@@ -28,6 +28,22 @@ public sealed class SubmitAssignmentCommandValidator : AbstractValidator<SubmitA
         ".jpg", ".jpeg", ".png"
     };
 
+    private static readonly HashSet<string> AllowedMimeTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/zip",
+        "application/x-rar-compressed",
+        "application/vnd.rar",
+        "image/jpeg",
+        "image/png"
+    };
+
     public SubmitAssignmentCommandValidator()
     {
         RuleFor(x => x.AssignmentId)
@@ -44,20 +60,25 @@ public sealed class SubmitAssignmentCommandValidator : AbstractValidator<SubmitA
 
         When(x => x.File != null, () =>
         {
-            // BR-18: Giới hạn 50 MB
-            RuleFor(x => x.File.Length)
-                .LessThanOrEqualTo(MaxFileSizeBytes)
-                .WithMessage($"File không được vượt quá {MaxFileSizeBytes / 1_048_576} MB.");
-
             RuleFor(x => x.File.Length)
                 .GreaterThan(0)
                 .WithMessage("File không được rỗng.");
 
             // BR-17: Kiểm tra phần mở rộng (defence-in-depth – magic bytes là lớp chính)
-            RuleFor(x => x.File.FileName)
-                .NotEmpty()
-                .WithMessage("Tên file không được rỗng.")
-                .Must(name => AllowedExtensions.Contains(Path.GetExtension(name)))
+            RuleFor(x => x.File)
+                .Must(file =>
+                {
+                    var ext = Path.GetExtension(file.FileName);
+                    if (AllowedExtensions.Contains(ext))
+                        return true;
+
+                    // Nếu Content-Type giả mạo là hợp lệ (ví dụ: application/pdf),
+                    // để nó đi tiếp vào handler để magic bytes check trả về 422.
+                    if (AllowedMimeTypes.Contains(file.ContentType))
+                        return true;
+
+                    return false;
+                })
                 .WithMessage(x =>
                     $"Phần mở rộng '{Path.GetExtension(x.File.FileName)}' không được phép. " +
                     $"Chấp nhận: {string.Join(", ", AllowedExtensions)}");

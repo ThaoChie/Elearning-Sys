@@ -115,7 +115,7 @@ export default function Sidebar({ user, navItems, onLogout }: SidebarProps) {
 
               <Icon
                 size={18}
-                className={`flex-shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`}
+                className={`flex-shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-600'}`}
               />
 
               {!collapsed && (
@@ -123,7 +123,7 @@ export default function Sidebar({ user, navItems, onLogout }: SidebarProps) {
               )}
 
               {!collapsed && item.badge && item.badge > 0 && (
-                <span className="flex-shrink-0 min-w-[20px] h-5 px-1 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center font-medium">
+                <span className="flex-shrink-0 min-w-[20px] h-5 px-1 rounded-full bg-blue-500 text-slate-900 text-xs flex items-center justify-center font-medium">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
               )}

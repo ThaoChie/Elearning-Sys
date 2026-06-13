@@ -72,10 +72,15 @@ public sealed class ProfileService(IUserRepository userRepository, IPasswordHash
     /// <inheritdoc/>
     public async Task ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken ct = default)
     {
+        if (currentPassword == newPassword)
+        {
+            throw new ArgumentException("Mật khẩu mới phải khác mật khẩu cũ.");
+        }
+
         var user = await userRepository.GetByIdAsync(userId, ct)
             ?? throw new UserNotFoundException(userId);
 
-        if (!passwordHasher.Verify(user.PasswordHash, currentPassword))
+        if (!passwordHasher.Verify(currentPassword, user.PasswordHash))
         {
             throw new InvalidCredentialsException();
         }

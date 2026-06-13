@@ -93,7 +93,7 @@ const RecentActivities: React.FC = () => {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-slate-700">Hoạt Động Gần Đây</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Nhật ký bất biến (HMAC-signed)</p>
+          <p className="text-xs text-slate-500 mt-0.5">Nhật ký bất biến (HMAC-signed)</p>
         </div>
         {/* Section 2.5: Nhật ký được ký HMAC-SHA256, không thể xóa/sửa */}
         <button className="text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors">
@@ -122,7 +122,7 @@ const RecentActivities: React.FC = () => {
                     {activity.actor}
                   </span>
                   {/* ActorID từ Audit Log - hiển thị nhỏ để truy vết */}
-                  <span className="text-[10px] text-slate-400 font-mono flex-shrink-0">
+                  <span className="text-[10px] text-slate-500 font-mono flex-shrink-0">
                     {activity.actorId}
                   </span>
                 </div>
@@ -130,7 +130,7 @@ const RecentActivities: React.FC = () => {
                   {activity.message}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[10px] text-slate-400">{activity.time}</span>
+                  <span className="text-[10px] text-slate-500">{activity.time}</span>
                   {/* Section 2.5: Link đến Audit Log entry để truy vết */}
                   {activity.auditLogId && (
                     <span className="text-[10px] font-mono text-indigo-300 group-hover:text-indigo-500 transition-colors cursor-pointer">
@@ -151,11 +151,11 @@ const RecentActivities: React.FC = () => {
 
       {/* Footer - integrity note */}
       <div className="mt-4 pt-3 border-t border-slate-50 flex items-center gap-2">
-        <svg className="w-3.5 h-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
-        <p className="text-[10px] text-slate-400">
+        <p className="text-[10px] text-slate-500">
           Log bất biến · HMAC-SHA256 · Không thể xóa/sửa (Section 2.5)
         </p>
       </div>

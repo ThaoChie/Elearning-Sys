@@ -61,7 +61,7 @@ function SessionRow({ session, isCurrent }: { session: ActiveSession; isCurrent:
         <p className="text-slate-500 text-[10px] whitespace-nowrap">{session.lastActiveAt}</p>
         {!isCurrent && (
           <div className="mt-0.5 flex justify-end">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
           </div>
         )}
       </div>
@@ -235,7 +235,7 @@ export default function SecurityStatusWidget({ status }: SecurityStatusWidgetPro
         onClick={() => navigate('/dashboard/system/auth')}
         className="
           w-full py-2.5 rounded-lg text-xs font-semibold
-          bg-[#1F3864] border border-[#162a4a] text-white
+          bg-[#1F3864] border border-[#162a4a] text-slate-900
           hover:bg-[#162a4a] hover:border-indigo-900
           active:scale-[0.98] transition-all duration-150
           flex items-center justify-center gap-2

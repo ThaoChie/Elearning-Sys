@@ -10,6 +10,7 @@ import RecentAuditLogs from '../../components/dashboard/widgets/RecentAuditLogs'
 import UserAlertTable from '../../components/dashboard/widgets/UserAlertTable'
 import type { DashboardUser } from '../../types/dashboard'
 import { ShieldCheck, RefreshCcw } from 'lucide-react'
+import { useAdminDashboard } from '../../hooks/useDashboardStats'
 
 interface Props {
   user: DashboardUser
@@ -23,6 +24,8 @@ export default function SystemOverview({ user }: Props) {
     hour: '2-digit',
     minute: '2-digit',
   })
+
+  const { data, loading } = useAdminDashboard()
 
   return (
     <div className="min-h-full space-y-6 pb-8">
@@ -52,18 +55,18 @@ export default function SystemOverview({ user }: Props) {
       </div>
 
       {/* ── Section 1: Stats + Alert Cards ──────────────────── */}
-      <AdminStats />
+      <AdminStats data={data} loading={loading} />
 
       {/* ── Section 2: Middle – Chart (60%) + Audit Logs (40%) ─ */}
       <div className="grid grid-cols-5 gap-5">
         {/* Security Chart – 60% */}
         <div className="col-span-3">
-          <SecurityChart />
+          <SecurityChart data={data} loading={loading} />
         </div>
 
         {/* Recent Audit Logs – 40% */}
         <div className="col-span-2">
-          <RecentAuditLogs />
+          <RecentAuditLogs logs={data?.recentLogs} loading={loading} />
         </div>
       </div>
 

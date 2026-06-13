@@ -84,6 +84,10 @@ public sealed class ProfileController(IProfileService profileService) : Controll
     // ════════════════════════════════════════════════════════════════════════
 
     /// <summary>Xác thực mã 6 số để chính thức bật 2FA.</summary>
+    [HttpGet("security/2fa/verify")]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    public IActionResult VerifyTwoFactorGet() => StatusCode(StatusCodes.Status405MethodNotAllowed);
+
     [HttpPost("security/2fa/verify")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -168,6 +172,10 @@ public sealed class ProfileController(IProfileService profileService) : Controll
         catch (InvalidCredentialsException ex)
         {
             return BadRequest(new { error = "invalid_credentials", message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = "invalid_request", message = ex.Message });
         }
     }
 }

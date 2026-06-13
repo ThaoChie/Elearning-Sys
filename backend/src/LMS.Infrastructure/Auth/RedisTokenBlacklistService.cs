@@ -71,7 +71,7 @@ public sealed class RedisTokenBlacklistService : ITokenBlacklistService
 
     public async Task RevokeAllUserTokensAsync(Guid userId, CancellationToken ct = default)
     {
-        var key = UserRevokePrefix + userId.ToString("N");
+        var key = UserRevokePrefix + userId.ToString();
         try
         {
             await _db.StringSetAsync(key, "1", UserRevokeTtl);
@@ -86,12 +86,39 @@ public sealed class RedisTokenBlacklistService : ITokenBlacklistService
     {
         try
         {
-            return await _db.KeyExistsAsync(UserRevokePrefix + userId.ToString("N"));
+            return await _db.KeyExistsAsync(UserRevokePrefix + userId.ToString());
         }
         catch (RedisException ex)
         {
             _logger.LogError(ex, "Redis: Không thể kiểm tra revoke User {UserId}", userId);
             return false;
+        }
+    }
+
+    public async Task<bool> TryAcquireRefreshLockAsync(string token, TimeSpan ttl, CancellationToken ct = default)
+    {
+        var key = "refresh_lock:" + token;
+        try
+        {
+            return await _db.StringSetAsync(key, "1", ttl, When.NotExists);
+        }
+        catch (RedisException ex)
+        {
+            _logger.LogError(ex, "Redis: Không thể thiết lập refresh lock cho token");
+            return true;
+        }
+    }
+
+    public async Task ReleaseRefreshLockAsync(string token, CancellationToken ct = default)
+    {
+        var key = "refresh_lock:" + token;
+        try
+        {
+            await _db.KeyDeleteAsync(key);
+        }
+        catch (RedisException ex)
+        {
+            _logger.LogError(ex, "Redis: Không thể giải phóng refresh lock cho token");
         }
     }
 }

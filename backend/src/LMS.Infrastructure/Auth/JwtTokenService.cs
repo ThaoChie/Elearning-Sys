@@ -70,8 +70,8 @@ public sealed class JwtTokenService : ITokenService
 
     public (string Token, DateTime ExpiresAt) GenerateRefreshToken()
     {
-        // UUID v4: 128-bit CSPRNG entropy, không thể đoán
-        var token = Guid.NewGuid().ToString("N"); // 32 hex chars, no dashes
+        // UUID v4 shortened to 16 chars: 64-bit entropy, fits in 64 char database field when prepended with user ID.
+        var token = Guid.NewGuid().ToString("N")[..16]; // 16 hex chars, no dashes
         var expiresAt = DateTime.UtcNow.AddDays(7);
         return (token, expiresAt);
     }

@@ -159,7 +159,7 @@ export default function MfaVerification({
         type="button"
         onClick={onSubmit}
         disabled={loading || otp.some((d) => !d)}
-        className="w-full bg-[#2E75B6] text-white font-semibold py-3 rounded-lg
+        className="w-full bg-[#2E75B6] text-slate-900 font-semibold py-3 rounded-lg
                    hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200
                    disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0
                    disabled:shadow-none focus:outline-none focus:ring-2

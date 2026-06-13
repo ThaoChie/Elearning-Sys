@@ -29,43 +29,70 @@ public sealed class RefreshTokenCommandHandler(
         var incomingToken = request.RefreshToken?.Trim()
             ?? throw new InvalidTokenException("Refresh Token không được rỗng.");
 
-        // ── 1. Tra cứu User theo token ────────────────────────────────────────
-        var user = await userRepository.GetByRefreshTokenAsync(incomingToken, ct);
-
-        if (user is null)
+        // Lock 5 giây để chống race condition
+        bool acquired = await blacklist.TryAcquireRefreshLockAsync(incomingToken, TimeSpan.FromSeconds(5), ct);
+        if (!acquired)
         {
-            // ── REUSE DETECTION (User null path) ─────────────────────────────
-            // Token không tìm thấy trong DB = đã bị rotate ra khỏi DB.
-            // Không biết thuộc về ai → không thể revoke, chỉ từ chối.
-            throw new InvalidTokenException("Refresh Token không hợp lệ hoặc đã hết hạn.");
+            throw new InvalidTokenException("Refresh Token đang được xử lý.");
         }
 
-        // ── 2. Kiểm tra token có hợp lệ không (so sánh + expiry) ─────────────
-        if (!user.IsRefreshTokenValid(incomingToken))
+        try
         {
-            // Token hết hạn hoặc không khớp → revoke toàn bộ phòng ngừa replay
-            user.RevokeRefreshToken();
+            // ── 1. Tra cứu User theo token ────────────────────────────────────────
+            var user = await userRepository.GetByRefreshTokenAsync(incomingToken, ct);
+
+            if (user is null)
+            {
+                // ── REUSE DETECTION (User null path) ─────────────────────────────
+                // Token không tìm thấy trong DB = đã bị rotate ra khỏi DB.
+                if (incomingToken.Contains('_'))
+                {
+                    var parts = incomingToken.Split('_');
+                    if (Guid.TryParseExact(parts[0], "N", out var userId))
+                    {
+                        var revokedUser = await userRepository.GetByIdAsync(userId, ct);
+                        if (revokedUser is not null)
+                        {
+                            revokedUser.RevokeRefreshToken();
+                            await userRepository.SaveChangesAsync(ct);
+                            await blacklist.RevokeAllUserTokensAsync(revokedUser.Id, ct);
+                        }
+                    }
+                }
+                throw new InvalidTokenException("Refresh Token không hợp lệ hoặc đã hết hạn.");
+            }
+
+            // ── 2. Kiểm tra token có hợp lệ không (so sánh + expiry) ─────────────
+            if (!user.IsRefreshTokenValid(incomingToken))
+            {
+                // Token hết hạn hoặc không khớp → revoke toàn bộ phòng ngừa replay
+                user.RevokeRefreshToken();
+                await userRepository.SaveChangesAsync(ct);
+                await blacklist.RevokeAllUserTokensAsync(user.Id, ct);
+
+                throw new InvalidTokenException("Refresh Token đã hết hạn. Vui lòng đăng nhập lại.");
+            }
+
+            // ── 3. Token hợp lệ → Rotation ───────────────────────────────────────
+            var accessToken  = tokenService.GenerateAccessToken(user);
+            var (newRefresh, newRefreshExpiry) = tokenService.GenerateRefreshToken();
+
+            // Ghi đè Refresh Token cũ bằng token MỚI (single-use rotation)
+            user.SetRefreshToken(newRefresh, newRefreshExpiry);
             await userRepository.SaveChangesAsync(ct);
-            await blacklist.RevokeAllUserTokensAsync(user.Id, ct);
 
-            throw new InvalidTokenException("Refresh Token đã hết hạn. Vui lòng đăng nhập lại.");
+            return new LoginResponse(
+                AccessToken:           accessToken,
+                RefreshToken:          user.RefreshToken!,
+                AccessTokenExpiresAt:  DateTime.UtcNow.AddMinutes(15),
+                RefreshTokenExpiresAt: newRefreshExpiry,
+                UserId:                user.Id,
+                Email:                 user.Email
+            );
         }
-
-        // ── 3. Token hợp lệ → Rotation ───────────────────────────────────────
-        var accessToken  = tokenService.GenerateAccessToken(user);
-        var (newRefresh, newRefreshExpiry) = tokenService.GenerateRefreshToken();
-
-        // Ghi đè Refresh Token cũ bằng token MỚI (single-use rotation)
-        user.SetRefreshToken(newRefresh, newRefreshExpiry);
-        await userRepository.SaveChangesAsync(ct);
-
-        return new LoginResponse(
-            AccessToken:           accessToken,
-            RefreshToken:          newRefresh,
-            AccessTokenExpiresAt:  DateTime.UtcNow.AddMinutes(15),
-            RefreshTokenExpiresAt: newRefreshExpiry,
-            UserId:                user.Id,
-            Email:                 user.Email
-        );
+        finally
+        {
+            await blacklist.ReleaseRefreshLockAsync(incomingToken, ct);
+        }
     }
 }

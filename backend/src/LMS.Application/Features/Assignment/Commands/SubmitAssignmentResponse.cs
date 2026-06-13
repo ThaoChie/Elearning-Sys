@@ -19,4 +19,7 @@ public sealed class SubmitAssignmentResponse
 
     /// <summary>Thời điểm nộp bài (UTC).</summary>
     public DateTime SubmittedAt    { get; init; }
+
+    /// <summary>Key lưu trữ file.</summary>
+    public string   StorageKey       { get; init; } = string.Empty;
 }

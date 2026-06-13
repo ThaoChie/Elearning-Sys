@@ -5,16 +5,17 @@ import DashboardStats from '../components/instructor/dashboard/DashboardStats';
 import ScoreChart from '../components/instructor/dashboard/ScoreChart';
 import RecentActivities from '../components/instructor/dashboard/RecentActivities';
 import AssignmentTable from '../components/instructor/dashboard/AssignmentTable';
+import { useInstructorDashboard } from '../hooks/useDashboardStats';
+import type { DashboardUser } from '../types/dashboard';
 
-// ============================================================
-// INSTRUCTOR DASHBOARD PAGE
-// Trang chính của Instructor Portal.
-// RBAC: Chỉ được truy cập bởi user có Role = "Instructor" (JWT Claim).
-// Toàn bộ dữ liệu hiển thị được scope theo InstructorID từ JWT Claims (chống IDOR).
-// ============================================================
-const InstructorDashboard: React.FC = () => {
+interface Props {
+  user?: DashboardUser
+}
+
+const InstructorDashboard: React.FC<Props> = ({ user }) => {
   const [activeNav, setActiveNav] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
+  const { data, loading } = useInstructorDashboard();
 
   return (
     <div className="flex h-screen overflow-hidden font-sans">
@@ -35,7 +36,7 @@ const InstructorDashboard: React.FC = () => {
                    exams: 'Exams', gradebook: 'Gradebook', settings: 'Settings' }[activeNav] ?? 'Dashboard'}
               </h1>
               <p className="text-xs text-slate-500">
-                Chào buổi sáng, GV. Nguyễn Thành · Thứ Hai, 09/06/2026
+                Chào buổi sáng, {user?.name || 'Giảng viên'} · {new Date().toLocaleDateString('vi-VN')}
               </p>
             </div>
 
@@ -66,12 +67,11 @@ const InstructorDashboard: React.FC = () => {
 
               {/* Avatar & Instructor info */}
               <div className="flex items-center gap-2.5 cursor-pointer group">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-slate-900 text-xs font-bold">
-                  NT
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold">
+                  {user?.name?.substring(0, 2).toUpperCase() || 'GV'}
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-xs font-semibold text-slate-700 leading-tight">Nguyễn Thành</p>
-                  {/* Security: Role từ JWT Claims - hiển thị để nhắc nhở phân quyền RBAC */}
+                  <p className="text-xs font-semibold text-slate-700 leading-tight">{user?.name || 'Giảng viên'}</p>
                   <p className="text-[10px] text-indigo-500 font-medium">Instructor</p>
                 </div>
                 <svg className="w-4 h-4 text-slate-500 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +86,7 @@ const InstructorDashboard: React.FC = () => {
         <main className="flex-1 overflow-y-auto p-6 space-y-5">
 
           {/* Row 1: Stats Cards (3 cards) */}
-          <DashboardStats />
+          <DashboardStats data={data} loading={loading} />
 
           {/* Row 2: Chart (Left 60%) + Recent Activities (Right 40%) */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">

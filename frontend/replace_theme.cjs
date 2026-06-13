@@ -42,7 +42,5 @@ function processDir(dir) {
   }
 }
 
-processDir('src/pages/student');
-processDir('src/components/dashboard/widgets');
-processDir('src/pages/system');
+processDir('src');
 console.log('Done');

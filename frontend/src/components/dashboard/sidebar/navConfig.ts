@@ -49,10 +49,10 @@ export const ALL_NAV_ITEMS: NavItem[] = [
     roles: ['Student'],
   },
   {
-    key: 'auth',
-    label: 'Xác thực & IAM',
+    key: 'auth' as any,
+    label: 'Dashboard',
     icon: 'auth',
-    path: '/dashboard/system/auth',
+    path: '/dashboard/system',
     roles: ['Admin'],
   },
   {

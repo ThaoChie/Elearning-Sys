@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FileCheck, Search, FileText, Download, CheckCircle, MessageSquare } from 'lucide-react'
+import { FileCheck, Search, FileText, Download, CheckCircle, MessageSquare, Clock } from 'lucide-react'
 import { addAuditLog } from '../admin/mockData'
 
 import { dbGetSubmissions, dbGradeSubmission } from '../../data/mockDatabase'
@@ -43,7 +43,7 @@ export default function GradingPage() {
             </div>
             <h1 className="text-xl font-bold text-[#1F3864] tracking-tight">Chấm điểm Bài tập</h1>
           </div>
-          <p className="text-xs text-slate-400 ml-10.5">Quản lý và chấm điểm các bài tập tự luận, đồ án của sinh viên</p>
+          <p className="text-xs text-slate-500 ml-10.5">Quản lý và chấm điểm các bài tập tự luận, đồ án của sinh viên</p>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default function GradingPage() {
         <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col h-full overflow-hidden">
           <div className="p-4 border-b border-slate-100 bg-slate-50">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <input type="text" placeholder="Tìm sinh viên hoặc môn học..." className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#1F3864]" />
             </div>
           </div>
@@ -72,7 +72,7 @@ export default function GradingPage() {
                   )}
                 </div>
                 <div className="text-xs text-slate-500 mb-1">{sub.task}</div>
-                <div className="text-[10px] text-slate-400">Nộp lúc: {sub.time}</div>
+                <div className="text-[10px] text-slate-500">Nộp lúc: {sub.time}</div>
               </button>
             ))}
           </div>
@@ -144,7 +144,7 @@ export default function GradingPage() {
                 <button 
                   onClick={handleGrade}
                   disabled={isGraded || score === '' || score < 0 || score > 10}
-                  className="w-full py-3 bg-[#1F3864] hover:bg-[#162a4a] text-white font-bold rounded-xl shadow-lg transition-colors mt-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-[#1F3864] hover:bg-[#162a4a] text-slate-900 font-bold rounded-xl shadow-lg transition-colors mt-auto disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isGraded ? 'Đã chấm điểm' : 'Lưu kết quả'}
                 </button>

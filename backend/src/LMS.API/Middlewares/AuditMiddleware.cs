@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using LMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LMS.API.Middlewares;
 
@@ -15,13 +16,15 @@ public sealed class AuditMiddleware
     };
 
     private readonly RequestDelegate _next;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public AuditMiddleware(RequestDelegate next)
+    public AuditMiddleware(RequestDelegate next, IServiceScopeFactory scopeFactory)
     {
         _next = next;
+        _scopeFactory = scopeFactory;
     }
 
-    public async Task InvokeAsync(HttpContext ctx, IAuditLogService auditLog)
+    public async Task InvokeAsync(HttpContext ctx)
     {
         await _next(ctx);
 
@@ -34,7 +37,7 @@ public sealed class AuditMiddleware
         var ip = GetClientIp(ctx);
 
         // Fire-and-forget vì không muốn fail request nếu audit gặp lỗi
-        _ = SafeLogAsync(auditLog, actorId, action, ip);
+        _ = SafeLogAsync(_scopeFactory, actorId, action, ip);
     }
 
     private static string BuildAction(HttpContext ctx)
@@ -55,10 +58,12 @@ public sealed class AuditMiddleware
         return ctx.Connection.RemoteIpAddress?.ToString();
     }
 
-    private static async Task SafeLogAsync(IAuditLogService auditLog, string? actorId, string action, string? ip)
+    private static async Task SafeLogAsync(IServiceScopeFactory scopeFactory, string? actorId, string action, string? ip)
     {
         try
         {
+            using var scope = scopeFactory.CreateScope();
+            var auditLog = scope.ServiceProvider.GetRequiredService<IAuditLogService>();
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             await auditLog.LogAsync(actorId, action, ip, cts.Token);
         }

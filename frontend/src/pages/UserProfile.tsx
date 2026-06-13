@@ -121,7 +121,7 @@ export default function UserProfile({ user }: Props) {
         <div>
           <div className="flex items-center gap-2.5 mb-1">
             <div className="w-8 h-8 rounded-xl bg-[#1F3864] flex items-center justify-center shadow-sm">
-              <User size={16} className="text-slate-900" />
+              <User size={16} className="text-white" />
             </div>
             <h1 className="text-xl font-bold text-[#1F3864] tracking-tight">
               Hồ sơ cá nhân
@@ -278,7 +278,7 @@ export default function UserProfile({ user }: Props) {
 
       {/* ── Modal Cài đặt 2FA ─────────────────────────────────────── */}
       {showMfaModal && setupData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-[400px] max-w-[90vw]">
             <h3 className="text-lg font-bold text-slate-800 mb-2">Cài đặt Xác thực 2 bước</h3>
             <p className="text-sm text-slate-500 mb-6">
@@ -320,7 +320,7 @@ export default function UserProfile({ user }: Props) {
                 <button 
                   type="submit" 
                   disabled={isMfaLoading || mfaCode.length !== 6}
-                  className="flex-1 py-2 bg-[#1F3864] hover:bg-[#152643] text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-70"
+                  className="flex-1 py-2 bg-[#1F3864] hover:bg-[#152643] text-slate-900 rounded-lg text-sm font-semibold transition-colors disabled:opacity-70"
                 >
                   {isMfaLoading ? 'Đang xử lý...' : 'Xác nhận bật'}
                 </button>

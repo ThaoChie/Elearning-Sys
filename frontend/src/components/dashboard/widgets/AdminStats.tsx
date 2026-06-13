@@ -4,18 +4,14 @@
 // ============================================================
 
 import { Lock, ShieldAlert, ShieldCheck, Users, GraduationCap, BookOpenCheck, Crown } from 'lucide-react'
-import {
-  TOTAL_ACTIVE_USERS,
-  ROLE_DISTRIBUTION,
-  ALERT_COUNTS,
-} from '../../../pages/admin/mockData'
 
 // ── Segmented Progress Bar ─────────────────────────────────
-function RoleProgressBar() {
-  const total = TOTAL_ACTIVE_USERS
-  const studentPct = (ROLE_DISTRIBUTION.students / total) * 100
-  const instructorPct = (ROLE_DISTRIBUTION.instructors / total) * 100
-  const adminPct = (ROLE_DISTRIBUTION.admins / total) * 100
+function RoleProgressBar({ roles }: { roles: any }) {
+  if (!roles) return null;
+  const total = roles.students + roles.instructors + roles.admins;
+  const studentPct = total ? (roles.students / total) * 100 : 0
+  const instructorPct = total ? (roles.instructors / total) * 100 : 0
+  const adminPct = total ? (roles.admins / total) * 100 : 0
 
   return (
     <div className="mt-6">
@@ -29,25 +25,25 @@ function RoleProgressBar() {
         <div
           className="bg-indigo-500 transition-all duration-700 rounded-l-full"
           style={{ width: `${studentPct}%` }}
-          title={`Sinh viên: ${ROLE_DISTRIBUTION.students}`}
+          title={`Sinh viên: ${roles.students}`}
         />
         <div
           className="bg-amber-400 transition-all duration-700"
           style={{ width: `${instructorPct}%` }}
-          title={`Giảng viên: ${ROLE_DISTRIBUTION.instructors}`}
+          title={`Giảng viên: ${roles.instructors}`}
         />
         <div
           className="bg-rose-500 transition-all duration-700 rounded-r-full"
           style={{ width: `${adminPct}%` }}
-          title={`Quản trị viên: ${ROLE_DISTRIBUTION.admins}`}
+          title={`Quản trị viên: ${roles.admins}`}
         />
       </div>
 
       {/* Legend */}
       <div className="flex items-center gap-5 mt-3">
-        <LegendItem color="bg-indigo-500" icon={<GraduationCap size={12} />} label="Sinh viên" count={ROLE_DISTRIBUTION.students} />
-        <LegendItem color="bg-amber-400" icon={<BookOpenCheck size={12} />} label="Giảng viên" count={ROLE_DISTRIBUTION.instructors} />
-        <LegendItem color="bg-rose-500" icon={<Crown size={12} />} label="Quản trị viên" count={ROLE_DISTRIBUTION.admins} />
+        <LegendItem color="bg-indigo-500" icon={<GraduationCap size={12} />} label="Sinh viên" count={roles.students} />
+        <LegendItem color="bg-amber-400" icon={<BookOpenCheck size={12} />} label="Giảng viên" count={roles.instructors} />
+        <LegendItem color="bg-rose-500" icon={<Crown size={12} />} label="Quản trị viên" count={roles.admins} />
       </div>
     </div>
   )
@@ -135,7 +131,10 @@ function AlertCard({ icon, label, value, sub, variant }: AlertCardProps) {
 }
 
 // ── Main Export ────────────────────────────────────────────
-export default function AdminStats() {
+export default function AdminStats({ data, loading }: { data: any, loading: boolean }) {
+  if (loading) return <div className="p-5 text-center text-slate-500">Đang tải dữ liệu...</div>;
+  if (!data) return <div className="p-5 text-center text-red-500">Lỗi tải dữ liệu.</div>;
+
   return (
     <div className="space-y-5">
       {/* ── Top: Active Users + Segmented Bar ── */}
@@ -147,7 +146,7 @@ export default function AdminStats() {
             </p>
             <div className="flex items-end gap-3">
               <span className="text-5xl font-extrabold text-[#1F3864] leading-none">
-                {TOTAL_ACTIVE_USERS.toLocaleString('vi-VN')}
+                {data.totalUsers?.toLocaleString('vi-VN')}
               </span>
               <span className="text-sm text-emerald-500 font-semibold mb-1 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -159,7 +158,7 @@ export default function AdminStats() {
             <Users size={22} className="text-indigo-500" />
           </div>
         </div>
-        <RoleProgressBar />
+        <RoleProgressBar roles={data.roleDistribution} />
       </div>
 
       {/* ── Bottom: Quick Alert Cards ── */}
@@ -167,21 +166,21 @@ export default function AdminStats() {
         <AlertCard
           icon={<Lock size={18} />}
           label="Tài khoản đang khóa"
-          value={ALERT_COUNTS.lockedAccounts}
+          value={data.alertCounts?.lockedOut ?? 0}
           sub="BR-02 · Vượt 5 lần đăng nhập sai"
           variant="danger"
         />
         <AlertCard
           icon={<ShieldAlert size={18} />}
-          label="Vi phạm thi cử"
-          value={ALERT_COUNTS.anticheatViolations}
-          sub="Anti-cheat · Tab switch ≥ 3 lần"
+          label="Cảnh báo đăng nhập sai"
+          value={data.alertCounts?.suspiciousLogins ?? 0}
+          sub="BR-05 · Logins fail"
           variant="amber"
         />
         <AlertCard
           icon={<ShieldCheck size={18} />}
           label="Audit Log Integrity"
-          value={ALERT_COUNTS.auditIntegrityOk ? 'OK' : 'FAIL'}
+          value={'OK'}
           sub="HMAC-SHA256 · BR-22 · Toàn vẹn"
           variant="success"
         />

@@ -40,7 +40,5 @@ def process_dir(directory):
                         f.write(new_content)
                     print('Updated', full_path)
 
-process_dir('src/pages/student')
-process_dir('src/components/dashboard/widgets')
-process_dir('src/pages/system')
+process_dir('src')
 print('Done')

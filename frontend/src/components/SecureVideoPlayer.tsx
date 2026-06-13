@@ -195,7 +195,7 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
   if (error) {
     return (
       <div
-        className={`flex flex-col items-center justify-center bg-gray-900 text-white rounded-lg p-8 gap-4 ${className}`}
+        className={`flex flex-col items-center justify-center bg-gray-900 text-slate-900 rounded-lg p-8 gap-4 ${className}`}
       >
         <p className="text-red-400 text-sm">{error}</p>
         <button

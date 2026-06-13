@@ -112,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {/* Label nhóm */}
         {!collapsed && (
-          <p className="px-3 mb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+          <p className="px-3 mb-2 text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
             Main Menu
           </p>
         )}
@@ -137,7 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               )}
 
               {/* Icon */}
-              <span className={`flex-shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+              <span className={`flex-shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-500 group-hover:text-slate-600'}`}>
                 {item.icon}
               </span>
 
@@ -164,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {!collapsed && (
         <div className="mx-3 mb-4 p-3 bg-gradient-to-br from-indigo-50 to-violet-50 rounded-xl border border-indigo-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-slate-900 text-xs font-bold flex-shrink-0">
               NT
             </div>
             <div className="overflow-hidden">
@@ -182,7 +182,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         className="
           absolute -right-3 top-16 w-6 h-6 bg-white border border-slate-200
           rounded-full flex items-center justify-center
-          text-slate-400 hover:text-indigo-600 hover:border-indigo-300
+          text-slate-500 hover:text-indigo-600 hover:border-indigo-300
           transition-all shadow-sm z-10
         "
       >

@@ -35,13 +35,18 @@ public sealed class ExamController(IMediator mediator) : ControllerBase
     /// <response code="400">Hết giờ – phiên đã bị đánh dấu Violated.</response>
     /// <response code="401">Chưa xác thực hoặc token hết hạn.</response>
     /// <response code="404">Không tìm thấy phiên thi đang active cho user này.</response>
-    [HttpPost("{id:guid}/heartbeat")]
+    [HttpPost("{id}/heartbeat")]
     [ProducesResponseType(typeof(HeartbeatResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Heartbeat(Guid id, CancellationToken ct)
+    public async Task<IActionResult> Heartbeat(string id, CancellationToken ct)
     {
+        if (!Guid.TryParse(id, out var parsedId))
+        {
+            return BadRequest(new { error = "invalid_id", message = "ID không hợp lệ." });
+        }
+
         // ── Extract UserId từ JWT Claims (IDOR prevention) ────────────────────
         // ClaimsPrincipalExtensions.GetRequiredUserId() đảm bảo luôn lấy từ "sub" claim.
         // TUYỆT ĐỐI KHÔNG dùng `id` route hay bất kỳ input nào từ client làm UserId.
@@ -55,7 +60,7 @@ public sealed class ExamController(IMediator mediator) : ControllerBase
         try
         {
             // ExamId từ route, UserId từ Claims – KHÔNG từ body
-            var result = await mediator.Send(new HeartbeatCommand(id, userId), ct);
+            var result = await mediator.Send(new HeartbeatCommand(parsedId, userId), ct);
             return Ok(result);
         }
         catch (ExamTimeExpiredException ex)
@@ -93,16 +98,21 @@ public sealed class ExamController(IMediator mediator) : ControllerBase
     /// </response>
     /// <response code="401">Chưa xác thực.</response>
     /// <response code="404">Không tìm thấy phiên thi đang active.</response>
-    [HttpPost("{id:guid}/violation")]
+    [HttpPost("{id}/violation")]
     [ProducesResponseType(typeof(ViolationResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ReportViolation(
-        Guid id,
+        string id,
         [FromBody] ViolationRequest request,
         CancellationToken ct)
     {
+        if (!Guid.TryParse(id, out var parsedId))
+        {
+            return BadRequest(new { error = "invalid_id", message = "ID không hợp lệ." });
+        }
+
         Guid userId;
         try { userId = User.GetRequiredUserId(); }
         catch (UnauthorizedAccessException ex)
@@ -113,7 +123,7 @@ public sealed class ExamController(IMediator mediator) : ControllerBase
         try
         {
             // ViolationType từ body (chỉ để audit log), ViolationCount do server tự quản lý
-            var command = new ReportViolationCommand(id, userId, request.ViolationType);
+            var command = new ReportViolationCommand(parsedId, userId, request.ViolationType);
             var result = await mediator.Send(command, ct);
             return Ok(result);
         }

@@ -144,7 +144,7 @@ export default function SubmissionsPage() {
                   <button 
                     onClick={handleSubmit}
                     disabled={!file}
-                    className="px-6 py-2.5 bg-[#1F3864] hover:bg-[#162A4A] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition-colors"
+                    className="px-6 py-2.5 bg-[#1F3864] hover:bg-[#162A4A] disabled:opacity-50 disabled:cursor-not-allowed text-slate-900 font-bold rounded-xl shadow-lg transition-colors"
                   >
                     {isEditing ? 'Lưu bài nộp mới' : 'Nộp bài tập'}
                   </button>

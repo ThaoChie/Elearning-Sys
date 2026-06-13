@@ -25,7 +25,7 @@ export default function DeadlineCalendar({ events }: DeadlineCalendarProps) {
     <section
       className="
         rounded-xl border border-slate-200/60
-        bg-white/80 backdrop-blur-md p-5 flex flex-col gap-4 shadow-sm
+        bg-white/80 p-5 flex flex-col gap-4 shadow-sm
       "
       aria-labelledby="deadline-calendar-title"
     >

@@ -21,12 +21,28 @@ public class NotificationsController(IMediator mediator) : ControllerBase
         return Ok(notifications);
     }
 
-    [HttpPatch("{id:guid}/read")]
-    public async Task<IActionResult> MarkAsRead(Guid id)
+    [HttpPatch("{id}/read")]
+    public async Task<IActionResult> MarkAsRead(string id)
     {
+        if (!Guid.TryParse(id, out var parsedId))
+        {
+            return BadRequest(new { error = "invalid_id", message = "ID không hợp lệ." });
+        }
+
         var userId = User.GetRequiredUserId();
-        await mediator.Send(new MarkNotificationAsReadCommand(userId, id));
-        return NoContent();
+        try
+        {
+            await mediator.Send(new MarkNotificationAsReadCommand(userId, parsedId));
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new { error = "notification_not_found", message = "Không tìm thấy thông báo." });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return NotFound(new { error = "notification_not_found", message = "Không tìm thấy thông báo." });
+        }
     }
 
     [HttpPost("mark-all-read")]

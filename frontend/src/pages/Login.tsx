@@ -319,13 +319,13 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
           <div className="flex items-center gap-3 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/25
                             backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <GraduationCap className="w-6 h-6 text-white" />
+              <GraduationCap className="w-6 h-6 text-slate-900" />
             </div>
             <div className="text-left">
-              <p className="text-white/60 text-xs uppercase tracking-widest font-medium">
+              <p className="text-slate-900/60 text-xs uppercase tracking-widest font-medium">
                 Hệ thống học trực tuyến
               </p>
-              <p className="text-white font-bold text-base leading-tight">Trường Đại học Việt Nhật</p>
+              <p className="text-slate-900 font-bold text-base leading-tight">Trường Đại học Việt Nhật</p>
             </div>
           </div>
 
@@ -333,10 +333,10 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
           <EducationIllustration />
 
           {/* Tagline */}
-          <h1 className="mt-8 text-white text-2xl font-bold leading-snug">
+          <h1 className="mt-8 text-slate-900 text-2xl font-bold leading-snug">
             Học tập không giới hạn
           </h1>
-          <p className="mt-2 text-white/60 text-sm leading-relaxed max-w-xs">
+          <p className="mt-2 text-slate-900/60 text-sm leading-relaxed max-w-xs">
             Công nghệ tiên tiến, Giáo dục khai phóng, Đổi mới sáng tạo hướng đến phát triển bền vững
           </p>
         </div>
@@ -509,7 +509,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="mt-6 w-full bg-[#C00000] text-white font-semibold py-3.5
+                    className="mt-6 w-full bg-[#C00000] text-slate-900 font-semibold py-3.5
                                rounded-full shadow-md shadow-[#C00000]/25
                                hover:bg-[#a80000] hover:shadow-lg hover:shadow-[#C00000]/30
                                hover:-translate-y-0.5

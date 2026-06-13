@@ -80,7 +80,7 @@ export const NotificationDropdown: React.FC = () => {
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm shadow-red-500/50 ring-2 ring-white">
+          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-slate-900 text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm shadow-red-500/50 ring-2 ring-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -103,7 +103,7 @@ export const NotificationDropdown: React.FC = () => {
           
           <div className="max-h-[320px] overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-slate-400 text-xs">
+              <div className="px-4 py-8 text-center text-slate-500 text-xs">
                 Không có thông báo nào.
               </div>
             ) : (
@@ -120,7 +120,7 @@ export const NotificationDropdown: React.FC = () => {
                     <p className={`text-xs ${!n.isRead ? 'font-semibold text-slate-800' : 'text-slate-600'}`}>
                       {n.title}: {n.message}
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                    <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>

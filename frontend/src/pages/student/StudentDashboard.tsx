@@ -63,7 +63,7 @@ function StatCard({ icon, label, value, sub, accent = 'indigo' }: StatCardProps)
   }
 
   return (
-    <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/40 bg-slate-50/60 backdrop-blur-sm hover:border-slate-600/50 transition-colors">
+    <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/40 bg-slate-50/60 hover:border-slate-600/50 transition-colors">
       <div className={`flex-shrink-0 w-10 h-10 rounded-lg border flex items-center justify-center ${accentMap[accent] ?? accentMap.indigo}`}>
         {icon}
       </div>
@@ -83,7 +83,7 @@ function WeeklyGoalBar({ studied, goal }: { studied: number; goal: number }) {
   const minutes = studied % 60
 
   return (
-    <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/50 backdrop-blur-sm shadow-sm">
+    <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/50 shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Flame size={16} className="text-orange-500" />

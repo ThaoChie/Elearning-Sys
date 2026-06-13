@@ -45,10 +45,10 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
     /// <response code="404">Bài tập không tồn tại.</response>
     /// <response code="409">Sinh viên đã nộp bài này rồi (BR-16).</response>
     /// <response code="422">File chứa virus/malware hoặc MIME type bị giả mạo.</response>
-    [HttpPost("{id:guid}/submit")]
+    [HttpPost("{id}/submit")]
     [Consumes("multipart/form-data")]
-    [RequestSizeLimit(52_428_800)]          // Hard limit: 50 MB + overhead
-    [RequestFormLimits(MultipartBodyLengthLimit = 52_428_800)]
+    [RequestSizeLimit(104_857_600)]          // Limit: 100 MB
+    [RequestFormLimits(MultipartBodyLengthLimit = 104_857_600)]
     [ProducesResponseType(typeof(SubmitAssignmentResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -56,10 +56,15 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Submit(
-        Guid            id,
+        string            id,
         IFormFile       file,
         CancellationToken ct)
     {
+        if (!Guid.TryParse(id, out var parsedId))
+        {
+            return BadRequest(new { error = "invalid_id", message = "ID không hợp lệ." });
+        }
+
         // ── 1. Lấy StudentId từ JWT Claims (IDOR prevention) ──────────────────
         // ClaimsPrincipalExtensions.GetRequiredUserId() đảm bảo luôn lấy từ "sub" claim.
         // TUYỆT ĐỐI KHÔNG lấy StudentId từ URL hay request body.
@@ -75,7 +80,7 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
 
         var command = new SubmitAssignmentCommand
         {
-            AssignmentId = id,
+            AssignmentId = parsedId,
             StudentId    = studentId,   // từ JWT Claims – KHÔNG từ body/URL
             File         = file
         };
@@ -94,7 +99,8 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
                     originalFileName = result.OriginalFileName,
                     mimeType         = result.MimeType,
                     fileSizeBytes    = result.FileSizeBytes,
-                    submittedAt      = result.SubmittedAt
+                    submittedAt      = result.SubmittedAt,
+                    storageKey       = result.StorageKey
                 });
         }
         catch (KeyNotFoundException ex)
@@ -140,4 +146,9 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Dummy GET endpoint to enforce Authentication policy before HTTP Method verification.
+    /// </summary>
+    [HttpGet("{id}/submit")]
+    public IActionResult SubmitGet(string id) => StatusCode(StatusCodes.Status405MethodNotAllowed);
 }

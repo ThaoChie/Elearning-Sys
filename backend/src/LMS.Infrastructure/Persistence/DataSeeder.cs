@@ -22,37 +22,84 @@ public sealed class DataSeeder(
 
     public async Task SeedAsync(CancellationToken ct = default)
     {
-        // Idempotent guard – không seed nếu DB đã có dữ liệu
-        if (await db.Users.AnyAsync(ct))
+        logger.LogInformation("DataSeeder: Clearing database tables...");
+        try
         {
-            logger.LogInformation("DataSeeder: Database đã có dữ liệu, bỏ qua seed.");
-            return;
+            if (db.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+            {
+                // Disable trigger before truncating so it doesn't block DELETE operations if EF Core uses DELETE under the hood or for TRUNCATE cascade
+                await db.Database.ExecuteSqlRawAsync("DROP TRIGGER IF EXISTS trg_AuditLogs_BlockDelete ON \"AuditLogs\";", ct);
+                await db.Database.ExecuteSqlRawAsync("DROP TRIGGER IF EXISTS trg_AuditLogs_BlockUpdate ON \"AuditLogs\";", ct);
+                
+                await db.Database.ExecuteSqlRawAsync(
+                    "TRUNCATE TABLE \"Users\", \"Courses\", \"Modules\", \"Lectures\", \"Quizzes\", \"Questions\", \"Answers\", \"Notifications\", \"AuditLogs\", \"ExamSessions\", \"Assignments\", \"AssignmentSubmissions\" CASCADE;", ct);
+            }
+            else
+            {
+                // Fallback for SQL Server
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [AssignmentSubmissions];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Assignments];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [ExamSessions];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [AuditLogs];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Notifications];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Answers];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Questions];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Quizzes];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Lectures];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Modules];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Courses];", ct);
+                await db.Database.ExecuteSqlRawAsync("DELETE FROM [Users];", ct);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to truncate tables. Proceeding anyway.");
         }
 
         logger.LogInformation("DataSeeder: Bắt đầu seed dữ liệu mẫu...");
 
         Randomizer.Seed = new Random(42); // seed cố định để tái hiện được
 
-        // ── 1. Tạo Admin ────────────────────────────────────────────────────
+        // ── 1. Tạo các tài khoản test cứng phục vụ E2E ──────────────────────
+        var studentUser = User.Create("student@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        var student2User = User.Create("student2@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        var userLmsUser = User.Create("user@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        var instructorUser = User.Create("instructor@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Instructor);
+        var adminUser = User.Create("admin@lms.vn", passwordHasher.Hash("AdminPass1!"), UserRole.Admin);
+        var locktest4User = User.Create("locktest4@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        var locktest5User = User.Create("locktest5@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+
+        var lockedUser = User.Create("locked@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        typeof(User).GetProperty("LockoutEnd")?.SetValue(lockedUser, DateTime.UtcNow.AddMinutes(15));
+
+        var expiredLockUser = User.Create("expired_lock@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
+        typeof(User).GetProperty("LockoutEnd")?.SetValue(expiredLockUser, DateTime.UtcNow.AddMinutes(-5));
+        typeof(User).GetProperty("FailedLoginCount")?.SetValue(expiredLockUser, 5);
+
+        // ── 2. Tạo Admin ────────────────────────────────────────────────────
         var admin = User.Create(
             AdminEmail,
             passwordHasher.Hash(AdminPassword),
             UserRole.Admin);
 
-        // ── 2. Tạo Instructor và Student bằng Bogus ─────────────────────────
+        // ── 3. Tạo Instructor và Student bằng Bogus ─────────────────────────
         var faker = new Faker("vi");
 
         var instructor = User.Create(
-            email:        faker.Internet.Email(provider: "elearning.com"),
+            email:        $"instructor_{Guid.NewGuid().ToString("N").Substring(0,8)}@elearning.com",
             passwordHash: passwordHasher.Hash("Instructor@123"),
             role:         UserRole.Instructor);
 
         var student = User.Create(
-            email:        faker.Internet.Email(provider: "student.edu.vn"),
+            email:        $"student_{Guid.NewGuid().ToString("N").Substring(0,8)}@student.edu.vn",
             passwordHash: passwordHasher.Hash("Student@123"),
             role:         UserRole.Student);
 
-        await db.Users.AddRangeAsync([admin, instructor, student], ct);
+        await db.Users.AddRangeAsync([
+            studentUser, student2User, userLmsUser, instructorUser, adminUser,
+            locktest4User, locktest5User, lockedUser, expiredLockUser,
+            admin, instructor, student
+        ], ct);
 
         // ── 3. Tạo Course ───────────────────────────────────────────────────
         var courseFaker = new Faker<Course>("vi")
@@ -177,6 +224,103 @@ public sealed class DataSeeder(
             }
 
             await db.SaveChangesAsync(ct);
+        }
+
+        // ── 7. Tạo Assignment cho test ──────────────────────────────────────
+        var assignment = Assignment.Create(
+            courseId: course.CourseId,
+            title: "Bài tập thực hành bảo mật ứng dụng",
+            description: "Nộp file PDF báo cáo phân tích lỗ hổng bảo mật.",
+            dueAt: DateTime.UtcNow.AddDays(7));
+        
+        typeof(Assignment).GetProperty("AssignmentId")?
+            .SetValue(assignment, new Guid("00000000-0000-0000-0000-000000000001"));
+
+        await db.Assignments.AddAsync(assignment, ct);
+
+        // ── 8. Tạo ExamSession hoạt động cho student@lms.vn ─────────────────
+        var examSession = ExamSession.Create(
+            examId: new Guid("00000000-0000-0000-0000-000000000002"),
+            userId: studentUser.Id,
+            durationSeconds: 3600);
+        await db.ExamSessions.AddAsync(examSession, ct);
+
+        // ── 9. Seed Notifications cho test ────────────────────────────────────
+        var notif1 = Notification.Create(
+            studentUser.Id,
+            "Chào mừng bạn đến LMS",
+            "Tài khoản của bạn đã được tạo thành công.",
+            NotificationType.System);
+
+        var notif2 = Notification.Create(
+            studentUser.Id,
+            "Bài tập mới",
+            "Bạn có bài tập mới cần hoàn thành.",
+            NotificationType.Assignment,
+            assignment.AssignmentId);
+
+        var notif3 = Notification.Create(
+            studentUser.Id,
+            "Khoá học cập nhật",
+            "Khoá học ASP.NET Core đã được cập nhật.",
+            NotificationType.Course,
+            course.CourseId);
+        notif3.MarkAsRead(); // 1 notification đã đọc
+
+        var notif4 = Notification.Create(
+            student2User.Id,
+            "Thông báo hệ thống",
+            "Hệ thống sẽ bảo trì vào cuối tuần.",
+            NotificationType.System);
+
+        var notif5 = Notification.Create(
+            student2User.Id,
+            "Bài kiểm tra sắp tới",
+            "Bạn có bài kiểm tra vào tuần tới.",
+            NotificationType.Exam);
+        notif5.MarkAsRead();
+
+        await db.Notifications.AddRangeAsync([notif1, notif2, notif3, notif4, notif5], ct);
+
+        await db.SaveChangesAsync(ct);
+
+        // ── 10. Tạo triggers bảo vệ AuditLogs (immutable) ──────────────────
+        if (db.Database.ProviderName == "Npgsql.EntityFrameworkCore.PostgreSQL")
+        {
+            await db.Database.ExecuteSqlRawAsync(@"
+                CREATE OR REPLACE FUNCTION fn_block_audit_update()
+                RETURNS trigger AS $$
+                BEGIN
+                    RAISE EXCEPTION 'AuditLog records are immutable. UPDATE is forbidden.';
+                END;
+                $$ LANGUAGE plpgsql;
+            ", ct);
+
+            await db.Database.ExecuteSqlRawAsync(@"
+                CREATE OR REPLACE FUNCTION fn_block_audit_delete()
+                RETURNS trigger AS $$
+                BEGIN
+                    RAISE EXCEPTION 'AuditLog records are immutable. DELETE is forbidden.';
+                END;
+                $$ LANGUAGE plpgsql;
+            ", ct);
+
+            // DROP IF EXISTS then CREATE to ensure idempotency
+            await db.Database.ExecuteSqlRawAsync(@"
+                DROP TRIGGER IF EXISTS trg_AuditLogs_BlockUpdate ON ""AuditLogs"";
+                CREATE TRIGGER trg_AuditLogs_BlockUpdate
+                    BEFORE UPDATE ON ""AuditLogs""
+                    FOR EACH ROW
+                    EXECUTE FUNCTION fn_block_audit_update();
+            ", ct);
+
+            await db.Database.ExecuteSqlRawAsync(@"
+                DROP TRIGGER IF EXISTS trg_AuditLogs_BlockDelete ON ""AuditLogs"";
+                CREATE TRIGGER trg_AuditLogs_BlockDelete
+                    BEFORE DELETE ON ""AuditLogs""
+                    FOR EACH ROW
+                    EXECUTE FUNCTION fn_block_audit_delete();
+            ", ct);
         }
 
         logger.LogInformation(

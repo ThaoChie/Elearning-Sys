@@ -69,11 +69,11 @@ export default function ExamsPage() {
             </div>
             <h1 className="text-xl font-bold text-[#1F3864] tracking-tight">Quản lý Kỳ thi</h1>
           </div>
-          <p className="text-xs text-slate-400 ml-10.5">Soạn đề thi trắc nghiệm và cấu hình chế độ chống gian lận (Anti-Cheat)</p>
+          <p className="text-xs text-slate-500 ml-10.5">Soạn đề thi trắc nghiệm và cấu hình chế độ chống gian lận (Anti-Cheat)</p>
         </div>
         <button 
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2 bg-[#C00000] hover:bg-[#a80000] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#C00000] hover:bg-[#a80000] text-slate-900 text-sm font-semibold rounded-lg shadow-sm transition-colors"
         >
           {showCreate ? 'Hủy' : <><Plus size={16} /> Tạo bài thi mới</>}
         </button>
@@ -166,7 +166,7 @@ export default function ExamsPage() {
             </button>
             <button 
               onClick={handleSaveExam}
-              className="px-6 py-2 bg-[#1F3864] hover:bg-[#162a4a] text-white text-sm font-semibold rounded-lg transition-colors"
+              className="px-6 py-2 bg-[#1F3864] hover:bg-[#162a4a] text-slate-900 text-sm font-semibold rounded-lg transition-colors"
             >
               {editingExamId ? 'Lưu cập nhật' : 'Lưu cấu hình & Tiếp tục soạn câu hỏi'}
             </button>
@@ -178,7 +178,7 @@ export default function ExamsPage() {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
           <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
             <input type="text" placeholder="Tìm kiếm bài thi..." className="w-full pl-9 pr-4 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#1F3864]" />
           </div>
         </div>
@@ -223,14 +223,14 @@ export default function ExamsPage() {
                     </button>
                     <button 
                       onClick={() => openEditModal(exam)}
-                      className="p-1.5 text-slate-400 hover:text-[#2E75B6] hover:bg-slate-100 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-500 hover:text-[#2E75B6] hover:bg-slate-100 rounded-lg transition-colors"
                       title="Chỉnh sửa cấu hình"
                     >
                       <Edit size={16} />
                     </button>
                     <button 
                       onClick={() => handleDeleteExam(exam.id)}
-                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Xóa bài thi"
                     >
                       <Trash2 size={16} />

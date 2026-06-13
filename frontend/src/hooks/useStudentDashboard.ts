@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { StudentCourse, UpcomingExam, SecurityStatus, DeadlineEvent, StudentStats } from '../types/student'
+import apiClient from '../api/apiClient'
 import {
   MOCK_COURSES,
   MOCK_EXAMS,
@@ -26,7 +27,6 @@ export interface StudentDashboardState {
 }
 
 interface UseStudentDashboardOptions {
-  // userId luôn từ JWT Claims được truyền xuống từ parent (KHÔNG từ URL)
   userId: string
 }
 
@@ -44,23 +44,40 @@ export function useStudentDashboard({ userId }: UseStudentDashboardOptions): Stu
     error: null,
   })
 
-  // Simulate API fetch — production: replace với axios calls + JWT bearer token
   useEffect(() => {
     if (!userId) return
 
-    const timer = setTimeout(() => {
-      setState({
-        courses: MOCK_COURSES, // Giữ tất cả để show locked state (BR-07 demo)
-        exams: MOCK_EXAMS,
-        securityStatus: MOCK_SECURITY_STATUS,
-        deadlines: MOCK_DEADLINES,
-        stats: MOCK_STATS,
-        isLoading: false,
-        error: null,
-      })
-    }, 800)
+    let isMounted = true
+    setState(prev => ({ ...prev, isLoading: true }))
 
-    return () => clearTimeout(timer)
+    apiClient.get('/student/dashboard')
+      .then(res => {
+        if (!isMounted) return;
+        const data = res.data;
+        setState({
+          courses: MOCK_COURSES, // TODO: Replace with real courses later
+            exams: MOCK_EXAMS,
+            securityStatus: MOCK_SECURITY_STATUS,
+            deadlines: MOCK_DEADLINES,
+            stats: {
+              enrolledCourses: data.enrolledCourses ?? 0,
+              completedCourses: 0,
+              averageScore: 0,
+              totalStudyHours: data.completedLessons ?? 0,
+              upcomingExams: data.upcomingExams?.length ?? 0,
+              weeklyGoalMinutes: 600,
+              weeklyStudiedMinutes: 450,
+            },
+            isLoading: false,
+            error: null,
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          if (isMounted) setState(prev => ({ ...prev, isLoading: false }));
+        })
+
+    return () => { isMounted = false; }
   }, [userId])
 
   const refreshSecurity = useCallback(() => {

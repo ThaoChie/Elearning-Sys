@@ -37,13 +37,13 @@ export default function CoursesPage({ user }: Props) {
               Quản lý Khóa học
             </h1>
           </div>
-          <p className="text-xs text-slate-400 ml-10.5">
+          <p className="text-xs text-slate-500 ml-10.5">
             Quản lý các khóa học do bạn phụ trách
           </p>
         </div>
         <button 
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#C00000] hover:bg-[#a80000] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#C00000] hover:bg-[#a80000] text-slate-900 text-sm font-semibold rounded-lg shadow-sm transition-colors"
         >
           <Plus size={16} /> Tạo khóa học mới
         </button>
@@ -56,7 +56,7 @@ export default function CoursesPage({ user }: Props) {
             <div className="relative h-48 w-full overflow-hidden bg-slate-100">
               <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               <div className="absolute top-3 right-3">
-                <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full shadow-sm ${course.status === 'Published' ? 'bg-[#375623] text-white' : 'bg-amber-100 text-amber-800'}`}>
+                <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full shadow-sm ${course.status === 'Published' ? 'bg-[#375623] text-slate-900' : 'bg-amber-100 text-amber-800'}`}>
                   {course.status}
                 </span>
               </div>
@@ -79,7 +79,7 @@ export default function CoursesPage({ user }: Props) {
                 >
                   <PlayCircle size={16} /> Soạn đề cương / Bài giảng
                 </button>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-lg transition-colors">
+                <button className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-lg transition-colors">
                   <MoreVertical size={16} />
                 </button>
               </div>
@@ -119,7 +119,7 @@ export default function CoursesPage({ user }: Props) {
               </div>
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
                 <button type="button" onClick={() => setShowCreateModal(false)} className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Hủy</button>
-                <button type="submit" className="px-4 py-2 text-sm font-semibold text-white bg-[#C00000] hover:bg-[#a80000] rounded-lg shadow-sm">Khởi tạo & Tiếp tục soạn đề cương</button>
+                <button type="submit" className="px-4 py-2 text-sm font-semibold text-slate-900 bg-[#C00000] hover:bg-[#a80000] rounded-lg shadow-sm">Khởi tạo & Tiếp tục soạn đề cương</button>
               </div>
             </form>
           </div>

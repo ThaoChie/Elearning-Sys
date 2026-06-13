@@ -135,7 +135,7 @@ const ScoreChart: React.FC = () => {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-slate-700">Phân Phối Điểm Thi</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Các bài thi đã kết thúc trong học kỳ</p>
+          <p className="text-xs text-slate-500 mt-0.5">Các bài thi đã kết thúc trong học kỳ</p>
         </div>
         {/* Security badge: dữ liệu điểm thi được mã hóa phía server */}
         <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
@@ -162,7 +162,7 @@ const ScoreChart: React.FC = () => {
         ].map((s) => (
           <div key={s.label} className="flex-1 text-center">
             <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-[10px] text-slate-400">{s.label}</p>
+            <p className="text-[10px] text-slate-500">{s.label}</p>
           </div>
         ))}
       </div>

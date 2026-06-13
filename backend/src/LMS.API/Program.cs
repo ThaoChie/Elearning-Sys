@@ -11,6 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 104_857_600; // 100 MB
+});
+
 // ── Application + Infrastructure services ─────────────────────────────────────
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -109,6 +114,17 @@ app.UseCors("LmsPolicy");
 // Global exception handler – đặt sau UseCors để lỗi vẫn trả về CORS headers.
 app.UseExceptionHandler(errApp => errApp.Run(async ctx =>
 {
+    var exceptionHandlerPathFeature = ctx.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+    var exception = exceptionHandlerPathFeature?.Error;
+
+    if (exception is UnauthorizedAccessException)
+    {
+        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        ctx.Response.ContentType = "application/json";
+        await ctx.Response.WriteAsJsonAsync(new { error = "unauthorized", message = exception.Message });
+        return;
+    }
+
     ctx.Response.StatusCode  = StatusCodes.Status500InternalServerError;
     ctx.Response.ContentType = "application/json";
     await ctx.Response.WriteAsJsonAsync(new { error = "internal_server_error", message = "Đã xảy ra lỗi phía server." });

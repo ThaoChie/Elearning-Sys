@@ -67,7 +67,7 @@ function ExamTopbar({
       {/* Tiêu đề */}
       <div className="flex items-center gap-3">
         <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-        <span className="text-white font-semibold text-sm truncate max-w-xs lg:max-w-md">
+        <span className="text-slate-900 font-semibold text-sm truncate max-w-xs lg:max-w-md">
           {title}
         </span>
       </div>
@@ -75,7 +75,7 @@ function ExamTopbar({
       {/* Tiến độ câu hỏi */}
       <div className="hidden md:flex items-center gap-2">
         <span className="text-blue-200 text-xs">Câu</span>
-        <span className="text-white font-bold text-sm">
+        <span className="text-slate-900 font-bold text-sm">
           {currentQuestion}/{questionCount}
         </span>
       </div>
@@ -86,8 +86,8 @@ function ExamTopbar({
           className={[
             'flex items-center gap-2 px-4 py-1.5 rounded-md font-mono font-bold text-base',
             isCritical || isExpired
-              ? 'bg-red-600 text-white animate-pulse'
-              : 'bg-blue-900 text-white',
+              ? 'bg-red-600 text-slate-900 animate-pulse'
+              : 'bg-blue-900 text-slate-900',
           ].join(' ')}
         >
           <svg
@@ -105,7 +105,7 @@ function ExamTopbar({
 
         <button
           onClick={onSubmit}
-          className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-sm font-semibold px-4 py-1.5 rounded-md transition-colors duration-150 whitespace-nowrap"
+          className="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-slate-900 text-sm font-semibold px-4 py-1.5 rounded-md transition-colors duration-150 whitespace-nowrap"
         >
           Nộp bài
         </button>
@@ -211,7 +211,7 @@ function FullscreenWarningModal({
         <button
           onClick={onReenter}
           style={{ backgroundColor: '#1F3864' }}
-          className="w-full py-2.5 rounded-lg text-white font-semibold hover:opacity-90 transition-opacity"
+          className="w-full py-2.5 rounded-lg text-slate-900 font-semibold hover:opacity-90 transition-opacity"
         >
           Quay lại toàn màn hình
         </button>
@@ -261,7 +261,7 @@ function SubmitConfirmModal({
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors"
+            className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-slate-900 text-sm font-semibold rounded-lg transition-colors"
           >
             Nộp bài
           </button>
@@ -414,10 +414,10 @@ export default function ExamRoom() {
                   className={[
                     'w-8 h-8 rounded-md text-xs font-semibold transition-all duration-150',
                     isCurrent
-                      ? 'ring-2 ring-offset-1 ring-blue-500 text-white'
+                      ? 'ring-2 ring-offset-1 ring-blue-500 text-slate-900'
                       : '',
                     isAnswered && !isCurrent
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-green-500 text-slate-900'
                       : !isAnswered && !isCurrent
                         ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         : '',
@@ -449,7 +449,7 @@ export default function ExamRoom() {
             <div className="flex items-start gap-3 mb-5">
               <span
                 style={{ backgroundColor: '#1F3864' }}
-                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-slate-900 text-sm font-bold"
               >
                 {currentQuestionIndex + 1}
               </span>
@@ -527,7 +527,7 @@ export default function ExamRoom() {
                   )
                 }
                 style={{ backgroundColor: '#1F3864' }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-slate-900 text-sm font-medium hover:opacity-90 transition-opacity"
               >
                 Câu tiếp theo
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -537,7 +537,7 @@ export default function ExamRoom() {
             ) : (
               <button
                 onClick={() => setIsSubmitModalVisible(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-900 text-sm font-semibold transition-colors"
               >
                 Nộp bài
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

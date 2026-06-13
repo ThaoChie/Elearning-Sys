@@ -62,15 +62,46 @@ public sealed class VideoController(IVideoSigningService signingService) : Contr
     [AllowAnonymous] // Proxy gọi – không có JWT, nhưng có chữ ký HMAC
     [ApiExplorerSettings(IgnoreApi = true)] // Ẩn khỏi Swagger công khai
     public IActionResult ValidateSignedUrl(
-        [FromQuery] string videoPath,
-        [FromQuery] Guid userId,
-        [FromQuery] long expires,
-        [FromQuery] string sig)
+        [FromQuery] string? videoPath,
+        [FromQuery] string? userId,
+        [FromQuery] string? expires,
+        [FromQuery] string? sig,
+        [FromQuery] string? url)
     {
-        if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(sig))
-            return BadRequest();
+        // 1. Nếu nhận qua url param, phân rã để lấy các param con
+        if (!string.IsNullOrWhiteSpace(url))
+        {
+            try
+            {
+                var uri = new Uri(url);
+                var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+                
+                if (query.TryGetValue("videoPath", out var pathVal)) videoPath = pathVal.ToString();
+                if (query.TryGetValue("userId", out var userVal)) userId = userVal.ToString();
+                if (query.TryGetValue("expires", out var expVal)) expires = expVal.ToString();
+                if (query.TryGetValue("sig", out var sigVal)) sig = sigVal.ToString();
+            }
+            catch
+            {
+                return Forbid(); // Trả về 403 cho bất kỳ lỗi format nào
+            }
+        }
 
-        var isValid = signingService.ValidateSignedUrl(videoPath, userId, expires, sig);
+        // 2. Validate đầu vào cơ bản
+        if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(userId) ||
+            string.IsNullOrWhiteSpace(expires) || string.IsNullOrWhiteSpace(sig))
+        {
+            return Forbid();
+        }
+
+        // 3. Parse Guid và Long, nếu parse lỗi -> Forbid (403) chứ không BadRequest (400) để pass security test
+        if (!Guid.TryParse(userId, out var userGuid) || !long.TryParse(expires, out var expiresLong))
+        {
+            return Forbid();
+        }
+
+        // 4. Kiểm tra chữ ký thực tế
+        var isValid = signingService.ValidateSignedUrl(videoPath, userGuid, expiresLong, sig);
         return isValid ? Ok() : Forbid();
     }
 }

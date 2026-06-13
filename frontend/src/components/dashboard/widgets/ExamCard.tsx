@@ -53,7 +53,7 @@ export default function ExamCard({ exam }: ExamCardProps) {
           ? 'border-amber-500/50 bg-gradient-to-br from-amber-50/90 to-amber-100/60 shadow-amber-500/10'
           : isPast
           ? 'border-slate-200/50 bg-slate-50/30 opacity-60'
-          : 'border-slate-200/60 bg-white/80 backdrop-blur-md'}
+          : 'border-slate-200/60 bg-white/80'}
         hover:border-indigo-500/40 hover:shadow-indigo-500/10 hover:shadow-lg
       `}
       aria-label={`Bài thi: ${exam.title}`}
@@ -61,7 +61,7 @@ export default function ExamCard({ exam }: ExamCardProps) {
       {/* Live badge */}
       {isLive && (
         <div className="absolute -top-2 left-4 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500 text-slate-900 text-[10px] font-bold shadow-lg shadow-green-500/30">
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white" />
           ĐANG DIỄN RA
         </div>
       )}

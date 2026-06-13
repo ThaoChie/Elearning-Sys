@@ -289,7 +289,7 @@ function Toast({ message, visible }: { message: string; visible: boolean }) {
     <div
       className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50
                   flex items-center gap-3 px-5 py-3.5 rounded-2xl
-                  bg-emerald-600 text-white text-sm font-medium shadow-xl
+                  bg-emerald-600 text-slate-900 text-sm font-medium shadow-xl
                   transition-all duration-300
                   ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
     >
@@ -532,13 +532,13 @@ export default function ForgotPasswordPage() {
           <div className="flex items-center gap-3 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/25
                             backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <GraduationCap className="w-6 h-6 text-white" />
+              <GraduationCap className="w-6 h-6 text-slate-900" />
             </div>
             <div className="text-left">
-              <p className="text-white/60 text-xs uppercase tracking-widest font-medium">
+              <p className="text-slate-900/60 text-xs uppercase tracking-widest font-medium">
                 Hệ thống học trực tuyến
               </p>
-              <p className="text-white font-bold text-base leading-tight">Trường Đại học Việt Nhật</p>
+              <p className="text-slate-900 font-bold text-base leading-tight">Trường Đại học Việt Nhật</p>
             </div>
           </div>
 
@@ -546,10 +546,10 @@ export default function ForgotPasswordPage() {
           <SecurityIllustration />
 
           {/* Tagline */}
-          <h1 className="mt-8 text-white text-2xl font-bold leading-snug">
+          <h1 className="mt-8 text-slate-900 text-2xl font-bold leading-snug">
             Bảo mật tài khoản của bạn
           </h1>
-          <p className="mt-2 text-white/60 text-sm leading-relaxed max-w-xs">
+          <p className="mt-2 text-slate-900/60 text-sm leading-relaxed max-w-xs">
             Quá trình phục hồi mật khẩu được bảo vệ bởi mã xác thực một lần (OTP)
             và tiêu chuẩn bảo mật cao nhất.
           </p>
@@ -557,8 +557,8 @@ export default function ForgotPasswordPage() {
           {/* Security badge */}
           <div className="mt-8 flex items-center gap-2 px-4 py-2 rounded-full
                           bg-white/10 border border-white/20">
-            <ShieldCheck className="w-4 h-4 text-white/80" />
-            <span className="text-white/70 text-xs font-medium">
+            <ShieldCheck className="w-4 h-4 text-slate-900/80" />
+            <span className="text-slate-900/70 text-xs font-medium">
               Được mã hóa bởi Argon2id & HMAC-SHA256
             </span>
           </div>
@@ -667,9 +667,9 @@ function ProgressBar({ current, labels }: { current: number; labels: string[] })
               className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
                           transition-all duration-300 shrink-0 ${
                             i < current
-                              ? 'bg-[#C00000] text-white'
+                              ? 'bg-[#C00000] text-slate-900'
                               : i === current
-                              ? 'bg-[#C00000] text-white ring-4 ring-[#C00000]/20'
+                              ? 'bg-[#C00000] text-slate-900 ring-4 ring-[#C00000]/20'
                               : 'bg-gray-200 text-gray-400'
                           }`}
             >
@@ -788,7 +788,7 @@ function StepRequest({ email, emailError, loading, onEmailChange, onSubmit, onBa
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#C00000] text-white font-semibold py-3.5
+          className="w-full bg-[#C00000] text-slate-900 font-semibold py-3.5
                      rounded-full shadow-md shadow-[#C00000]/25
                      hover:bg-[#a80000] hover:shadow-lg hover:shadow-[#C00000]/30
                      hover:-translate-y-0.5
@@ -944,7 +944,7 @@ function StepVerify({
         <button
           type="submit"
           disabled={loading || otpValues.join('').length < OTP_LENGTH}
-          className="w-full bg-[#C00000] text-white font-semibold py-3.5
+          className="w-full bg-[#C00000] text-slate-900 font-semibold py-3.5
                      rounded-full shadow-md shadow-[#C00000]/25
                      hover:bg-[#a80000] hover:shadow-lg hover:shadow-[#C00000]/30
                      hover:-translate-y-0.5
@@ -1135,7 +1135,7 @@ function StepReset({
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#C00000] text-white font-semibold py-3.5
+          className="w-full bg-[#C00000] text-slate-900 font-semibold py-3.5
                      rounded-full shadow-md shadow-[#C00000]/25
                      hover:bg-[#a80000] hover:shadow-lg hover:shadow-[#C00000]/30
                      hover:-translate-y-0.5

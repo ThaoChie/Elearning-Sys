@@ -116,7 +116,7 @@ public class User
     /// <summary>Lưu Refresh Token mới sau khi issue thành công.</summary>
     public void SetRefreshToken(string token, DateTime expiresAt)
     {
-        RefreshToken = token;
+        RefreshToken = Id.ToString("N") + "_" + token;
         RefreshTokenExpiresAt = expiresAt;
     }
 
@@ -159,4 +159,11 @@ public class User
         RefreshToken == token &&
         RefreshTokenExpiresAt.HasValue &&
         RefreshTokenExpiresAt.Value > DateTime.UtcNow;
+
+    /// <summary>Thiết lập trạng thái khóa tài khoản cho mục đích kiểm thử/seeding.</summary>
+    public void SetLockoutEndForTesting(DateTime? lockoutEnd, int failedCount)
+    {
+        LockoutEnd = lockoutEnd;
+        FailedLoginCount = failedCount;
+    }
 }

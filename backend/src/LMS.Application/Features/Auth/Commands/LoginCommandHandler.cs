@@ -51,6 +51,11 @@ public sealed class LoginCommandHandler(
             {
                 user.RecordFailedLogin();
                 await userRepository.SaveChangesAsync(ct);
+
+                if (user.IsLockedOut())
+                {
+                    throw new AccountLockedException(user.LockoutEnd!.Value);
+                }
             }
 
             // Message chung chung để chống User Enumeration Attack
@@ -69,7 +74,7 @@ public sealed class LoginCommandHandler(
 
         return new LoginResponse(
             AccessToken: accessToken,
-            RefreshToken: refreshToken,
+            RefreshToken: user.RefreshToken!,
             AccessTokenExpiresAt: DateTime.UtcNow.AddMinutes(15),
             RefreshTokenExpiresAt: refreshExpiresAt,
             UserId: user.Id,

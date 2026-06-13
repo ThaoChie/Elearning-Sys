@@ -106,7 +106,7 @@ export default function ExamBuilder() {
                 <Shield size={12}/> Anti-Cheat Active
               </span>
             </div>
-            <p className="text-sm text-slate-400 mt-1">Ngân hàng câu hỏi sẽ được xáo trộn tự động khi sinh viên làm bài</p>
+            <p className="text-sm text-slate-500 mt-1">Ngân hàng câu hỏi sẽ được xáo trộn tự động khi sinh viên làm bài</p>
           </div>
         <div className="flex items-center gap-3">
           <button 
@@ -120,7 +120,7 @@ export default function ExamBuilder() {
               alert('Lưu đề thi thành công!');
               navigate('/dashboard/academic/exams');
             }}
-            className="flex items-center gap-2 px-6 py-2 bg-[#1F3864] hover:bg-[#162a4a] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-[#1F3864] hover:bg-[#162a4a] text-slate-900 text-sm font-semibold rounded-lg shadow-sm transition-colors"
           >
             Lưu đề thi
           </button>
@@ -131,7 +131,7 @@ export default function ExamBuilder() {
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="p-4 border-b border-slate-100 bg-slate-50/50">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
             <input 
               type="text" 
               placeholder="Tìm kiếm câu hỏi..." 
@@ -162,13 +162,13 @@ export default function ExamBuilder() {
                 </div>
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-4">
                   <button onClick={() => openQuestionModal(q)} className="px-3 py-1.5 text-sm font-semibold text-slate-500 hover:text-[#2E75B6] hover:bg-blue-50 rounded-lg">Sửa</button>
-                  <button onClick={() => deleteQuestion(q.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={16}/></button>
+                  <button onClick={() => deleteQuestion(q.id)} className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={16}/></button>
                 </div>
               </div>
             </div>
           ))}
           {filteredQuestions.length === 0 && (
-            <div className="p-12 text-center text-slate-400">Không có câu hỏi nào. Nhấn "Thêm câu hỏi" để bắt đầu.</div>
+            <div className="p-12 text-center text-slate-500">Không có câu hỏi nào. Nhấn "Thêm câu hỏi" để bắt đầu.</div>
           )}
         </div>
       </div>
@@ -218,7 +218,7 @@ export default function ExamBuilder() {
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
                 <button type="button" onClick={() => setShowQuestionModal(false)} className="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Hủy bỏ</button>
-                <button type="submit" className="px-5 py-2.5 text-sm font-semibold text-white bg-[#2E75B6] hover:bg-[#1F3864] rounded-lg shadow-sm">Lưu câu hỏi</button>
+                <button type="submit" className="px-5 py-2.5 text-sm font-semibold text-slate-900 bg-[#2E75B6] hover:bg-[#1F3864] rounded-lg shadow-sm">Lưu câu hỏi</button>
               </div>
             </form>
           </div>

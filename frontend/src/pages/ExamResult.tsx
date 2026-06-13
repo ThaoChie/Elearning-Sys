@@ -6,7 +6,7 @@ export default function ExamResult() {
 
   return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl" />
         
@@ -15,16 +15,16 @@ export default function ExamResult() {
             <CheckCircle size={40} />
           </div>
           
-          <h1 className="text-2xl font-bold text-white mb-2">Nộp bài thành công!</h1>
-          <p className="text-slate-400 text-sm mb-8">Bạn đã hoàn thành bài thi trắc nghiệm.</p>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Nộp bài thành công!</h1>
+          <p className="text-slate-500 text-sm mb-8">Bạn đã hoàn thành bài thi trắc nghiệm.</p>
 
-          <div className="w-full bg-slate-900/50 rounded-2xl p-6 border border-slate-700/50 mb-8 space-y-4">
+          <div className="w-full bg-slate-50/50 rounded-2xl p-6 border border-slate-200/50 mb-8 space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-slate-400 text-sm flex items-center gap-2"><Target size={16}/> Số câu đã làm</span>
-              <span className="text-white font-bold">5 / 5</span>
+              <span className="text-slate-500 text-sm flex items-center gap-2"><Target size={16}/> Số câu đã làm</span>
+              <span className="text-slate-900 font-bold">5 / 5</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-400 text-sm flex items-center gap-2"><Award size={16}/> Điểm số tạm tính</span>
+              <span className="text-slate-500 text-sm flex items-center gap-2"><Award size={16}/> Điểm số tạm tính</span>
               <span className="text-green-400 font-bold text-xl">Đang chấm...</span>
             </div>
           </div>

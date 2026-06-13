@@ -27,4 +27,14 @@ public interface ITokenBlacklistService
     /// Kiểm tra UserID có bị revoke toàn bộ không.
     /// </summary>
     Task<bool> IsUserRevokedAsync(Guid userId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Thử lock một refresh token để chống race condition. Trả về true nếu lock thành công.
+    /// </summary>
+    Task<bool> TryAcquireRefreshLockAsync(string token, TimeSpan ttl, CancellationToken ct = default);
+
+    /// <summary>
+    /// Giải phóng lock của refresh token.
+    /// </summary>
+    Task ReleaseRefreshLockAsync(string token, CancellationToken ct = default);
 }
