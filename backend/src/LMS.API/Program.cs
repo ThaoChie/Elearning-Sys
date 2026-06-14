@@ -93,7 +93,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("LmsPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigins)
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()       // Authorization, Content-Type, …
               .AllowAnyMethod()       // GET, POST, PUT, DELETE, OPTIONS
               .AllowCredentials();    // Cookie / Authorization header
