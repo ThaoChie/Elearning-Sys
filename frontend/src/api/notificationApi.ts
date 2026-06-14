@@ -1,20 +1,21 @@
 import type { Notification } from '../types/notification';
 
 export const notificationApi = {
-  getMyNotifications: async (limit: number = 50, unreadOnly: boolean = false) => {
+  getMyNotifications: async (_limit: number = 50, _unreadOnly: boolean = false) => {
     return [
       {
         id: 'n1',
         title: 'Chào mừng bạn',
         message: 'Chào mừng bạn đến với hệ thống LMS Security!',
-        type: 'info',
+        type: 'System' as const,
         createdAt: new Date().toISOString(),
-        isRead: false
+        isRead: false,
+        relatedEntityId: null,
       }
     ] as Notification[];
   },
 
-  markAsRead: async (id: string) => {
+  markAsRead: async (_id: string) => {
     // Mock
   },
 

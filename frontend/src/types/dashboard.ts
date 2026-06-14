@@ -16,6 +16,8 @@ export type SubsystemKey =
   | 'users'
   | 'notifications'
   | 'reports'
+  | 'student_home'
+  | 'profile'
 
 export type SystemHealthStatus = 'healthy' | 'degraded' | 'critical' | 'unknown'
 

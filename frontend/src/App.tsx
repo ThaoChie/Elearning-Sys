@@ -6,14 +6,6 @@ import DashboardShell from './components/dashboard/DashboardShell'
 import ExamRoom from './pages/ExamRoom'
 import ExamResult from './pages/ExamResult'
 import type { DashboardUser } from './types/dashboard'
-import { Users, GraduationCap, Shield } from 'lucide-react'
-
-// MOCK USERS FOR TESTING
-const MOCK_USERS: Record<string, DashboardUser> = {
-  Admin: { id: 'a1', name: 'Quản trị viên', email: 'admin@truong.edu.vn', role: 'Admin' },
-  Instructor: { id: 'i1', name: 'Giảng viên', email: 'gv@truong.edu.vn', role: 'Instructor' },
-  Student: { id: 's1', name: 'Sinh viên', email: 'sv@truong.edu.vn', role: 'Student' }
-}
 
 function App() {
   // Read current user from JWT token

@@ -61,7 +61,7 @@ export default function SystemOverview({ user }: Props) {
       <div className="grid grid-cols-5 gap-5">
         {/* Security Chart – 60% */}
         <div className="col-span-3">
-          <SecurityChart data={data} loading={loading} />
+          <SecurityChart />
         </div>
 
         {/* Recent Audit Logs – 40% */}

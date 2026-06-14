@@ -143,7 +143,7 @@ export default function GradingPage() {
                 
                 <button 
                   onClick={handleGrade}
-                  disabled={isGraded || score === '' || score < 0 || score > 10}
+                  disabled={isGraded || score === '' || Number(score) < 0 || Number(score) > 10}
                   className="w-full py-3 bg-[#1F3864] hover:bg-[#162a4a] text-slate-900 font-bold rounded-xl shadow-lg transition-colors mt-auto disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isGraded ? 'Đã chấm điểm' : 'Lưu kết quả'}

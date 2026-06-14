@@ -18,7 +18,7 @@ import {
   UserCircle,      // Profile
   type LucideProps,
 } from 'lucide-react'
-import type { NavItem, UserRole } from '../../types/dashboard'
+import type { NavItem, UserRole } from '../../../types/dashboard'
 import type { ComponentType } from 'react'
 
 // Map từ string key → Lucide Component (tránh import động gây bundle lớn)

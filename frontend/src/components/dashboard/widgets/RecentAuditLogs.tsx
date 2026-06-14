@@ -3,60 +3,7 @@
 // Hiển thị HMAC Verification badge theo BR-22
 // ============================================================
 
-import { ShieldCheck, ShieldX, LogIn, LogOut, GraduationCap, Star, UserCog, AlertOctagon, ClipboardCheck } from 'lucide-react'
-import { RECENT_AUDIT_LOGS, type AuditLogEntry } from '../../../pages/admin/mockData'
-
-// ── Action type → icon & color ─────────────────────────────
-const ACTION_META: Record<
-  AuditLogEntry['actionType'],
-  { icon: React.ReactNode; bg: string; text: string }
-> = {
-  LOGIN_OK: {
-    icon: <LogIn size={13} />,
-    bg: 'bg-emerald-100',
-    text: 'text-emerald-600',
-  },
-  LOGIN_SUCCESS: {
-    icon: <LogIn size={13} />,
-    bg: 'bg-emerald-100',
-    text: 'text-emerald-600',
-  },
-  LOGIN_FAIL: {
-    icon: <LogIn size={13} />,
-    bg: 'bg-red-100',
-    text: 'text-red-600',
-  },
-  LOCKOUT: {
-    icon: <ShieldX size={13} />,
-    bg: 'bg-red-100',
-    text: 'text-red-600',
-  },
-  LOGOUT: {
-    icon: <LogOut size={13} />,
-    bg: 'bg-slate-100',
-    text: 'text-slate-500',
-  },
-  EXAM_SUBMIT: {
-    icon: <ClipboardCheck size={13} />,
-    bg: 'bg-indigo-100',
-    text: 'text-indigo-600',
-  },
-  GRADE_UPDATE: {
-    icon: <Star size={13} />,
-    bg: 'bg-amber-100',
-    text: 'text-amber-600',
-  },
-  ROLE_CHANGE: {
-    icon: <UserCog size={13} />,
-    bg: 'bg-purple-100',
-    text: 'text-purple-600',
-  },
-  ANTICHEAT: {
-    icon: <AlertOctagon size={13} />,
-    bg: 'bg-orange-100',
-    text: 'text-orange-600',
-  },
-}
+import { ShieldCheck, ShieldX } from 'lucide-react'
 
 function HmacBadge({ valid }: { valid: boolean }) {
   return valid ? (

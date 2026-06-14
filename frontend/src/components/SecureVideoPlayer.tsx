@@ -16,14 +16,8 @@ import {
   useState,
   memo,
 } from 'react'
-import apiClient from '../api/apiClient'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
-
-interface SignedUrlResponse {
-  url: string
-  expiresAt: number // Unix timestamp (giây)
-}
 
 interface SecureVideoPlayerProps {
   /** Đường dẫn tương đối của video trong storage, VD: "courses/123/lesson-1.mp4" */

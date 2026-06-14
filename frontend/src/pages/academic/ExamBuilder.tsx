@@ -30,7 +30,7 @@ const mockQuestions: Question[] = [
 export default function ExamBuilder() {
   const { examId } = useParams()
   const navigate = useNavigate()
-  
+
   const [questions, setQuestions] = useState<Question[]>(mockQuestions)
   const [search, setSearch] = useState('')
 
@@ -93,7 +93,7 @@ export default function ExamBuilder() {
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => navigate('/dashboard/academic/exams')}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-500"
           >
@@ -108,14 +108,15 @@ export default function ExamBuilder() {
             </div>
             <p className="text-sm text-slate-500 mt-1">Ngân hàng câu hỏi sẽ được xáo trộn tự động khi sinh viên làm bài</p>
           </div>
+        </div>{/* ← closes "flex items-center gap-4" */}
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={() => setShowQuestionModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-[#1F3864] hover:bg-slate-50 text-[#1F3864] text-sm font-semibold rounded-lg shadow-sm transition-colors"
           >
             <Plus size={16} /> Thêm câu hỏi
           </button>
-          <button 
+          <button
             onClick={() => {
               alert('Lưu đề thi thành công!');
               navigate('/dashboard/academic/exams');
@@ -132,9 +133,9 @@ export default function ExamBuilder() {
         <div className="p-4 border-b border-slate-100 bg-slate-50/50">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
-            <input 
-              type="text" 
-              placeholder="Tìm kiếm câu hỏi..." 
+            <input
+              type="text"
+              placeholder="Tìm kiếm câu hỏi..."
               className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#2E75B6]"
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -148,7 +149,7 @@ export default function ExamBuilder() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <h3 className="font-bold text-slate-800 text-base mb-4 flex items-start gap-2">
-                    <span className="text-[#2E75B6] mt-0.5">Câu {index + 1}:</span> 
+                    <span className="text-[#2E75B6] mt-0.5">Câu {index + 1}:</span>
                     {q.content}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-8">
@@ -181,7 +182,7 @@ export default function ExamBuilder() {
             <form onSubmit={saveQuestion} className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Nội dung câu hỏi <span className="text-red-500">*</span></label>
-                <textarea 
+                <textarea
                   required
                   className="w-full border border-slate-300 rounded-lg p-3 text-sm focus:border-[#2E75B6] outline-none min-h-[100px]"
                   placeholder="Nhập nội dung câu hỏi..."
@@ -195,16 +196,16 @@ export default function ExamBuilder() {
                 <div className="space-y-3">
                   {qAnswers.map((ans, idx) => (
                     <div key={ans.id} className={`flex items-center gap-3 p-2 rounded-lg border ${ans.isCorrect ? 'border-emerald-500 bg-emerald-50/30' : 'border-slate-200'}`}>
-                      <input 
-                        type="radio" 
-                        name="correctAnswer" 
+                      <input
+                        type="radio"
+                        name="correctAnswer"
                         className="w-4 h-4 accent-emerald-600 ml-2 cursor-pointer"
                         checked={ans.isCorrect}
                         onChange={() => setCorrectAnswer(ans.id)}
                       />
                       <span className="font-bold text-slate-500">{String.fromCharCode(65 + idx)}</span>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         className="flex-1 bg-transparent border-none text-sm outline-none p-1"
                         placeholder={`Nội dung phương án ${String.fromCharCode(65 + idx)}`}

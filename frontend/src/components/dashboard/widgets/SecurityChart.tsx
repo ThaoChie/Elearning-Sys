@@ -17,13 +17,8 @@ export default function SecurityChart() {
     ...SECURITY_INCIDENTS.flatMap((d) => [d.bruteForce, d.authErrors])
   )
 
-  // Trục Y: chia 4 mốc
-  const yTicks = [0, 25, 50, 75, 100].filter((v) => v <= Math.ceil(maxVal / 10) * 10 + 5)
-
   const groupW = BAR_W * 2 + BAR_GAP
   const totalW = SECURITY_INCIDENTS.length * (groupW + GROUP_GAP) - GROUP_GAP
-
-  const toY = (val: number) => CHART_H - (val / (maxVal * 1.1)) * CHART_H
 
   // Tổng năm
   const totalBrute = SECURITY_INCIDENTS.reduce((a, b) => a + b.bruteForce, 0)

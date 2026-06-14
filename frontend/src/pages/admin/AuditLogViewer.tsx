@@ -180,7 +180,7 @@ export default function AuditLogViewer() {
                       {log.ip}
                     </td>
                     <td className="px-5 py-4">
-                      <IntegrityBadge verified={log.hmacVerified} />
+                      <IntegrityBadge verified={log.hmacValid} />
                     </td>
                   </tr>
                 ))

@@ -38,7 +38,7 @@ export default function SubmissionsPage() {
     dbSubmitAssignment(selectedAssignment.id, file.name)
     // Update local state
     const updated = assignments.map(a => 
-      a.id === selectedAssignment.id ? { ...a, status: 'submitted', file: file.name } : a
+      a.id === selectedAssignment.id ? { ...a, status: 'submitted' as 'submitted', file: file.name } : a
     )
     setAssignments(updated)
     setSelectedAssignment({ ...selectedAssignment, status: 'submitted', file: file.name })
@@ -51,7 +51,7 @@ export default function SubmissionsPage() {
     if (confirm('Bạn có chắc muốn hủy nộp bài tập này? Thao tác này sẽ xóa file đã nộp.')) {
       dbCancelSubmission(selectedAssignment.id)
       const updated = assignments.map(a => 
-        a.id === selectedAssignment.id ? { ...a, status: 'pending', file: null } : a
+        a.id === selectedAssignment.id ? { ...a, status: 'pending' as 'pending', file: null } : a
       )
       setAssignments(updated)
       setSelectedAssignment({ ...selectedAssignment, status: 'pending', file: null })
@@ -80,7 +80,7 @@ export default function SubmissionsPage() {
               className={`w-full text-left p-4 rounded-xl border transition-colors ${selectedAssignment.id === asg.id ? 'bg-indigo-50 border-indigo-500 text-slate-900 shadow-sm' : 'bg-white/80 border-slate-200/50 text-slate-600 hover:border-indigo-300 hover:bg-white'}`}
             >
               <div className="text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">{asg.course}</div>
-              <div className="font-bold mb-3">{asg.title}</div>
+              <div className="font-bold mb-3">{asg.task}</div>
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1 text-slate-500"><Clock size={14}/> Hạn: {asg.due}</span>
                 {asg.status === 'pending' && <span className="px-2 py-0.5 rounded text-amber-700 bg-amber-50 font-semibold border border-amber-200">Chưa nộp</span>}

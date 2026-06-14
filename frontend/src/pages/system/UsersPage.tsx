@@ -20,7 +20,7 @@ export default function UsersPage() {
   // User Form Modal State
   const [showUserForm, setShowUserForm] = useState(false)
   const [editingUser, setEditingUser] = useState<UserItem | null>(null)
-  const [formData, setFormData] = useState({ fullName: '', email: '', role: 'Student' as const })
+  const [formData, setFormData] = useState<{fullName: string; email: string; role: 'Admin' | 'Instructor' | 'Student'}>({ fullName: '', email: '', role: 'Student' })
 
   useEffect(() => {
     fetchUsers()

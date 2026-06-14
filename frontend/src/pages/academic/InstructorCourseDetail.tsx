@@ -220,7 +220,7 @@ export default function InstructorCourseDetail() {
                 <select 
                   className="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none focus:border-[#2E75B6]"
                   value={lessonData.type}
-                  onChange={e => setLessonData({...lessonData, type: e.target.value as 'Video'|'PDF'})}
+                  onChange={e => setLessonData({...lessonData, type: e.target.value as 'video'|'pdf'})}
                 >
                   <option value="video">Video bài giảng</option>
                   <option value="pdf">Tài liệu PDF / Slide</option>
