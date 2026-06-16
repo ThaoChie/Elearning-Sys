@@ -1,15 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ClipboardList, Shield, Clock, Search, Plus, Play, MoreVertical, Edit, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { dbGetExams, dbCreateExam, dbUpdateExam, dbDeleteExam } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 export default function ExamsPage() {
   const navigate = useNavigate()
-  const [examsList, setExamsList] = useState(dbGetExams())
+  const [examsList, setExamsList] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   
   const [showCreate, setShowCreate] = useState(false)
   const [editingExamId, setEditingExamId] = useState<string | null>(null)
   const [examFormData, setExamFormData] = useState({ title: '', course: 'An ninh mạng cơ bản', duration: 60, totalScore: 10 })
+
+  useEffect(() => {
+    fetchExams()
+  }, [])
+
+  const fetchExams = async () => {
+    try {
+      const res = await apiClient.get('/exam')
+      setExamsList(res.data || [])
+    } catch (err) {
+      console.error("Failed to load exams", err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const openCreateModal = () => {
     setEditingExamId(null)
@@ -28,34 +44,37 @@ export default function ExamsPage() {
     setShowCreate(true)
   }
 
-  const handleSaveExam = () => {
-    if (editingExamId) {
-      dbUpdateExam(editingExamId, {
-        title: examFormData.title, 
-        course: examFormData.course, 
-        duration: `${examFormData.duration} phút`
-      })
-      setExamsList(dbGetExams())
-    } else {
-      const newExam = {
-        id: `ex-${Date.now()}`,
-        title: examFormData.title || 'Bài thi mới',
-        course: examFormData.course,
-        duration: `${examFormData.duration} phút`,
-        questions: 0,
-        status: 'Draft',
-        antiCheat: true
+  const handleSaveExam = async () => {
+    try {
+      if (editingExamId) {
+        await apiClient.put(`/exam/${editingExamId}`, {
+          title: examFormData.title, 
+          course: examFormData.course, 
+          durationMinutes: examFormData.duration
+        })
+      } else {
+        await apiClient.post('/exam', {
+          title: examFormData.title || 'Bài thi mới',
+          course: examFormData.course,
+          durationMinutes: examFormData.duration,
+          antiCheatEnabled: true
+        })
       }
-      dbCreateExam(newExam)
-      setExamsList(dbGetExams())
+      setShowCreate(false)
+      fetchExams()
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Chưa hỗ trợ API lưu đề thi hoặc có lỗi xảy ra.')
     }
-    setShowCreate(false)
   }
 
-  const handleDeleteExam = (id: string) => {
+  const handleDeleteExam = async (id: string) => {
     if(confirm('Bạn có chắc chắn muốn xóa đề thi này?')) {
-      dbDeleteExam(id)
-      setExamsList(dbGetExams().slice())
+      try {
+        await apiClient.delete(`/exam/${id}`)
+        fetchExams()
+      } catch (err: any) {
+        alert(err.response?.data?.message || 'Lỗi khi xóa đề thi.')
+      }
     }
   }
 

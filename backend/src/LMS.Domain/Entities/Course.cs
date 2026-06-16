@@ -10,6 +10,8 @@ public class Course
     public string   Title       { get; private set; } = string.Empty;
     public string   Description { get; private set; } = string.Empty;
     public string   ThumbnailUrl { get; private set; } = string.Empty;
+    public string   Category    { get; private set; } = string.Empty;
+    public decimal  Rating      { get; private set; } = 0m;
     public bool     IsPublished { get; private set; }
     public DateTime CreatedAt   { get; private set; }
 

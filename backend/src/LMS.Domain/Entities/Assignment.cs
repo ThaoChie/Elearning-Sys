@@ -85,6 +85,9 @@ public class AssignmentSubmission
     public SubmissionStatus Status           { get; private set; }
     public DateTime         SubmittedAt      { get; private set; }
 
+    public decimal?         Score            { get; private set; }
+    public string?          Feedback         { get; private set; }
+
     private AssignmentSubmission() { }
 
     /// <summary>
@@ -123,5 +126,12 @@ public class AssignmentSubmission
             Status           = SubmissionStatus.Pending,
             SubmittedAt      = DateTime.UtcNow
         };
+    }
+
+    public void Grade(decimal score, string feedback)
+    {
+        Score = score;
+        Feedback = feedback;
+        Status = SubmissionStatus.Graded;
     }
 }

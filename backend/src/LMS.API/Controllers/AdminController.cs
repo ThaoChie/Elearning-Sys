@@ -53,6 +53,8 @@ public sealed class AdminController(AppDbContext db) : ControllerBase
             email = u.Email,
             role = u.Role.ToString(),
             status = u.LockoutEnd > DateTime.UtcNow ? "Locked" : "Active",
+            failedLogins = u.FailedLoginCount,
+            lastLoginAt = "",
             createdAt = u.CreatedAt.ToString("dd/MM/yyyy")
         }).ToListAsync();
         return Ok(users);

@@ -5,6 +5,8 @@ using LMS.Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LMS.Infrastructure.Persistence;
 
 namespace LMS.API.Controllers;
 
@@ -22,8 +24,28 @@ namespace LMS.API.Controllers;
 [Route("api/exam")]
 [Produces("application/json")]
 [Authorize(Policy = AuthPolicies.StudentOnly)] // Chỉ Student được phép thi
-public sealed class ExamController(IMediator mediator) : ControllerBase
+public sealed class ExamController(IMediator mediator, AppDbContext dbContext) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> GetExams()
+    {
+        var exams = await dbContext.Quizzes
+            .Include(q => q.Course)
+            .Select(q => new
+            {
+                id = q.QuizId,
+                title = q.Title,
+                courseName = q.Course.Title,
+                durationMinutes = q.TimeLimitMin,
+                startAt = q.StartAt,
+                endAt = q.EndAt,
+                antiCheatEnabled = q.AntiCheatEnabled
+            })
+            .ToListAsync();
+
+        return Ok(exams);
+    }
+
     /// <summary>
     /// Heartbeat đồng bộ trạng thái phiên thi (gọi mỗi 30 giây từ client).
     /// Server kiểm tra timer và trả về thời gian còn lại (tính server-side).

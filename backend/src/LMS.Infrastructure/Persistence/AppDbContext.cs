@@ -20,10 +20,15 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<Quiz>     Quizzes   => Set<Quiz>();
     public DbSet<Question> Questions => Set<Question>();
     public DbSet<Answer>   Answers   => Set<Answer>();
+    public DbSet<CourseEnrollment> CourseEnrollments => Set<CourseEnrollment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        
+        modelBuilder.Entity<CourseEnrollment>()
+            .HasKey(ce => new { ce.CourseId, ce.StudentId });
+            
         base.OnModelCreating(modelBuilder);
     }
 

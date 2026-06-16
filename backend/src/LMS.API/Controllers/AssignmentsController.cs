@@ -4,6 +4,8 @@ using LMS.Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LMS.Infrastructure.Persistence;
 
 namespace LMS.API.Controllers;
 
@@ -21,8 +23,8 @@ namespace LMS.API.Controllers;
 [ApiController]
 [Route("api/assignments")]
 [Produces("application/json")]
-[Authorize(Policy = AuthPolicies.StudentOnly)] // Chỉ Student được nộp bài
-public sealed class AssignmentsController(IMediator mediator) : ControllerBase
+[Authorize] // Chính sách phân quyền cụ thể sẽ được áp dụng cho từng endpoint
+public sealed class AssignmentsController(IMediator mediator, AppDbContext dbContext) : ControllerBase
 {
     /// <summary>
     /// Nộp bài tập (UC-13).
@@ -46,6 +48,7 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
     /// <response code="409">Sinh viên đã nộp bài này rồi (BR-16).</response>
     /// <response code="422">File chứa virus/malware hoặc MIME type bị giả mạo.</response>
     [HttpPost("{id}/submit")]
+    [Authorize(Policy = AuthPolicies.StudentOnly)]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(104_857_600)]          // Limit: 100 MB
     [RequestFormLimits(MultipartBodyLengthLimit = 104_857_600)]
@@ -150,5 +153,76 @@ public sealed class AssignmentsController(IMediator mediator) : ControllerBase
     /// Dummy GET endpoint to enforce Authentication policy before HTTP Method verification.
     /// </summary>
     [HttpGet("{id}/submit")]
+    [Authorize(Policy = AuthPolicies.StudentOnly)]
     public IActionResult SubmitGet(string id) => StatusCode(StatusCodes.Status405MethodNotAllowed);
+
+    [HttpGet("submissions/me")]
+    [Authorize(Policy = AuthPolicies.StudentOnly)]
+    public async Task<IActionResult> GetMySubmissions()
+    {
+        var studentId = User.GetRequiredUserId();
+        
+        var query = from sub in dbContext.AssignmentSubmissions
+                    join asm in dbContext.Assignments on sub.AssignmentId equals asm.AssignmentId
+                    join crs in dbContext.Courses on asm.CourseId equals crs.CourseId
+                    where sub.StudentId == studentId
+                    select new
+                    {
+                        id = sub.SubmissionId,
+                        title = asm.Title,
+                        course = crs.Title,
+                        status = sub.Status.ToString(),
+                        time = sub.SubmittedAt,
+                        grade = sub.Score
+                    };
+                    
+        var result = await query.ToListAsync();
+        return Ok(result);
+    }
+
+    [HttpGet("submissions")]
+    [Authorize(Policy = AuthPolicies.InstructorOnly)]
+    public async Task<IActionResult> GetAllSubmissions()
+    {
+        var instructorId = User.GetRequiredUserId();
+        
+        var query = from sub in dbContext.AssignmentSubmissions
+                    join asm in dbContext.Assignments on sub.AssignmentId equals asm.AssignmentId
+                    join crs in dbContext.Courses on asm.CourseId equals crs.CourseId
+                    join stu in dbContext.Users on sub.StudentId equals stu.Id
+                    where crs.InstructorId == instructorId // Only courses taught by the logged-in instructor
+                    select new
+                    {
+                        id = sub.SubmissionId,
+                        student = stu.Email,
+                        course = crs.Title,
+                        time = sub.SubmittedAt,
+                        status = sub.Status.ToString(),
+                        file = sub.OriginalFileName,
+                        grade = sub.Score,
+                        feedback = sub.Feedback
+                    };
+                    
+        var result = await query.ToListAsync();
+        return Ok(result);
+    }
+
+    [HttpPost("submissions/{id}/grade")]
+    [Authorize(Policy = AuthPolicies.InstructorOnly)]
+    public async Task<IActionResult> GradeSubmission(Guid id, [FromBody] GradeRequest request)
+    {
+        var submission = await dbContext.AssignmentSubmissions.FirstOrDefaultAsync(s => s.SubmissionId == id);
+        if (submission == null) return NotFound(new { message = "Submission not found" });
+
+        submission.Grade(request.Score, request.Feedback);
+        await dbContext.SaveChangesAsync();
+
+        return Ok(new { message = "Graded successfully" });
+    }
+}
+
+public class GradeRequest
+{
+    public decimal Score { get; set; }
+    public string Feedback { get; set; } = string.Empty;
 }

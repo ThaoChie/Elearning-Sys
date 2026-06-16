@@ -2,20 +2,31 @@ import { useState, useEffect } from 'react'
 import { FileUp, CheckCircle, Clock, FileText, UploadCloud, AlertCircle, Edit, Trash2 } from 'lucide-react'
 import { addAuditLog } from '../admin/mockData'
 
-import { dbGetSubmissions, dbSubmitAssignment, dbCancelSubmission } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 export default function SubmissionsPage() {
-  const [assignments, setAssignments] = useState(dbGetSubmissions().filter(s => s.student === 'Nguyễn Văn An'))
-  const [selectedAssignment, setSelectedAssignment] = useState(assignments[0] || null)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [selectedAssignment, setSelectedAssignment] = useState<any>(null)
   const [dragActive, setDragActive] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    apiClient.get('/assignments/submissions/me')
+      .then(res => {
+        setAssignments(res.data || [])
+        setSelectedAssignment((res.data && res.data[0]) || null)
+      })
+      .catch(err => console.error("Failed to load submissions", err))
+      .finally(() => setLoading(false))
+  }, [])
 
   // Sync state when selected assignment changes
   useEffect(() => {
     setFile(null)
     setIsEditing(false)
-  }, [selectedAssignment.id])
+  }, [selectedAssignment?.id])
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -33,28 +44,39 @@ export default function SubmissionsPage() {
     }
   }
 
-  const handleSubmit = () => {
-    if (!file) return
-    dbSubmitAssignment(selectedAssignment.id, file.name)
-    // Update local state
-    const updated = assignments.map(a => 
-      a.id === selectedAssignment.id ? { ...a, status: 'submitted' as 'submitted', file: file.name } : a
-    )
-    setAssignments(updated)
-    setSelectedAssignment({ ...selectedAssignment, status: 'submitted', file: file.name })
-    setFile(null)
-    setIsEditing(false)
-    alert('Nộp bài thành công!')
-  }
-
-  const handleCancelSubmission = () => {
-    if (confirm('Bạn có chắc muốn hủy nộp bài tập này? Thao tác này sẽ xóa file đã nộp.')) {
-      dbCancelSubmission(selectedAssignment.id)
+  const handleSubmit = async () => {
+    if (!file || !selectedAssignment) return
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      await apiClient.post(`/assignments/${selectedAssignment.id}/submit`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
       const updated = assignments.map(a => 
-        a.id === selectedAssignment.id ? { ...a, status: 'pending' as 'pending', file: null } : a
+        a.id === selectedAssignment.id ? { ...a, status: 'submitted', file: file.name } : a
       )
       setAssignments(updated)
-      setSelectedAssignment({ ...selectedAssignment, status: 'pending', file: null })
+      setSelectedAssignment({ ...selectedAssignment, status: 'submitted', file: file.name })
+      setFile(null)
+      setIsEditing(false)
+      alert('Nộp bài thành công!')
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Lỗi nộp bài')
+    }
+  }
+
+  const handleCancelSubmission = async () => {
+    if (confirm('Bạn có chắc muốn hủy nộp bài tập này? Thao tác này sẽ xóa file đã nộp.')) {
+      try {
+        await apiClient.delete(`/assignments/${selectedAssignment.id}/submit`)
+        const updated = assignments.map(a => 
+          a.id === selectedAssignment.id ? { ...a, status: 'pending', file: null } : a
+        )
+        setAssignments(updated)
+        setSelectedAssignment({ ...selectedAssignment, status: 'pending', file: null })
+      } catch (err: any) {
+        alert(err.response?.data?.message || 'Lỗi hủy nộp bài')
+      }
     }
   }
 
@@ -93,6 +115,15 @@ export default function SubmissionsPage() {
 
         {/* Khung nộp bài */}
         <div className="lg:col-span-2">
+          {loading ? (
+            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl p-6 h-full flex flex-col min-h-[500px] shadow-sm items-center justify-center">
+              <p className="text-slate-500">Đang tải...</p>
+            </div>
+          ) : !selectedAssignment ? (
+            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl p-6 h-full flex flex-col min-h-[500px] shadow-sm items-center justify-center">
+              <p className="text-slate-500">Chưa có bài tập nào.</p>
+            </div>
+          ) : (
           <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-2xl p-6 h-full flex flex-col min-h-[500px] shadow-sm">
             <div className="mb-6 border-b border-slate-200 pb-4">
               <h2 className="text-2xl font-bold text-slate-900 mb-2">{selectedAssignment.task}</h2>
@@ -186,6 +217,8 @@ export default function SubmissionsPage() {
               </div>
             )}
           </div>
+          )}
+        </div>
         </div>
       </div>
     </div>

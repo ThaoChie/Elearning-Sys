@@ -2,13 +2,24 @@ import { useState, useEffect } from 'react'
 import { FileCheck, Search, FileText, Download, CheckCircle, MessageSquare, Clock } from 'lucide-react'
 import { addAuditLog } from '../admin/mockData'
 
-import { dbGetSubmissions, dbGradeSubmission } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 export default function GradingPage() {
-  const [subs, setSubs] = useState(dbGetSubmissions())
-  const [selectedSub, setSelectedSub] = useState(subs[0] || null)
+  const [subs, setSubs] = useState<any[]>([])
+  const [selectedSub, setSelectedSub] = useState<any>(null)
   const [score, setScore] = useState<string>('')
   const [feedback, setFeedback] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    apiClient.get('/assignments/submissions')
+      .then(res => {
+        setSubs(res.data || [])
+        setSelectedSub((res.data && res.data[0]) || null)
+      })
+      .catch(err => console.error("Failed to fetch submissions", err))
+      .finally(() => setLoading(false))
+  }, [])
 
   useEffect(() => {
     if (!selectedSub) return
@@ -17,18 +28,26 @@ export default function GradingPage() {
     setFeedback(selectedSub.feedback || '')
   }, [selectedSub])
 
-  const handleGrade = () => {
+  const handleGrade = async () => {
     if (!selectedSub) return
-    dbGradeSubmission(selectedSub.id, score, feedback)
-    const updatedSubs = subs.map(sub => {
-      if (sub.id === selectedSub.id) {
-        const updated = { ...sub, status: 'graded' as 'graded', grade: score, feedback }
-        setSelectedSub(updated)
-        return updated
-      }
-      return sub
-    })
-    setSubs(updatedSubs)
+    try {
+      await apiClient.post(`/assignments/submissions/${selectedSub.id}/grade`, {
+        score: Number(score),
+        feedback
+      })
+      const updatedSubs = subs.map(sub => {
+        if (sub.id === selectedSub.id) {
+          const updated = { ...sub, status: 'graded', grade: score, feedback }
+          setSelectedSub(updated)
+          return updated
+        }
+        return sub
+      })
+      setSubs(updatedSubs)
+      alert("Chấm điểm thành công!")
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Lỗi khi chấm điểm")
+    }
   }
 
   const isGraded = selectedSub?.status === 'graded'
@@ -57,11 +76,15 @@ export default function GradingPage() {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
-            {subs.map(sub => (
+            {loading ? (
+              <p className="text-center text-slate-500 py-4">Đang tải...</p>
+            ) : subs.length === 0 ? (
+              <p className="text-center text-slate-500 py-4">Chưa có bài nộp nào.</p>
+            ) : subs.map(sub => (
               <button 
                 key={sub.id}
                 onClick={() => setSelectedSub(sub)}
-                className={`w-full text-left p-4 rounded-xl border mb-2 transition-colors ${selectedSub.id === sub.id ? 'bg-blue-50 border-blue-200' : 'bg-white border-transparent hover:border-slate-200'}`}
+                className={`w-full text-left p-4 rounded-xl border mb-2 transition-colors ${selectedSub?.id === sub.id ? 'bg-blue-50 border-blue-200' : 'bg-white border-transparent hover:border-slate-200'}`}
               >
                 <div className="flex justify-between items-start mb-1">
                   <span className="font-bold text-slate-800">{sub.student}</span>

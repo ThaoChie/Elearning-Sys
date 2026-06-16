@@ -5,11 +5,12 @@
 // ============================================================
 
 import { Lock, Unlock, Eye, AlertTriangle, CheckCircle2, XCircle, MinusCircle } from 'lucide-react'
-import { MOCK_USERS, type MockUser } from '../../../pages/admin/mockData'
+import { useState, useEffect } from 'react'
+import apiClient from '../../../api/apiClient'
 
 // ── Sub-components ─────────────────────────────────────────
 
-function RoleBadge({ role }: { role: MockUser['role'] }) {
+function RoleBadge({ role }: { role: string }) {
   const map = {
     Admin: 'bg-purple-100 text-purple-700 border-purple-200',
     Instructor: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -23,13 +24,13 @@ function RoleBadge({ role }: { role: MockUser['role'] }) {
   )
 }
 
-function StatusBadge({ status }: { status: MockUser['status'] }) {
+function StatusBadge({ status }: { status: string }) {
   const map = {
     Active: { cls: 'text-emerald-600 bg-emerald-50 border-emerald-200', icon: <CheckCircle2 size={11} />, label: 'Hoạt động' },
     Locked: { cls: 'text-red-600 bg-red-50 border-red-200', icon: <XCircle size={11} />, label: 'Đang khóa' },
     Suspended: { cls: 'text-slate-500 bg-slate-50 border-slate-200', icon: <MinusCircle size={11} />, label: 'Tạm dừng' },
   }
-  const { cls, icon, label } = map[status]
+  const { cls, icon, label } = map[status as keyof typeof map] || map.Active
   return (
     <span
       className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${cls}`}
@@ -64,7 +65,7 @@ function FailedLoginBar({ count }: { count: number }) {
   )
 }
 
-function ActionButtons({ user }: { user: MockUser }) {
+function ActionButtons({ user }: { user: any }) {
   return (
     <div className="flex items-center gap-1.5">
       <button
@@ -97,16 +98,24 @@ function ActionButtons({ user }: { user: MockUser }) {
 
 // ── Main Component ─────────────────────────────────────────
 export default function UserAlertTable() {
-  const lockedCount = MOCK_USERS.filter((u) => u.status === 'Locked').length
-  const riskyCount = MOCK_USERS.filter((u) => u.failedLogins >= 3).length
+  const [users, setUsers] = useState<any[]>([])
+
+  useEffect(() => {
+    apiClient.get('/admin/users')
+      .then(res => setUsers(res.data || []))
+      .catch(err => console.error("Failed to load users for alert table", err))
+  }, [])
+
+  const lockedCount = users.filter((u) => u.status === 'Locked').length
+  const riskCount = users.filter((u) => (u.failedLogins || 0) >= 3 && u.status !== 'Locked').length
 
   return (
-    <div className="bg-white/70 backdrop-blur-md rounded-2xl border border-white/50 shadow-sm overflow-hidden">
-      {/* Table header bar */}
-      <div className="px-6 py-5 border-b border-white/30 flex items-center justify-between">
+    <div className="bg-white/70 backdrop-blur-md border border-white/50 shadow-sm rounded-2xl overflow-hidden flex flex-col h-[320px]">
+      {/* Header */}
+      <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-white/50 shrink-0">
         <div>
           <h3 className="text-sm font-semibold text-[#1F3864]">Quản lý tài khoản</h3>
-          <p className="text-xs text-slate-500 mt-0.5">{MOCK_USERS.length} người dùng · Read-only overview</p>
+          <p className="text-xs text-slate-500 mt-0.5">{users.length} người dùng · Read-only overview</p>
         </div>
         <div className="flex items-center gap-3">
           {lockedCount > 0 && (
@@ -115,104 +124,70 @@ export default function UserAlertTable() {
               {lockedCount} tài khoản bị khóa
             </div>
           )}
-          {riskyCount > 0 && (
+          {riskCount > 0 && (
             <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5">
               <AlertTriangle size={11} />
-              {riskyCount} có nguy cơ cao
+              {riskCount} có nguy cơ cao
             </div>
           )}
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto flex-1">
         <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-slate-50 bg-slate-50/60">
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">
-                Email / Người dùng
-              </th>
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">
-                Vai trò
-              </th>
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">
-                Trạng thái
-              </th>
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3 w-44">
-                Đăng nhập sai (BR-02)
-              </th>
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">
-                Lần cuối
-              </th>
-              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">
-                Hành động
-              </th>
+          <thead className="bg-slate-50/60 border-b border-slate-100 sticky top-0">
+            <tr>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-6 py-3">Email / Người dùng</th>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">Vai trò</th>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">Trạng thái</th>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3 w-44">Đăng nhập sai (BR-02)</th>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">Lần cuối</th>
+              <th className="text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-4 py-3">Hành động</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-50">
-            {MOCK_USERS.map((user) => {
-              const isRisky = user.failedLogins >= 3
-              const isLocked = user.status === 'Locked'
-              return (
-                <tr
-                  key={user.id}
-                  className={`
-                    group transition-colors
-                    ${isLocked ? 'bg-red-50/30 hover:bg-red-50/60' : isRisky ? 'bg-amber-50/20 hover:bg-amber-50/40' : 'hover:bg-slate-50/70'}
-                  `}
-                >
-                  {/* Email */}
-                  <td className="px-6 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`
-                          flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
-                          ${isLocked ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'}
-                        `}
-                      >
-                        {user.fullName.charAt(0)}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold text-slate-700 truncate">{user.fullName}</p>
-                        <p className="text-[11px] text-slate-500 font-mono truncate">{user.email}</p>
-                      </div>
+          <tbody className="divide-y divide-slate-100/50">
+            {users.map((user) => (
+              <tr key={user.id} className="hover:bg-indigo-50/30 transition-colors">
+                <td className="p-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                      {user.fullName.charAt(0).toUpperCase()}
                     </div>
-                  </td>
-
-                  {/* Role */}
-                  <td className="px-4 py-3.5">
-                    <RoleBadge role={user.role} />
-                  </td>
-
-                  {/* Status */}
-                  <td className="px-4 py-3.5">
-                    <StatusBadge status={user.status} />
-                  </td>
-
-                  {/* Failed Logins bar */}
-                  <td className="px-4 py-3.5 w-44">
-                    <FailedLoginBar count={user.failedLogins} />
-                  </td>
-
-                  {/* Last seen */}
-                  <td className="px-4 py-3.5">
-                    <span className="text-[11px] text-slate-500 font-mono">{user.lastSeen}</span>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-4 py-3.5">
-                    <ActionButtons user={user} />
-                  </td>
-                </tr>
-              )
-            })}
+                    <div>
+                      <div className="text-sm font-bold text-slate-700 leading-tight flex items-center gap-1.5">
+                        {user.fullName}
+                        {(user.failedLogins || 0) >= 5 && <AlertTriangle size={12} className="text-red-500" />}
+                      </div>
+                      <div className="text-[10px] text-slate-500">{user.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="p-3">
+                  <RoleBadge role={user.role} />
+                </td>
+                <td className="p-3">
+                  <StatusBadge status={user.status} />
+                </td>
+                <td className="p-3">
+                  <FailedLoginBar count={user.failedLogins || 0} />
+                </td>
+                <td className="p-3">
+                  <div className="text-xs text-slate-600 font-medium">{user.lastLoginAt?.split(' ')[0] || '--:--'}</div>
+                  <div className="text-[10px] text-slate-400">{user.lastLoginAt?.split(' ')[1] || '--/--'}</div>
+                </td>
+                <td className="p-3 text-right">
+                  <ActionButtons user={user} />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t border-slate-50 bg-slate-50/40 flex items-center justify-between">
+      <div className="px-6 py-3 border-t border-slate-50 bg-slate-50/40 flex items-center justify-between shrink-0">
         <p className="text-xs text-slate-500">
           Hiển thị {MOCK_USERS.length} / {MOCK_USERS.length} người dùng · Dashboard read-only
         </p>

@@ -12,6 +12,9 @@ public class Quiz
 
     /// <summary>Thời gian làm bài (phút).</summary>
     public int      TimeLimitMin  { get; private set; }
+    public DateTime? StartAt      { get; private set; }
+    public DateTime? EndAt        { get; private set; }
+    public bool     AntiCheatEnabled { get; private set; }
     public DateTime CreatedAt     { get; private set; }
 
     // EF Core navigation

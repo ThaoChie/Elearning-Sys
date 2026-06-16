@@ -65,7 +65,6 @@ public sealed class DataSeeder(
         var student2User = User.Create("student2@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
         var userLmsUser = User.Create("user@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
         var instructorUser = User.Create("instructor@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Instructor);
-        var adminUser = User.Create("admin@lms.vn", passwordHasher.Hash("AdminPass1!"), UserRole.Admin);
         var locktest4User = User.Create("locktest4@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
         var locktest5User = User.Create("locktest5@lms.vn", passwordHasher.Hash("ValidPass1!"), UserRole.Student);
 
@@ -96,9 +95,9 @@ public sealed class DataSeeder(
             role:         UserRole.Student);
 
         await db.Users.AddRangeAsync([
-            studentUser, student2User, userLmsUser, instructorUser, adminUser,
+            studentUser, student2User, userLmsUser, instructorUser,
             locktest4User, locktest5User, lockedUser, expiredLockUser,
-            admin, instructor, student
+            instructor, student
         ], ct);
 
         // ── 3. Tạo Course ───────────────────────────────────────────────────

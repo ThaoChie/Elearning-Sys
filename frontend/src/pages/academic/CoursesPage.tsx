@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BookOpen, Plus, MoreVertical, PlayCircle, Users, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import type { DashboardUser } from '../../types/dashboard'
-import { dbGetCourses, dbCreateCourse } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 interface Props {
   user: DashboardUser
@@ -10,18 +10,37 @@ interface Props {
 
 export default function CoursesPage({ user }: Props) {
   const navigate = useNavigate()
-  const [courses, setCourses] = useState(dbGetCourses())
-  
+  const [courses, setCourses] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [formData, setFormData] = useState({ title: '', description: '' })
 
-  const handleCreateCourse = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchCourses()
+  }, [])
+
+  const fetchCourses = async () => {
+    try {
+      const res = await apiClient.get('/courses')
+      setCourses(res.data || [])
+    } catch (err) {
+      console.error("Failed to fetch courses", err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCreateCourse = async (e: React.FormEvent) => {
     e.preventDefault()
-    const newCourse = dbCreateCourse(formData.title, formData.description)
-    setCourses([...courses, newCourse])
-    setShowCreateModal(false)
-    setFormData({ title: '', description: '' })
-    navigate(`/dashboard/academic/courses/${newCourse.id}`)
+    try {
+      await apiClient.post('/courses', formData)
+      fetchCourses()
+      setShowCreateModal(false)
+      setFormData({ title: '', description: '' })
+      alert('Tạo khoá học thành công!')
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Chưa hỗ trợ tạo khoá học từ API')
+    }
   }
 
   return (
@@ -50,14 +69,19 @@ export default function CoursesPage({ user }: Props) {
       </div>
 
       {/* ── Grid Khóa học ───────────────────────────────────── */}
+      {loading ? (
+        <div className="flex items-center justify-center p-10"><p className="text-slate-500">Đang tải...</p></div>
+      ) : courses.length === 0 ? (
+        <div className="flex items-center justify-center p-10"><p className="text-slate-500">Chưa có khóa học nào.</p></div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {courses.map(course => (
           <div key={course.id} className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
             <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-              <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src={course.thumbnail || 'https://via.placeholder.com/400x200?text=Course'} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               <div className="absolute top-3 right-3">
-                <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full shadow-sm ${course.status === 'Published' ? 'bg-[#375623] text-slate-900' : 'bg-amber-100 text-amber-800'}`}>
-                  {course.status}
+                <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-full shadow-sm bg-[#375623] text-slate-900`}>
+                  {course.status || 'Published'}
                 </span>
               </div>
             </div>
@@ -68,8 +92,8 @@ export default function CoursesPage({ user }: Props) {
               </h3>
               
               <div className="flex items-center gap-4 text-xs text-slate-500 mb-5">
-                <span className="flex items-center gap-1.5"><Users size={14} /> {course.students} HV</span>
-                <span className="flex items-center gap-1.5"><Clock size={14} /> {course.duration}</span>
+                <span className="flex items-center gap-1.5"><Users size={14} /> {course.students || 0} HV</span>
+                <span className="flex items-center gap-1.5"><Clock size={14} /> {course.duration || 'TBD'}</span>
               </div>
               
               <div className="flex items-center justify-between border-t border-slate-50 pt-4">
@@ -87,6 +111,7 @@ export default function CoursesPage({ user }: Props) {
           </div>
         ))}
       </div>
+      )}
 
       {/* Modal Tạo Khóa học */}
       {showCreateModal && (

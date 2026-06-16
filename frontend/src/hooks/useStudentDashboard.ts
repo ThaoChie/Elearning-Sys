@@ -8,13 +8,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { StudentCourse, UpcomingExam, SecurityStatus, DeadlineEvent, StudentStats } from '../types/student'
 import apiClient from '../api/apiClient'
-import {
-  MOCK_COURSES,
-  MOCK_EXAMS,
-  MOCK_SECURITY_STATUS,
-  MOCK_DEADLINES,
-  MOCK_STATS,
-} from '../pages/student/mockData.student'
 
 export interface StudentDashboardState {
   courses: StudentCourse[]
@@ -37,9 +30,25 @@ export function useStudentDashboard({ userId }: UseStudentDashboardOptions): Stu
   const [state, setState] = useState<StudentDashboardState>({
     courses: [],
     exams: [],
-    securityStatus: MOCK_SECURITY_STATUS,
+    securityStatus: {
+      lastLogin: new Date().toISOString(),
+      ipAddress: '127.0.0.1',
+      device: 'Web Browser',
+      location: 'Unknown',
+      suspiciousLogins: 0,
+      mfaEnabled: false,
+      activeSessions: 1
+    },
     deadlines: [],
-    stats: MOCK_STATS,
+    stats: {
+      enrolledCourses: 0,
+      completedCourses: 0,
+      averageScore: 0,
+      totalStudyHours: 0,
+      upcomingExams: 0,
+      weeklyGoalMinutes: 600,
+      weeklyStudiedMinutes: 0
+    },
     isLoading: true,
     error: null,
   })
@@ -55,23 +64,31 @@ export function useStudentDashboard({ userId }: UseStudentDashboardOptions): Stu
         if (!isMounted) return;
         const data = res.data;
         setState({
-          courses: MOCK_COURSES, // TODO: Replace with real courses later
-            exams: MOCK_EXAMS,
-            securityStatus: MOCK_SECURITY_STATUS,
-            deadlines: MOCK_DEADLINES,
-            stats: {
-              enrolledCourses: data.enrolledCourses ?? 0,
-              completedCourses: 0,
-              averageScore: 0,
-              totalStudyHours: data.completedLessons ?? 0,
-              upcomingExams: data.upcomingExams?.length ?? 0,
-              weeklyGoalMinutes: 600,
-              weeklyStudiedMinutes: 450,
-            },
-            isLoading: false,
-            error: null,
-          });
-        })
+          courses: data.courses || [],
+          exams: data.exams || [],
+          securityStatus: data.securityStatus || {
+            lastLogin: new Date().toISOString(),
+            ipAddress: '127.0.0.1',
+            device: 'Web Browser',
+            location: 'Unknown',
+            suspiciousLogins: 0,
+            mfaEnabled: false,
+            activeSessions: 1
+          },
+          deadlines: data.deadlines || [],
+          stats: {
+            enrolledCourses: data.enrolledCourses ?? 0,
+            completedCourses: data.completedCourses ?? 0,
+            averageScore: data.averageScore ?? 0,
+            totalStudyHours: data.completedLessons ?? 0,
+            upcomingExams: data.upcomingExams?.length ?? 0,
+            weeklyGoalMinutes: 600,
+            weeklyStudiedMinutes: 450,
+          },
+          isLoading: false,
+          error: null,
+        });
+      })
         .catch(err => {
           console.error(err);
           if (isMounted) setState(prev => ({ ...prev, isLoading: false }));
