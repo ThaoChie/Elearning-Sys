@@ -36,7 +36,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://elearning-sys-fp7n.onrender.com; frame-ancestors 'none';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.unsplash.com https://plus.unsplash.com; media-src 'self' blob:; connect-src 'self' https://elearning-sys-fp7n.onrender.com; frame-ancestors 'none';"
         },
         {
           "key": "Strict-Transport-Security",
