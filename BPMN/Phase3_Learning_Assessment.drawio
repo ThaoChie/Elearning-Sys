@@ -1,789 +1,286 @@
-<mxfile host="65bd71144e">
-    <diagram name="Tab1 – Flow (Enrollment &amp; Learning)" id="tab1-flow-enroll">
-        <mxGraphModel dx="1086" dy="445" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1350" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="fl_title" value="Flow Diagram — Student Enrollment &amp; Learning Journey" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="150" y="10" width="850" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_s" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="555" y="55" width="28" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl1" value="Student Logs In&#xa;(JWT Auth)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="105" width="200" height="48" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl2" value="Browse Course Catalog" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="175" width="200" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl3" value="View Course Details&#xa;(Title, Modules, Instructor)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="241" width="200" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_d1" value="Already&#xa;Enrolled?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="500" y="315" width="140" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_enroll" value="Enroll in Course&#xa;(POST /enrollments)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="300" y="335" width="160" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl4" value="Access Course Modules &amp; Lectures" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="425" width="200" height="48" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl5" value="Select Content Item" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="497" width="200" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_d2" value="Content&#xa;Type?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="500" y="567" width="140" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_l1" value="Get Signed URL&#xa;(HMAC-SHA256, TTL 4h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="600" width="175" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_l2" value="Play Video&#xa;(Canvas Watermark)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="670" width="175" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_q1" value="Start Exam Session&#xa;(server assigns StartAt)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="480" y="680" width="175" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_q2" value="Answer Questions&#xa;(Anti-Cheat Active)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="480" y="750" width="175" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_q3" value="Submit Exam" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="480" y="815" width="175" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_a1" value="Download Assignment&#xa;Brief" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="780" y="600" width="160" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_a2" value="Upload Solution File&#xa;(Security Pipeline)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="780" y="670" width="160" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_merge" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="555" y="905" width="40" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_d3" value="Continue&#xa;Learning?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="500" y="970" width="140" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="fl_end" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;shape=doubleEllipse;" parent="1" vertex="1">
-                    <mxGeometry x="555" y="1080" width="28" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_s" target="fl1" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe2" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl1" target="fl2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe3" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl2" target="fl3" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe4" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl3" target="fl_d1" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe5" value="No" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d1" target="fl_enroll" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe6" value="Yes" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d1" target="fl4" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe6b" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_enroll" target="fl4" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe7" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl4" target="fl5" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe8" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl5" target="fl_d2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe9" value="Lecture" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d2" target="fl_l1" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe10" value="Quiz" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d2" target="fl_q1" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe11" value="Assignment" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d2" target="fl_a1" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe12" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_l1" target="fl_l2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe13" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_q1" target="fl_q2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe14" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_q2" target="fl_q3" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe15" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_a1" target="fl_a2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe16" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_l2" target="fl_merge" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe17" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_q3" target="fl_merge" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe18" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_a2" target="fl_merge" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe19" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" parent="1" source="fl_merge" target="fl_d3" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fe20" value="Yes" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d3" target="fl4" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="155" y="1010"/>
-                            <mxPoint x="155" y="449"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="fe21" value="No" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" parent="1" source="fl_d3" target="fl_end" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram name="Tab2 – Sequence (Exam Anti-Cheat)" id="tab2-seq-anticheat">
-        <mxGraphModel dx="1551" dy="636" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1250" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="ac_title" value="Sequence Diagram — Exam Anti-Cheat Engine" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="100" y="10" width="1200" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p1" value="Student&#xa;(Browser)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p2" value="React&#xa;AntiCheat Hooks" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="260" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p3" value="ExamPage&#xa;Component" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p4" value="ExamController&#xa;(API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p5" value="ExamSession&#xa;(DB)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="890" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_p6" value="AuditLog&#xa;(Middleware)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="1100" y="55" width="130" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_ll1" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="125" y="99" as="sourcePoint"/>
-                        <mxPoint x="125" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_ll2" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="325" y="99" as="sourcePoint"/>
-                        <mxPoint x="325" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_ll3" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="535" y="99" as="sourcePoint"/>
-                        <mxPoint x="535" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_ll4" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="745" y="99" as="sourcePoint"/>
-                        <mxPoint x="745" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_ll5" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="955" y="99" as="sourcePoint"/>
-                        <mxPoint x="955" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_ll6" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1165" y="99" as="sourcePoint"/>
-                        <mxPoint x="1165" y="1220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s1" value="PHASE 1 — Initialize Exam Session" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="115" width="400" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m1" value="Start Exam (click)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry y="13" relative="1" as="geometry">
-                        <mxPoint x="125" y="143" as="sourcePoint"/>
-                        <mxPoint x="535" y="143" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m2" value="POST /api/exam/{id}/start" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.1905" y="15" relative="1" as="geometry">
-                        <mxPoint x="535" y="165" as="sourcePoint"/>
-                        <mxPoint x="745" y="165" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m3" value="CREATE ExamSession {StartAt=UtcNow, Status=Active}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.2857" y="18" relative="1" as="geometry">
-                        <mxPoint x="745" y="188" as="sourcePoint"/>
-                        <mxPoint x="955" y="188" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m3r" value="sessionId" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="955" y="208" as="sourcePoint"/>
-                        <mxPoint x="125" y="208" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s2" value="PHASE 2 — Mount Anti-Cheat Hooks" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="230" width="400" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m4" value="Mount useFullscreen() → auto-enter Fullscreen after 300ms" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.1905" y="-18" relative="1" as="geometry">
-                        <mxPoint x="535" y="258" as="sourcePoint"/>
-                        <mxPoint x="325" y="258" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m5" value="Mount useAntiCheat() → block copy/paste/rightclick/F12" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry y="-13" relative="1" as="geometry">
-                        <mxPoint x="535" y="283" as="sourcePoint"/>
-                        <mxPoint x="325" y="283" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m6" value="Mount useTabDetection(sessionId)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0952" y="-8" relative="1" as="geometry">
-                        <mxPoint x="535" y="308" as="sourcePoint"/>
-                        <mxPoint x="325" y="308" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m7" value="requestFullscreen() on examContainer ref" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" parent="1" edge="1">
-                    <mxGeometry x="0.25" y="-13" relative="1" as="geometry">
-                        <mxPoint x="325" y="333" as="sourcePoint"/>
-                        <mxPoint x="125" y="333" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s3" value="PHASE 3 — Heartbeat Loop (every 30s)" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="358" width="400" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_hb_box" value="loop [every 30 seconds]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=10;fontStyle=2;verticalAlign=top;dashed=1;dashPattern=6 3;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="385" width="1150" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m8" value="POST /api/exam/{id}/heartbeat (Bearer JWT)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0238" y="-15" relative="1" as="geometry">
-                        <mxPoint x="325" y="415" as="sourcePoint"/>
-                        <mxPoint x="745" y="415" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m9" value="IsExpired()? GetRemainingSeconds()" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0952" y="15" relative="1" as="geometry">
-                        <mxPoint x="745" y="435" as="sourcePoint"/>
-                        <mxPoint x="955" y="435" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m9r" value="200 {remainingSeconds} / 400 exam_time_expired" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.0714" y="10" relative="1" as="geometry">
-                        <mxPoint x="745" y="460" as="sourcePoint"/>
-                        <mxPoint x="325" y="460" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s4" value="PHASE 4 — Tab Switch Detected" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="505" width="400" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m10" value="visibilitychange → document.visibilityState = &#39;hidden&#39;" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="125" y="533" as="sourcePoint"/>
-                        <mxPoint x="325" y="533" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m11" value="violationCount++ (local ref)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="325" y="558" as="sourcePoint"/>
-                        <mxPoint x="325" y="588" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="395" y="558"/>
-                            <mxPoint x="395" y="588"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m12" value="POST /api/exam/{id}/violation {violationType:&#39;TabSwitch&#39;}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0238" y="18" relative="1" as="geometry">
-                        <mxPoint x="325" y="598" as="sourcePoint"/>
-                        <mxPoint x="745" y="598" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m13" value="RecordViolation() → ViolationCount++ (server)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.381" y="13" relative="1" as="geometry">
-                        <mxPoint x="745" y="623" as="sourcePoint"/>
-                        <mxPoint x="955" y="623" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m13r" value="200 {violationCount, isForceSubmitted:false}" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0714" y="-8" relative="1" as="geometry">
-                        <mxPoint x="745" y="648" as="sourcePoint"/>
-                        <mxPoint x="325" y="648" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_warn" value="Show Warning Modal (violation 1 or 2)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="325" y="673" as="sourcePoint"/>
-                        <mxPoint x="125" y="673" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s5" value="PHASE 5 — Violation ≥ 3 → Force Submit" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="700" width="500" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m14" value="POST /api/exam/{id}/violation (3rd time)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="325" y="728" as="sourcePoint"/>
-                        <mxPoint x="745" y="728" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m15" value="ViolationCount=3 → Status=ForceSubmitted" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0952" y="-7" relative="1" as="geometry">
-                        <mxPoint x="745" y="753" as="sourcePoint"/>
-                        <mxPoint x="955" y="753" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m16" value="400 exam_force_submitted" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="745" y="778" as="sourcePoint"/>
-                        <mxPoint x="325" y="778" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m17" value="onMaxViolations() → Navigate to Result Page" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="325" y="803" as="sourcePoint"/>
-                        <mxPoint x="125" y="803" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m18" value="AuditLog: POST /violation → ForceSubmit" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;dashed=1;dashPattern=5 3;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.0238" y="10" relative="1" as="geometry">
-                        <mxPoint x="745" y="830" as="sourcePoint"/>
-                        <mxPoint x="1165" y="830" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_s6" value="ALTERNATE — Student Submits Normally" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="860" width="500" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ac_m19" value="Click &#39;Submit Exam&#39;" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.0976" y="-12" relative="1" as="geometry">
-                        <mxPoint x="125" y="888" as="sourcePoint"/>
-                        <mxPoint x="535" y="888" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m20" value="POST /api/exam/{id}/submit" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.1905" y="13" relative="1" as="geometry">
-                        <mxPoint x="535" y="913" as="sourcePoint"/>
-                        <mxPoint x="745" y="913" as="targetPoint"/>
-                        <mxPoint x="1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m21" value="Status = Submitted" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="-0.0952" y="8" relative="1" as="geometry">
-                        <mxPoint x="745" y="938" as="sourcePoint"/>
-                        <mxPoint x="955" y="938" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ac_m21r" value="200 OK – Exam Completed" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" parent="1" edge="1">
-                    <mxGeometry x="0.0161" y="-8" relative="1" as="geometry">
-                        <mxPoint x="745" y="958" as="sourcePoint"/>
-                        <mxPoint x="125" y="958" as="targetPoint"/>
-                        <mxPoint x="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram name="Tab3 – Sequence (Assignment Pipeline)" id="tab3-seq-assignment">
-        <mxGraphModel dx="1600" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1100" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="ap_title" value="Sequence Diagram — Assignment Submission Security Pipeline (7 Steps)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="100" y="10" width="1250" height="28" as="geometry"/>
-                </mxCell>
-                <!-- Participants -->
-                <mxCell id="ap_p1" value="Student" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p2" value="Assignment&#xa;Controller" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="240" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p3" value="DB&#xa;(SQL Server)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="440" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p4" value="MIME&#xa;Validator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="640" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p5" value="ClamAV&#xa;(TCP Daemon)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="840" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p6" value="AES-256&#xa;Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="1040" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_p7" value="MinIO&#xa;(Storage)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="1240" y="55" width="120" height="44" as="geometry"/>
-                </mxCell>
-                <!-- Lifelines -->
-                <mxCell id="ap_ll1" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="110" y="99" as="sourcePoint"/>
-                        <mxPoint x="110" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll2" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="99" as="sourcePoint"/>
-                        <mxPoint x="300" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll3" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="500" y="99" as="sourcePoint"/>
-                        <mxPoint x="500" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll4" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="700" y="99" as="sourcePoint"/>
-                        <mxPoint x="700" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll5" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="900" y="99" as="sourcePoint"/>
-                        <mxPoint x="900" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll6" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1100" y="99" as="sourcePoint"/>
-                        <mxPoint x="1100" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_ll7" value="" style="endArrow=none;dashed=1;dashPattern=5 4;strokeWidth=1;strokeColor=#888888;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1300" y="99" as="sourcePoint"/>
-                        <mxPoint x="1300" y="1070" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Step labels -->
-                <mxCell id="ap_lbl0" value="POST /api/assignments/{id}/submit (multipart/form-data, Bearer JWT)" style="text;html=1;fontSize=12;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="115" width="700" height="20" as="geometry"/>
-                </mxCell>
-                <!-- Step 1: JWT Extract -->
-                <mxCell id="ap_step1_lbl" value="STEP 1 — Extract StudentId from JWT Claims (401 if missing)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="145" width="550" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m1" value="POST /submit (Bearer JWT, file)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="110" y="170" as="sourcePoint"/>
-                        <mxPoint x="300" y="170" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m1a" value="GetRequiredUserId() from JWT Claims" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry"><mxPoint x="300" y="195" as="sourcePoint"/><mxPoint x="300" y="225" as="targetPoint"/><Array as="points"><mxPoint x="370" y="195"/><mxPoint x="370" y="225"/></Array></mxGeometry>
-                </mxCell>
-                <!-- Step 2: Assignment Exists -->
-                <mxCell id="ap_step2_lbl" value="STEP 2 — Assignment Exists in DB (404 if not found)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="235" width="550" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m2" value="SELECT Assignment WHERE Id={id}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="258" as="sourcePoint"/>
-                        <mxPoint x="500" y="258" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m2r" value="Assignment record / null" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="500" y="278" as="sourcePoint"/>
-                        <mxPoint x="300" y="278" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Step 3: Duplicate Check -->
-                <mxCell id="ap_step3_lbl" value="STEP 3 — Duplicate Submission Check (409 already_submitted)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="305" width="600" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m3" value="SELECT COUNT WHERE assignmentId+studentId" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="328" as="sourcePoint"/>
-                        <mxPoint x="500" y="328" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m3r" value="0 (no duplicate)" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="500" y="348" as="sourcePoint"/>
-                        <mxPoint x="300" y="348" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Step 4: File Size -->
-                <mxCell id="ap_step4_lbl" value="STEP 4 — File Size Check: 0 &lt; size ≤ 50 MB  (400 file_too_large)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="372" width="650" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m4" value="file.Length check" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry"><mxPoint x="300" y="395" as="sourcePoint"/><mxPoint x="300" y="425" as="targetPoint"/><Array as="points"><mxPoint x="370" y="395"/><mxPoint x="370" y="425"/></Array></mxGeometry>
-                </mxCell>
-                <!-- Step 5: MIME Validation -->
-                <mxCell id="ap_step5_lbl" value="STEP 5 — Read Magic Bytes (8 bytes) + Match MIME Allow-list  (422 invalid_mime_type)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="432" width="750" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m5" value="ReadAsync first 8 bytes (magic bytes)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="455" as="sourcePoint"/>
-                        <mxPoint x="700" y="455" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m5r" value="Valid MIME / 422 invalid_mime_type" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="700" y="473" as="sourcePoint"/>
-                        <mxPoint x="300" y="473" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Step 6: ClamAV -->
-                <mxCell id="ap_step6_lbl" value="STEP 6 — ClamAV TCP INSTREAM Scan (chunks 4096B)  (422 virus_detected)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="498" width="750" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m6" value="INSTREAM {fileChunks 4096B each}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="523" as="sourcePoint"/>
-                        <mxPoint x="900" y="523" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m6r" value="&#39;stream: OK&#39; / &#39;stream: FOUND virusname&#39;" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="900" y="543" as="sourcePoint"/>
-                        <mxPoint x="300" y="543" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Step 7: AES-256 Encrypt + MinIO Upload -->
-                <mxCell id="ap_step7_lbl" value="STEP 7 — AES-256-CBC Encrypt (random 16B IV prepended) + Upload MinIO with UUID StorageKey" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="568" width="1050" height="18" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_m7a" value="Encrypt(fileBytes, AES-256-CBC, random IV)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="593" as="sourcePoint"/>
-                        <mxPoint x="1100" y="593" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m7ar" value="[IV + ciphertext] bytes" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1100" y="613" as="sourcePoint"/>
-                        <mxPoint x="300" y="613" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m7b" value="PutObject(key=UUID.enc, body=encryptedBytes)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="640" as="sourcePoint"/>
-                        <mxPoint x="1300" y="640" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m7br" value="ACK" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1300" y="660" as="sourcePoint"/>
-                        <mxPoint x="300" y="660" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Persist submission -->
-                <mxCell id="ap_m8" value="INSERT AssignmentSubmission {StorageKey=UUID.enc, MimeType, FileSizeBytes}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="688" as="sourcePoint"/>
-                        <mxPoint x="500" y="688" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ap_m9" value="201 Created {submissionId}" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="715" as="sourcePoint"/>
-                        <mxPoint x="110" y="715" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <!-- Error summary box -->
-                <mxCell id="ap_err_box" value="Error Responses Summary" style="swimlane;startSize=25;fillColor=#f5f5f5;strokeColor=#000000;fontSize=11;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="750" width="550" height="270" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er1" value="Step 1 fail → 401 Unauthorized (missing JWT)" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="25" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er2" value="Step 2 fail → 404 assignment_not_found" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="47" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er3" value="Step 3 fail → 409 already_submitted" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="69" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er4" value="Step 4 fail → 400 file_too_large / file_required" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="91" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er5" value="Step 5 fail → 422 invalid_mime_type" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="113" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er6" value="Step 6 fail → 422 virus_detected" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="135" width="550" height="22" as="geometry"/>
-                </mxCell>
-                <mxCell id="ap_er7" value="Step 7 success → 201 Created" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontStyle=1;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box">
-                    <mxGeometry x="0" y="157" width="550" height="22" as="geometry"/>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram name="Tab4 – Activity (Grading)" id="tab4-activity-grading">
-        <mxGraphModel dx="1400" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1300" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="gr_title" value="Activity Diagram — Instructor Grading (Server-side Decrypt + Evaluate)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="100" y="10" width="950" height="28" as="geometry"/>
-                </mxCell>
-                <!-- Swimlane: Instructor -->
-                <mxCell id="gr_sl_inst" value="Instructor (InstructorOrAdmin Policy)" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="40" y="55" width="360" height="1200" as="geometry"/>
-                </mxCell>
-                <!-- Swimlane: System -->
-                <mxCell id="gr_sl_sys" value="System / Backend" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="420" y="55" width="360" height="1200" as="geometry"/>
-                </mxCell>
-                <!-- Swimlane: Storage -->
-                <mxCell id="gr_sl_store" value="MinIO / Storage" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
-                    <mxGeometry x="800" y="55" width="280" height="1200" as="geometry"/>
-                </mxCell>
-                <!-- ── Instructor Lane ── -->
-                <mxCell id="gr_s" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="153" y="30" width="28" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr1" value="Navigate to&#xa;Assignment Submissions List" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="85" width="195" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr2" value="Select Submission&#xa;to Grade" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="160" width="195" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr3" value="Click &#39;Download File&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="235" width="195" height="44" as="geometry"/>
-                </mxCell>
-                <!-- View decrypted file -->
-                <mxCell id="gr4" value="View Decrypted File&#xa;(original content)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="565" width="195" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr5" value="Input Grade (Score)&#xa;+ Feedback Comments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="640" width="195" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr6" value="Submit Grade" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="80" y="720" width="195" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="gr_end" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;shape=doubleEllipse;" vertex="1" parent="gr_sl_inst">
-                    <mxGeometry x="153" y="860" width="28" height="28" as="geometry"/>
-                </mxCell>
-                <!-- ── System Lane ── -->
-                <mxCell id="sys_auth" value="Verify JWT + Policy&#xa;(InstructorOrAdmin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="235" width="190" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_d_auth" value="Authorized?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="105" y="310" width="130" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_err_auth" value="Return 403 Forbidden" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=11;fontStyle=2;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="260" y="328" width="90" height="44" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_fetch_meta" value="SELECT Submission&#xa;(StorageKey, MimeType)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="410" width="190" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_decrypt" value="GetObject(StorageKey) from MinIO&#xa;→ AES-256-CBC Decrypt&#xa;(strip 16B IV prefix)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=11;fontStyle=1;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="490" width="190" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_stream" value="Stream Decrypted File&#xa;to Instructor Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="580" width="190" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_update" value="UPDATE Submission&#xa;SET Grade, Feedback,&#xa;Status = Graded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="720" width="190" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="sys_notif_g" value="Fire Notification to Student&#xa;&#39;Your assignment has been graded&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;fontSize=11;fontStyle=1;fontColor=#000000;" vertex="1" parent="gr_sl_sys">
-                    <mxGeometry x="80" y="810" width="190" height="50" as="geometry"/>
-                </mxCell>
-                <!-- ── Storage Lane ── -->
-                <mxCell id="st_get" value="GetObject(StorageKey)&#xa;→ Return .enc bytes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_store">
-                    <mxGeometry x="45" y="490" width="185" height="60" as="geometry"/>
-                </mxCell>
-                <!-- ── Edges Instructor ── -->
-                <mxCell id="ge1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr_s" target="gr1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="ge2" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr1" target="gr2">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="ge3" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr2" target="gr3">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="ge4" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr4" target="gr5">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="ge5" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr5" target="gr6">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="ge6" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr6" target="gr_end">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <!-- ── Edges System ── -->
-                <mxCell id="gse1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_auth" target="sys_d_auth">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="gse2" value="No" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="gr_sl_sys" source="sys_d_auth" target="sys_err_auth">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="gse3" value="Yes" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="gr_sl_sys" source="sys_d_auth" target="sys_fetch_meta">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="gse4" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_fetch_meta" target="sys_decrypt">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="gse5" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_decrypt" target="sys_stream">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="gse6" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_update" target="sys_notif_g">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <!-- ── Cross-lane edges ── -->
-                <mxCell id="gcx1" value="GET /submissions/{id}/download" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="275" y="257" as="sourcePoint"/>
-                        <mxPoint x="500" y="257" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="gcx2" value="fetch encrypted file" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="780" y="515" as="sourcePoint"/>
-                        <mxPoint x="845" y="515" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="gcx3" value=".enc bytes" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="845" y="535" as="sourcePoint"/>
-                        <mxPoint x="780" y="535" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="gcx4" value="stream decrypted file" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="500" y="600" as="sourcePoint"/>
-                        <mxPoint x="235" y="583" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="gcx5" value="POST /submissions/{id}/grade" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="235" y="745" as="sourcePoint"/>
-                        <mxPoint x="500" y="745" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="gcx6" value="200 OK" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="500" y="870" as="sourcePoint"/>
-                        <mxPoint x="235" y="880" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
+<mxfile host="app.diagrams.net" modified="2026-06-17" agent="draw.io" version="24.0.0" type="device">
+
+<!-- ============================================================
+     PHASE 3 — LEARNING & ASSESSMENT
+     Tab 1 : Flow (Enrollment & Learning Journey)
+     Tab 2 : Sequence (Exam Anti-Cheat)
+     Tab 3 : Sequence (Assignment Security Pipeline — opt/alt)
+     Tab 4 : Activity (Grading)
+     Style  : Blueprint · White bg · Stroke 1.5 · UML Fragments
+     ============================================================ -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TAB 1 — FLOW: ENROLLMENT & LEARNING JOURNEY
+       ═══════════════════════════════════════════════════════════ -->
+  <diagram name="Tab1 – Flow (Enrollment &amp; Learning)" id="tab1-flow-enroll">
+    <mxGraphModel dx="1086" dy="445" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="fl_title" value="Flow Diagram — Student Enrollment &amp; Learning Journey" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="150" y="10" width="850" height="28" as="geometry"/></mxCell>
+        <mxCell id="fl_s"   value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1"><mxGeometry x="555" y="55" width="28" height="28" as="geometry"/></mxCell>
+        <mxCell id="fl1"    value="Student Logs In (JWT Auth)"                  style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="470" y="105" width="200" height="48" as="geometry"/></mxCell>
+        <mxCell id="fl2"    value="Browse Course Catalog"                        style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="470" y="180" width="200" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl3"    value="View Course Details"                          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="470" y="250" width="200" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl_d1"  value="Already&#xa;Enrolled?"                        style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="500" y="320" width="140" height="80" as="geometry"/></mxCell>
+        <mxCell id="fl_enroll" value="Enroll in Course (POST /enrollments)"      style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="285" y="338" width="170" height="50" as="geometry"/></mxCell>
+        <mxCell id="fl4"    value="Access Course Modules &amp; Lectures"         style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="470" y="435" width="200" height="48" as="geometry"/></mxCell>
+        <mxCell id="fl5"    value="Select Content Item"                          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="470" y="510" width="200" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl_d2"  value="Content&#xa;Type?"                            style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="500" y="582" width="140" height="80" as="geometry"/></mxCell>
+        <mxCell id="fl_l1"  value="Get Signed URL (HMAC-SHA256, TTL 4h)"        style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="175" y="618" width="185" height="50" as="geometry"/></mxCell>
+        <mxCell id="fl_l2"  value="Play Video (Canvas Watermark)"                style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="175" y="695" width="185" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl_q1"  value="Start Exam Session (server assigns StartAt)"  style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="475" y="698" width="185" height="50" as="geometry"/></mxCell>
+        <mxCell id="fl_q2"  value="Answer Questions (Anti-Cheat Active)"         style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="475" y="775" width="185" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl_q3"  value="Submit Exam"                                  style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="475" y="845" width="185" height="44" as="geometry"/></mxCell>
+        <mxCell id="fl_a1"  value="Download Assignment Brief"                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="790" y="622" width="165" height="50" as="geometry"/></mxCell>
+        <mxCell id="fl_a2"  value="Upload Solution (Security Pipeline)"          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="790" y="695" width="165" height="50" as="geometry"/></mxCell>
+        <mxCell id="fl_merge" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1"><mxGeometry x="555" y="930" width="40" height="40" as="geometry"/></mxCell>
+        <mxCell id="fl_d3"  value="Continue&#xa;Learning?"                       style="rhombus;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="500" y="998" width="140" height="80" as="geometry"/></mxCell>
+        <mxCell id="fl_end" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;shape=doubleEllipse;" vertex="1" parent="1"><mxGeometry x="555" y="1110" width="28" height="28" as="geometry"/></mxCell>
+        <mxCell id="fe1"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_s"      target="fl1"      ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe2"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl1"       target="fl2"      ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe3"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl2"       target="fl3"      ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe4"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl3"       target="fl_d1"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe5"  value="No"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d1" target="fl_enroll"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe6"  value="Yes" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d1" target="fl4"     ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe6b" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_enroll" target="fl4"      ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe7"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl4"       target="fl5"      ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe8"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl5"       target="fl_d2"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe9"  value="Lecture"    style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d2" target="fl_l1"  ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe10" value="Quiz"       style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d2" target="fl_q1"  ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe11" value="Assignment" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d2" target="fl_a1"  ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe12" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_l1"     target="fl_l2"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe13" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_q1"     target="fl_q2"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe14" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_q2"     target="fl_q3"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe15" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_a1"     target="fl_a2"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe16" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_l2"     target="fl_merge" ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe17" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_q3"     target="fl_merge" ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe18" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_a2"     target="fl_merge" ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe19" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="fl_merge"  target="fl_d3"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fe20" value="Yes" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d3" target="fl4"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="155" y="1038"/><mxPoint x="155" y="459"/></Array></mxGeometry></mxCell>
+        <mxCell id="fe21" value="No"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;fontSize=10;" edge="1" parent="1" source="fl_d3" target="fl_end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TAB 2 — SEQUENCE: EXAM ANTI-CHEAT ENGINE
+       Clean self-calls, loop/opt UML fragments
+       ═══════════════════════════════════════════════════════════ -->
+  <diagram name="Tab2 – Sequence (Exam Anti-Cheat)" id="tab2-seq-anticheat">
+    <mxGraphModel dx="1600" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="ac_title" value="Sequence Diagram — Exam Anti-Cheat Engine (UML loop / opt Fragments)"
+          style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="1350" height="28" as="geometry"/>
+        </mxCell>
+        <!-- PARTICIPANTS -->
+        <mxCell id="ac_p1" value="Student&#xa;(Browser)"    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60"   y="55" width="130" height="44" as="geometry"/></mxCell>
+        <mxCell id="ac_p2" value="React&#xa;AntiCheat Hooks" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="270"  y="55" width="130" height="44" as="geometry"/></mxCell>
+        <mxCell id="ac_p3" value="ExamPage&#xa;Component"   style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="480"  y="55" width="130" height="44" as="geometry"/></mxCell>
+        <mxCell id="ac_p4" value="ExamController&#xa;(API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="690"  y="55" width="130" height="44" as="geometry"/></mxCell>
+        <mxCell id="ac_p5" value="ExamSession&#xa;(DB)"     style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="900"  y="55" width="130" height="44" as="geometry"/></mxCell>
+        <mxCell id="ac_p6" value="AuditLog&#xa;(Middleware)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="1110" y="55" width="130" height="44" as="geometry"/></mxCell>
+        <!-- LIFELINES -->
+        <mxCell id="ac_ll1" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125"  y="99" as="sourcePoint"/><mxPoint x="125"  y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_ll2" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335"  y="99" as="sourcePoint"/><mxPoint x="335"  y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_ll3" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545"  y="99" as="sourcePoint"/><mxPoint x="545"  y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_ll4" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755"  y="99" as="sourcePoint"/><mxPoint x="755"  y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_ll5" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="965"  y="99" as="sourcePoint"/><mxPoint x="965"  y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_ll6" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1175" y="99" as="sourcePoint"/><mxPoint x="1175" y="1270" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 1 -->
+        <mxCell id="ac_s1" value="PHASE 1 — Initialize Exam Session" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="120" width="400" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_m1" value="Start Exam (click)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="150" as="sourcePoint"/><mxPoint x="545" y="150" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m2" value="POST /api/exam/{id}/start" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545" y="185" as="sourcePoint"/><mxPoint x="755" y="185" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m3" value="CREATE ExamSession {StartAt=UtcNow, Status=Active}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="218" as="sourcePoint"/><mxPoint x="965" y="218" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m3r" value="sessionId" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="965" y="248" as="sourcePoint"/><mxPoint x="125" y="248" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 2 -->
+        <mxCell id="ac_s2" value="PHASE 2 — Mount Anti-Cheat Hooks" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="278" width="400" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_m4" value="Mount useFullscreen() → auto-enter Fullscreen 300ms" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545" y="308" as="sourcePoint"/><mxPoint x="335" y="308" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m5" value="Mount useAntiCheat() → block copy/paste/rightclick/F12" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545" y="343" as="sourcePoint"/><mxPoint x="335" y="343" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m6" value="Mount useTabDetection(sessionId)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545" y="378" as="sourcePoint"/><mxPoint x="335" y="378" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m7" value="requestFullscreen() on examContainer ref" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="413" as="sourcePoint"/><mxPoint x="125" y="413" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 3: loop fragment -->
+        <mxCell id="ac_s3" value="PHASE 3 — Heartbeat Loop (every 30s)" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="453" width="400" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_loop" value="loop [every 30 seconds]" style="text;html=1;fontSize=11;fontStyle=3;align=left;verticalAlign=top;fillColor=none;strokeColor=#000000;strokeWidth=1.5;spacingLeft=6;spacingTop=2;" vertex="1" parent="1"><mxGeometry x="60" y="473" width="1150" height="130" as="geometry"/></mxCell>
+        <mxCell id="ac_m8"  value="POST /api/exam/{id}/heartbeat (Bearer JWT)"       style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="513" as="sourcePoint"/><mxPoint x="755" y="513" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m9"  value="IsExpired()? GetRemainingSeconds()"               style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="548" as="sourcePoint"/><mxPoint x="965" y="548" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m9r" value="200 {remainingSeconds} / 400 exam_time_expired"   style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="578" as="sourcePoint"/><mxPoint x="335" y="578" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 4 -->
+        <mxCell id="ac_s4" value="PHASE 4 — Tab Switch Detected (visibilitychange event)" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="623" width="550" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_m10" value="visibilitychange → document.visibilityState = 'hidden'"    style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="653" as="sourcePoint"/><mxPoint x="335" y="653" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- self-call: violationCount++ on AntiCheat Hooks -->
+        <mxCell id="ac_m11" value="violationCount++ (local ref)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="335" y="690" as="sourcePoint"/>
+            <mxPoint x="335" y="730" as="targetPoint"/>
+            <Array as="points"><mxPoint x="395" y="690"/><mxPoint x="395" y="730"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ac_m12"  value="POST /api/exam/{id}/violation {violationType:'TabSwitch'}"   style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="758" as="sourcePoint"/><mxPoint x="755" y="758" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- self-call: RecordViolation on DB -->
+        <mxCell id="ac_m13" value="RecordViolation() → ViolationCount++" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="965" y="793" as="sourcePoint"/>
+            <mxPoint x="965" y="833" as="targetPoint"/>
+            <Array as="points"><mxPoint x="1025" y="793"/><mxPoint x="1025" y="833"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ac_m13r" value="200 {violationCount, isForceSubmitted: false}" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="860" as="sourcePoint"/><mxPoint x="335" y="860" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_warn" value="Show Warning Modal (violation 1 or 2)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="895" as="sourcePoint"/><mxPoint x="125" y="895" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 5: opt fragment -->
+        <mxCell id="ac_s5" value="PHASE 5 — Violation ≥ 3 → Force Submit" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="930" width="500" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_opt" value="opt" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=#000000;strokeWidth=1.5;spacingLeft=6;spacingTop=2;" vertex="1" parent="1"><mxGeometry x="60" y="950" width="1250" height="155" as="geometry"/></mxCell>
+        <mxCell id="ac_optg" value="[violationCount ≥ 3]" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="70" y="955" width="180" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_m14" value="POST /api/exam/{id}/violation (3rd time)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="985" as="sourcePoint"/><mxPoint x="755" y="985" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m15" value="ViolationCount=3 → Status=ForceSubmitted" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="1015" as="sourcePoint"/><mxPoint x="965" y="1015" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m16" value="400 exam_force_submitted → onMaxViolations() → Navigate to Result" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="1068" as="sourcePoint"/><mxPoint x="125" y="1068" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m18" value="AuditLog: POST /violation → ForceSubmit" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;dashed=1;dashPattern=5 3;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="1088" as="sourcePoint"/><mxPoint x="1175" y="1088" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- PHASE 6: Normal Submit -->
+        <mxCell id="ac_s6" value="PHASE 6 — Student Submits Normally" style="text;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="60" y="1130" width="500" height="18" as="geometry"/></mxCell>
+        <mxCell id="ac_m19" value="Click 'Submit Exam'" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="1160" as="sourcePoint"/><mxPoint x="545" y="1160" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m20" value="POST /api/exam/{id}/submit" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="545" y="1193" as="sourcePoint"/><mxPoint x="755" y="1193" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m21" value="Status = Submitted" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="1223" as="sourcePoint"/><mxPoint x="965" y="1223" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ac_m21r" value="200 OK – Exam Completed" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="755" y="1253" as="sourcePoint"/><mxPoint x="125" y="1253" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TAB 3 — SEQUENCE: ASSIGNMENT SUBMISSION PIPELINE (7 Steps)
+       Security steps clearly spaced; self-calls U-shape
+       ═══════════════════════════════════════════════════════════ -->
+  <diagram name="Tab3 – Sequence (Assignment Pipeline)" id="tab3-seq-assignment">
+    <mxGraphModel dx="1600" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="ap_title" value="Sequence Diagram — Assignment Submission Security Pipeline (7 Steps)"
+          style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="80" y="10" width="1450" height="28" as="geometry"/></mxCell>
+        <!-- PARTICIPANTS -->
+        <mxCell id="ap_p1" value="Student"               style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="50"   y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p2" value="Assignment&#xa;Controller" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="240"  y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p3" value="DB&#xa;(SQL Server)"    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="430"  y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p4" value="MIME&#xa;Validator"     style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="620"  y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p5" value="ClamAV&#xa;(TCP Daemon)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="810"  y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p6" value="AES-256&#xa;Service"    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="1000" y="55" width="120" height="44" as="geometry"/></mxCell>
+        <mxCell id="ap_p7" value="MinIO&#xa;(Storage)"    style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=12;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="1190" y="55" width="120" height="44" as="geometry"/></mxCell>
+        <!-- LIFELINES -->
+        <mxCell id="ap_ll1" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="110"  y="99" as="sourcePoint"/><mxPoint x="110"  y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll2" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300"  y="99" as="sourcePoint"/><mxPoint x="300"  y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll3" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490"  y="99" as="sourcePoint"/><mxPoint x="490"  y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll4" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="680"  y="99" as="sourcePoint"/><mxPoint x="680"  y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll5" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="870"  y="99" as="sourcePoint"/><mxPoint x="870"  y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll6" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1060" y="99" as="sourcePoint"/><mxPoint x="1060" y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_ll7" value="" style="endArrow=none;dashed=1;dashPattern=6 4;strokeWidth=1.5;strokeColor=#888888;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1250" y="99" as="sourcePoint"/><mxPoint x="1250" y="1170" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- STEP 1 -->
+        <mxCell id="ap_s1" value="STEP 1 — Extract StudentId from JWT (401 if missing)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="115" width="580" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m1" value="POST /api/assignments/{id}/submit (Bearer JWT, file)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="110" y="143" as="sourcePoint"/><mxPoint x="300" y="143" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m1a" value="GetRequiredUserId() from JWT Claims" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="300" y="180" as="sourcePoint"/><mxPoint x="300" y="220" as="targetPoint"/><Array as="points"><mxPoint x="362" y="180"/><mxPoint x="362" y="220"/></Array></mxGeometry>
+        </mxCell>
+        <!-- STEP 2 -->
+        <mxCell id="ap_s2" value="STEP 2 — Assignment Exists in DB (404)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="248" width="520" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m2"  value="SELECT Assignment WHERE Id={id}"    style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="275" as="sourcePoint"/><mxPoint x="490" y="275" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m2r" value="Assignment record"                   style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="305" as="sourcePoint"/><mxPoint x="300" y="305" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- STEP 3 -->
+        <mxCell id="ap_s3" value="STEP 3 — Duplicate Check (409)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="333" width="520" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m3"  value="SELECT COUNT WHERE assignmentId+studentId" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="360" as="sourcePoint"/><mxPoint x="490" y="360" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m3r" value="0 (no duplicate)"                          style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="390" as="sourcePoint"/><mxPoint x="300" y="390" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- STEP 4 -->
+        <mxCell id="ap_s4" value="STEP 4 — File Size Check: 0 &lt; size ≤ 50 MB  (400)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="418" width="680" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m4" value="file.Length check (0 &lt; size ≤ 52428800 bytes)" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;labelBackgroundColor=#ffffff;align=left;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="300" y="445" as="sourcePoint"/><mxPoint x="300" y="485" as="targetPoint"/><Array as="points"><mxPoint x="362" y="445"/><mxPoint x="362" y="485"/></Array></mxGeometry>
+        </mxCell>
+        <!-- STEP 5 -->
+        <mxCell id="ap_s5" value="STEP 5 — Magic Bytes MIME Validate  (422 invalid_mime_type)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="515" width="780" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m5"  value="ReadAsync first 8 bytes (magic bytes)"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="543" as="sourcePoint"/><mxPoint x="680" y="543" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m5r" value="Valid MIME / 422 invalid_mime_type"     style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="680" y="573" as="sourcePoint"/><mxPoint x="300" y="573" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- STEP 6 -->
+        <mxCell id="ap_s6" value="STEP 6 — ClamAV TCP INSTREAM Scan 4096B chunks  (422 virus_detected)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="603" width="850" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m6"  value="INSTREAM {fileChunks 4096B each}"              style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="630" as="sourcePoint"/><mxPoint x="870" y="630" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m6r" value="'stream: OK' / 'stream: FOUND virusname'"      style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="870" y="660" as="sourcePoint"/><mxPoint x="300" y="660" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- STEP 7 -->
+        <mxCell id="ap_s7" value="STEP 7 — AES-256-CBC Encrypt + MinIO Upload (UUID StorageKey)" style="text;html=1;fontSize=10;fontStyle=2;align=left;fillColor=none;strokeColor=none;fontColor=#555555;" vertex="1" parent="1"><mxGeometry x="50" y="690" width="950" height="18" as="geometry"/></mxCell>
+        <mxCell id="ap_m7a"  value="Encrypt(fileBytes, AES-256-CBC, random IV)"         style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="718" as="sourcePoint"/><mxPoint x="1060" y="718" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m7ar" value="[IV + ciphertext] bytes"                             style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1060" y="750" as="sourcePoint"/><mxPoint x="300" y="750" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m7b"  value="PutObject(key=UUID.enc, body=encryptedBytes)"       style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="785" as="sourcePoint"/><mxPoint x="1250" y="785" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m7br" value="ACK"                                                 style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1250" y="815" as="sourcePoint"/><mxPoint x="300" y="815" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Persist + 201 -->
+        <mxCell id="ap_m8"  value="INSERT AssignmentSubmission {StorageKey=UUID.enc, MimeType, FileSizeBytes}" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="853" as="sourcePoint"/><mxPoint x="490" y="853" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ap_m9"  value="201 Created {submissionId}"                                                 style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="890" as="sourcePoint"/><mxPoint x="110" y="890" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Error box -->
+        <mxCell id="ap_err_box" value="Error Responses Summary" style="swimlane;startSize=25;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=11;fontStyle=1;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="50" y="928" width="570" height="220" as="geometry"/></mxCell>
+        <mxCell id="ap_er1" value="Step 1 → 401 Unauthorized (missing JWT)" style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="25"  width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er2" value="Step 2 → 404 assignment_not_found"        style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="47"  width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er3" value="Step 3 → 409 already_submitted"           style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="69"  width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er4" value="Step 4 → 400 file_too_large"              style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="91"  width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er5" value="Step 5 → 422 invalid_mime_type"           style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="113" width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er6" value="Step 6 → 422 virus_detected"              style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="135" width="570" height="22" as="geometry"/></mxCell>
+        <mxCell id="ap_er7" value="Step 7 success → 201 Created"             style="text;html=1;align=left;fillColor=none;strokeColor=none;fontSize=11;fontStyle=1;fontColor=#000000;spacingLeft=8;" vertex="1" parent="ap_err_box"><mxGeometry x="0" y="157" width="570" height="22" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TAB 4 — ACTIVITY: INSTRUCTOR GRADING
+       ═══════════════════════════════════════════════════════════ -->
+  <diagram name="Tab4 – Activity (Grading)" id="tab4-activity-grading">
+    <mxGraphModel dx="1400" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="gr_title" value="Activity Diagram — Instructor Grading (Server-side Decrypt + Evaluate)" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="100" y="10" width="950" height="28" as="geometry"/></mxCell>
+        <!-- Swimlane: Instructor -->
+        <mxCell id="gr_sl_inst" value="Instructor (InstructorOrAdmin Policy)" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="40" y="55" width="360" height="1200" as="geometry"/></mxCell>
+        <!-- Swimlane: System -->
+        <mxCell id="gr_sl_sys" value="System / Backend" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="420" y="55" width="360" height="1200" as="geometry"/></mxCell>
+        <!-- Swimlane: Storage -->
+        <mxCell id="gr_sl_store" value="MinIO / Storage" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1"><mxGeometry x="800" y="55" width="280" height="1200" as="geometry"/></mxCell>
+
+        <!-- Instructor Lane -->
+        <mxCell id="gr_s"  value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="153" y="30" width="28" height="28" as="geometry"/></mxCell>
+        <mxCell id="gr1"   value="Navigate to Assignment Submissions List" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="85" width="195" height="50" as="geometry"/></mxCell>
+        <mxCell id="gr2"   value="Select Submission to Review"             style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="165" width="195" height="44" as="geometry"/></mxCell>
+        <mxCell id="gr3"   value="Click 'Download &amp; Review'"           style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="240" width="195" height="44" as="geometry"/></mxCell>
+        <mxCell id="gr4"   value="Review Decrypted File"                   style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="560" width="195" height="44" as="geometry"/></mxCell>
+        <mxCell id="gr5"   value="Input Grade (0-100) + Feedback"          style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="635" width="195" height="55" as="geometry"/></mxCell>
+        <mxCell id="gr6"   value="Submit Grade"                            style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_inst"><mxGeometry x="80" y="715" width="195" height="44" as="geometry"/></mxCell>
+        <mxCell id="gr_end" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;shape=doubleEllipse;" vertex="1" parent="gr_sl_inst"><mxGeometry x="153" y="815" width="28" height="28" as="geometry"/></mxCell>
+        <mxCell id="gre1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr_s"  target="gr1"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gre2" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr1"   target="gr2"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gre3" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr2"   target="gr3"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gre4" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr4"   target="gr5"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gre5" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr5"   target="gr6"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gre6" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_inst" source="gr6"   target="gr_end"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- System Lane -->
+        <mxCell id="sys_auth"   value="Validate JWT + InstructorOrAdmin Role"    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="240" width="200" height="50" as="geometry"/></mxCell>
+        <mxCell id="sys_fetch"  value="SELECT Submission WHERE SubmissionId={id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="320" width="200" height="55" as="geometry"/></mxCell>
+        <mxCell id="sys_dl"     value="GetObject(StorageKey=UUID.enc) from MinIO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="405" width="200" height="55" as="geometry"/></mxCell>
+        <mxCell id="sys_dec"    value="AES-256-CBC Decrypt (IV from first 16 bytes)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontStyle=1;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="490" width="200" height="55" as="geometry"/></mxCell>
+        <mxCell id="sys_grade"  value="UPDATE Submission SET Grade={g}, Status=Graded" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontStyle=1;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="715" width="200" height="55" as="geometry"/></mxCell>
+        <mxCell id="sys_notif2" value="Fire Push Notification to Student (Grade Ready)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontStyle=1;fontColor=#000000;" vertex="1" parent="gr_sl_sys"><mxGeometry x="80" y="800" width="200" height="55" as="geometry"/></mxCell>
+        <mxCell id="sye1" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_auth"  target="sys_fetch" ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sye2" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_fetch"  target="sys_dl"    ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sye3" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_dl"     target="sys_dec"   ><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sye4" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="gr_sl_sys" source="sys_grade"  target="sys_notif2"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Storage Lane -->
+        <mxCell id="st_obj" value="MinIO GetObject(UUID.enc)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_store"><mxGeometry x="40" y="405" width="185" height="55" as="geometry"/></mxCell>
+        <mxCell id="st_ack" value="Raw encrypted bytes"       style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#000000;strokeWidth=1.5;fontSize=12;fontColor=#000000;" vertex="1" parent="gr_sl_store"><mxGeometry x="40" y="490" width="185" height="44" as="geometry"/></mxCell>
+
+        <!-- Cross-lane edges -->
+        <mxCell id="cx_g1" value="submit review request"    style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="275" y="262" as="sourcePoint"/><mxPoint x="500" y="262" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="cx_g2" style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="sys_dl" target="st_obj"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="cx_g3" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="st_ack" target="sys_dec"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="cx_g4" value="decrypted file (stream)"  style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="500" y="535" as="sourcePoint"/><mxPoint x="275" y="575" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="cx_g5" value="submit grade"             style="endArrow=block;endFill=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="275" y="737" as="sourcePoint"/><mxPoint x="500" y="737" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="cx_g6" value="200 OK + notification sent" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#000000;strokeWidth=1.5;fontSize=10;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="500" y="827" as="sourcePoint"/><mxPoint x="275" y="827" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
 </mxfile>
