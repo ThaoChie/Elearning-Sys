@@ -162,13 +162,13 @@ export default function LessonPlayer() {
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-2">
-          {course.syllabus.map(chapter => (
+          {course.syllabus.map((chapter: any) => (
             <div key={chapter.id} className="mb-4">
               <h3 className="px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
                 {chapter.title}
               </h3>
               <div className="space-y-1 mt-1">
-                {chapter.lessons.map(lesson => (
+                {chapter.lessons.map((lesson: any) => (
                   <button 
                     key={lesson.id} 
                     className={`w-full text-left px-3 py-3 rounded-xl flex items-start gap-3 transition-colors ${lesson.isCurrent ? 'bg-indigo-500/10 border border-indigo-500/20' : 'hover:bg-white/80 border border-transparent'}`}

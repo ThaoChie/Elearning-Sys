@@ -105,14 +105,14 @@ export default function CourseDetail() {
           </h2>
           
           <div className="space-y-4">
-            {courseData.syllabus.map((chapter, idx) => (
+            {courseData.syllabus.map((chapter: any, idx: number) => (
               <div key={idx} className="bg-white/70 border border-slate-200/50 rounded-xl overflow-hidden">
                 <div className="bg-white/80 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
                   <h3 className="font-bold text-slate-700">{chapter.title}</h3>
                   <span className="text-xs text-slate-500">{chapter.lessons.length} bài học</span>
                 </div>
                 <div className="divide-y divide-slate-700/50">
-                  {chapter.lessons.map((item, i) => (
+                  {chapter.lessons.map((item: any, i: number) => (
                     <button 
                       key={i} 
                       onClick={() => courseData.isEnrolled && navigate(`/dashboard/student/courses/${courseId}/learn`)}
