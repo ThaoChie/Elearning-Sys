@@ -6,6 +6,7 @@ import { enrollInMockCourse } from './mockData.student'
 import { addAuditLog } from '../admin/mockData'
 
 import { dbGetCourseById } from '../../data/mockDatabase'
+import { sanitizeText } from '../../utils/sanitize'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
@@ -48,7 +49,7 @@ export default function CourseDetail() {
               {courseData.title}
             </h1>
             <p className="text-slate-600 text-sm mb-6 line-clamp-2">
-              {courseData.description}
+              {sanitizeText(courseData.description)}
             </p>
             <div className="flex items-center gap-6 text-sm text-slate-600">
               <span className="flex items-center gap-1.5"><Star size={16} className="text-amber-400" /> {courseData.rating}</span>

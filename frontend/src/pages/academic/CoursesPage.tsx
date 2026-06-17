@@ -3,6 +3,7 @@ import { BookOpen, Plus, MoreVertical, PlayCircle, Users, Clock } from 'lucide-r
 import { useNavigate } from 'react-router-dom'
 import type { DashboardUser } from '../../types/dashboard'
 import apiClient from '../../api/apiClient'
+import { sanitizeText } from '../../utils/sanitize'
 
 interface Props {
   user: DashboardUser
@@ -33,7 +34,12 @@ export default function CoursesPage({ user }: Props) {
   const handleCreateCourse = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await apiClient.post('/courses', formData)
+      // Sanitize trước khi gửi lên API để chống XSS tại điểm nhập liệu
+      const sanitizedData = {
+        title: sanitizeText(formData.title),
+        description: sanitizeText(formData.description),
+      }
+      await apiClient.post('/courses', sanitizedData)
       fetchCourses()
       setShowCreateModal(false)
       setFormData({ title: '', description: '' })

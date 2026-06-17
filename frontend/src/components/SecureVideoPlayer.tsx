@@ -7,6 +7,7 @@
  *  - Canvas watermark: UserID + Timestamp xoay -45°, render một lần duy nhất
  *    (không vẽ lại mỗi frame) → không gây giật lag video
  *  - Tự refresh Signed URL trước 5 phút khi hết hạn để không bị gián đoạn
+ *  - MutationObserver: tự động phục hồi canvas watermark nếu bị xóa qua DevTools (F12)
  */
 
 import {
@@ -62,17 +63,79 @@ function useSignedUrl(videoPath: string) {
   return { signedUrl, error, retry: fetchUrl }
 }
 
+// ── Hàm vẽ watermark độc lập (reuse cho cả hook và MutationGuard) ──────────
+//   Đặt trước useCanvasWatermark vì hook này gọi hàm này.
+
+/**
+ * Vẽ watermark lên canvas bất kỳ – dùng lại bởi:
+ *  1. useCanvasWatermark (mount lần đầu)
+ *  2. useMutationGuard  (restore sau khi canvas bị xóa qua F12)
+ *
+ * Kỹ thuật tối ưu: ưu tiên OffscreenCanvas (off main thread), fallback canvas DOM.
+ */
+function drawWatermarkOnCanvas(canvas: HTMLCanvasElement, userId: string) {
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  const W = canvas.offsetWidth || canvas.width || 640
+  const H = canvas.offsetHeight || canvas.height || 360
+  canvas.width = W
+  canvas.height = H
+
+  const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })
+  const label = `${userId} · ${timestamp}`
+
+  const draw = (targetCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => {
+    const tW = targetCtx.canvas.width
+    const tH = targetCtx.canvas.height
+
+    targetCtx.clearRect(0, 0, tW, tH)
+    targetCtx.save()
+
+    // Font và màu sắc watermark mờ
+    targetCtx.font = 'bold 14px Inter, system-ui, sans-serif'
+    targetCtx.fillStyle = 'rgba(255, 255, 255, 0.18)'
+    targetCtx.shadowColor = 'rgba(0,0,0,0.4)'
+    targetCtx.shadowBlur = 3
+
+    // Lặp tile watermark theo lưới chéo -45°
+    const angle = (-45 * Math.PI) / 180
+    const tileW = 260
+    const tileH = 80
+
+    for (let y = -tH; y < tH * 2; y += tileH) {
+      for (let x = -tW; x < tW * 2; x += tileW) {
+        targetCtx.save()
+        targetCtx.translate(x + tileW / 2, y + tileH / 2)
+        targetCtx.rotate(angle)
+        targetCtx.fillText(label, -targetCtx.measureText(label).width / 2, 0)
+        targetCtx.restore()
+      }
+    }
+
+    targetCtx.restore()
+  }
+
+  // Ưu tiên OffscreenCanvas để không block main thread
+  if (typeof OffscreenCanvas !== 'undefined') {
+    const offscreen = new OffscreenCanvas(W, H)
+    const offCtx = offscreen.getContext('2d') as OffscreenCanvasRenderingContext2D | null
+    if (offCtx) {
+      draw(offCtx)
+      ctx.drawImage(offscreen, 0, 0)
+      return
+    }
+  }
+
+  // Fallback: vẽ thẳng vào canvas DOM
+  draw(ctx)
+}
+
 // ── Hook: Canvas Watermark ────────────────────────────────────────────────────
 
 /**
- * Vẽ watermark một lần duy nhất lên canvas (không animate, không RAF loop).
- * Canvas được đặt `position: absolute` phủ lên video bằng CSS – không can thiệp
- * vào quá trình decode/render của thẻ <video>, nên không gây giật lag.
- *
- * Kỹ thuật tối ưu render:
- * 1. Vẽ vào OffscreenCanvas trước (off main thread nếu browser hỗ trợ),
- *    sau đó drawImage một lần vào canvas hiển thị.
- * 2. Nếu OffscreenCanvas không hỗ trợ, vẽ thẳng vào canvas DOM (vẫn chỉ 1 lần).
+ * Vẽ watermark một lần duy nhất lên canvas khi component mount.
+ * Reuse drawWatermarkOnCanvas để đồng nhất với MutationGuard restore.
  */
 function useCanvasWatermark(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
@@ -81,65 +144,125 @@ function useCanvasWatermark(
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const W = canvas.offsetWidth || canvas.width
-    const H = canvas.offsetHeight || canvas.height
-    canvas.width = W
-    canvas.height = H
-
-    const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })
-    const label = `${userId} · ${timestamp}`
-
-    // ── Vẽ vào OffscreenCanvas nếu browser hỗ trợ ──────────────────────────
-    const draw = (targetCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D) => {
-      const tW = targetCtx.canvas.width
-      const tH = targetCtx.canvas.height
-
-      targetCtx.clearRect(0, 0, tW, tH)
-      targetCtx.save()
-
-      // Font và màu sắc watermark mờ
-      targetCtx.font = 'bold 14px Inter, system-ui, sans-serif'
-      targetCtx.fillStyle = 'rgba(255, 255, 255, 0.18)'
-      targetCtx.shadowColor = 'rgba(0,0,0,0.4)'
-      targetCtx.shadowBlur = 3
-
-      // Lặp tile watermark theo lưới chéo -45°
-      const angle = (-45 * Math.PI) / 180
-      const tileW = 260
-      const tileH = 80
-
-      for (let y = -tH; y < tH * 2; y += tileH) {
-        for (let x = -tW; x < tW * 2; x += tileW) {
-          targetCtx.save()
-          targetCtx.translate(x + tileW / 2, y + tileH / 2)
-          targetCtx.rotate(angle)
-          targetCtx.fillText(label, -targetCtx.measureText(label).width / 2, 0)
-          targetCtx.restore()
-        }
-      }
-
-      targetCtx.restore()
-    }
-
-    // Ưu tiên OffscreenCanvas để không block main thread
-    if (typeof OffscreenCanvas !== 'undefined') {
-      const offscreen = new OffscreenCanvas(W, H)
-      const offCtx = offscreen.getContext('2d') as OffscreenCanvasRenderingContext2D | null
-      if (offCtx) {
-        draw(offCtx)
-        ctx.drawImage(offscreen, 0, 0)
-        return
-      }
-    }
-
-    // Fallback: vẽ thẳng vào canvas DOM
-    draw(ctx)
+    drawWatermarkOnCanvas(canvas, userId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]) // chỉ re-draw khi userId thay đổi
+}
+
+// ── Hook: MutationObserver + Interval Guard ──────────────────────────────────
+
+/**
+ * Bảo vệ canvas watermark khỏi bị xóa hoặc ẩn:
+ *
+ *  Phương pháp: MutationObserver + Interval polling
+ *  - Khi canvas bị xóa: tạo canvas mới và append vào wrapper NGAY LẬP TỨC
+ *    (KHÔNG dùng React state để tránh vòng lặp vô hạn)
+ *  - Khi canvas bị ẩn: force inline style restore
+ *  - Interval 1s: đảm bảo backup phòng trường hợp observer miss
+ */
+function useMutationGuard(
+  wrapperRef: React.RefObject<HTMLDivElement | null>,
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  userId: string,
+  drawWatermark: (canvas: HTMLCanvasElement, uid: string) => void,
+) {
+  const restoringRef = useRef(false)
+
+  useEffect(() => {
+    // Lấy wrapper SAU KHI component mount (để ref có giá trị)
+    const getWrapper = () => wrapperRef.current
+    let wrapper = getWrapper()
+
+    // Hàm phục hồi canvas
+    const restoreCanvas = (targetWrapper: HTMLDivElement) => {
+      if (restoringRef.current) return
+      restoringRef.current = true
+
+      const newCanvas = document.createElement('canvas')
+      newCanvas.setAttribute('aria-hidden', 'true')
+      newCanvas.setAttribute('data-testid', 'watermark-canvas')
+      newCanvas.className = 'absolute inset-0 w-full h-full pointer-events-none rounded-lg'
+      newCanvas.style.cssText = 'z-index:10;pointer-events:none;'
+      targetWrapper.appendChild(newCanvas)
+
+      // Vẽ watermark sau một tick (đảm bảo canvas đã được paint)
+      requestAnimationFrame(() => {
+        drawWatermark(newCanvas, userId)
+        // Update ref để watermark hook biết canvas mới
+        ;(canvasRef as React.MutableRefObject<HTMLCanvasElement>).current = newCanvas
+        setTimeout(() => { restoringRef.current = false }, 200)
+      })
+    }
+
+    // Chờ wrapper sẵn sàng (có thể bị delayed do Suspense)
+    const setupObserver = () => {
+      wrapper = getWrapper()
+      if (!wrapper) {
+        setTimeout(setupObserver, 100)
+        return
+      }
+
+      // ── MutationObserver ────────────────────────────────────────────────────
+      const observer = new MutationObserver((mutations) => {
+        if (!wrapper || restoringRef.current) return
+
+        for (const mutation of mutations) {
+          // Canvas bị xóa
+          if (mutation.type === 'childList') {
+            const canvasRemoved = Array.from(mutation.removedNodes).some(
+              n => n instanceof HTMLCanvasElement,
+            )
+            if (canvasRemoved) {
+              restoreCanvas(wrapper)
+              break
+            }
+          }
+          // Canvas bị ẩn
+          if (mutation.type === 'attributes' && mutation.target instanceof HTMLCanvasElement) {
+            const cs = window.getComputedStyle(mutation.target as HTMLCanvasElement)
+            if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.05) {
+              ;(mutation.target as HTMLElement).setAttribute(
+                'style',
+                'z-index:10;pointer-events:none;display:block;visibility:visible;opacity:1;',
+              )
+            }
+          }
+        }
+      })
+
+      observer.observe(wrapper, {
+        childList: true,
+        subtree: false,
+      })
+
+      // Observe canvas attributes
+      const cv = wrapper.querySelector('canvas')
+      if (cv) {
+        observer.observe(cv, { attributes: true, attributeFilter: ['style', 'class', 'hidden'] })
+      }
+
+      // ── Interval Backup (1s) ────────────────────────────────────────────────
+      const interval = setInterval(() => {
+        const w = getWrapper()
+        if (!w || restoringRef.current) return
+        const hasCanvas = !!w.querySelector('[data-testid="watermark-canvas"]')
+        if (!hasCanvas) {
+          restoreCanvas(w)
+        }
+      }, 1000)
+
+      return () => {
+        observer.disconnect()
+        clearInterval(interval)
+      }
+    }
+
+    const cleanup = setupObserver()
+    return () => {
+      if (typeof cleanup === 'function') cleanup()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // chỉ setup một lần sau mount
 }
 
 // ── Component chính ───────────────────────────────────────────────────────────
@@ -152,9 +275,15 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
 }: SecureVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const { signedUrl, error, retry } = useSignedUrl(videoPath)
 
+  // ── Vẽ watermark lần đầu khi canvas mount ────────────────────────────────
   useCanvasWatermark(canvasRef, userId)
+
+  // ── MutationObserver + Interval: phục hồi canvas nếu bị xóa hoặc ẩn ─────
+  // Dùng DOM imperative (không React state) để tránh re-render loop
+  useMutationGuard(wrapperRef, canvasRef, userId, drawWatermarkOnCanvas)
 
   // Ngăn chuột phải (context menu) trên toàn wrapper
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
@@ -166,7 +295,7 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
     e.preventDefault()
   }, [])
 
-  // Khi canvas hiển thị (hay resize), vẽ lại watermark
+  // Khi video resize → cập nhật kích thước canvas để khớp
   const handleCanvasResize = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -214,8 +343,10 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
 
   return (
     <div
+      ref={wrapperRef}
       className={`relative select-none ${className}`}
       onContextMenu={handleContextMenu}
+      data-testid="secure-video-wrapper"
     >
       {/* ── Video ────────────────────────────────────────────────────────────── */}
       <video
@@ -228,19 +359,21 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
         playsInline
         onDragStart={handleDragStart}
         onEnded={onEnded}
+        data-testid="secure-video-element"
       />
 
       {/*
         ── Canvas Watermark ────────────────────────────────────────────────────
         pointer-events: none → click/drag xuyên qua canvas vào video controls.
-        z-index cao hơn video nhưng thấp hơn controls (controls nằm trên cùng
-        vì là shadow DOM của browser).
+        MutationObserver + Interval (useMutationGuard) tự phục hồi canvas
+        nếu bị xóa hoặc ẩn qua DevTools (F12).
       */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
         className="absolute inset-0 w-full h-full pointer-events-none rounded-lg"
         style={{ zIndex: 10 }}
+        data-testid="watermark-canvas"
       />
     </div>
   )
