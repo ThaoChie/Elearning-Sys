@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { FileCheck, Search, FileText, Download, CheckCircle, MessageSquare, Clock } from 'lucide-react'
-import { addAuditLog } from '../admin/mockData'
 
 import apiClient from '../../api/apiClient'
 

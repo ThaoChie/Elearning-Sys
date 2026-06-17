@@ -57,29 +57,48 @@ export function useStudentDashboard({ userId }: UseStudentDashboardOptions): Stu
     let isMounted = true
     setState(prev => ({ ...prev, isLoading: true }))
 
-    apiClient.get('/student/dashboard')
+    apiClient.get('/courses')
       .then(res => {
         if (!isMounted) return;
-        const data = res.data;
+        // /courses returns { items: [...] }
+        const allCourses = res.data.items || res.data || [];
+        
+        // Transform the data to match StudentCourse type
+        const mappedCourses = allCourses.map((c: any) => ({
+          id: c.id || c.courseId,
+          title: c.title,
+          category: c.category || 'Backend',
+          instructorName: c.instructorName || 'Admin',
+          thumbnail: c.thumbnailUrl || 'https://via.placeholder.com/150',
+          progress: c.progress || 0,
+          isEnrolled: c.isEnrolled ?? false
+        }));
+
         setState({
-          courses: data.courses || [],
-          exams: data.exams || [],
-          securityStatus: data.securityStatus || {
-            lastLogin: new Date().toISOString(),
-            ipAddress: '127.0.0.1',
-            device: 'Web Browser',
-            location: 'Unknown',
-            suspiciousLogins: 0,
+          courses: mappedCourses,
+          exams: [],
+          securityStatus: {
             mfaEnabled: false,
-            activeSessions: 1
+            securityScore: 100,
+            activeSessions: [{
+              id: 'sess-1',
+              deviceType: 'desktop',
+              deviceName: 'Web Browser',
+              ipAddress: '127.0.0.1',
+              location: 'Hanoi, VN',
+              lastActiveAt: new Date().toISOString(),
+              isCurrent: true
+            }],
+            lastPasswordChangeAt: new Date().toISOString(),
+            recentFailedLogins: 0
           },
-          deadlines: data.deadlines || [],
+          deadlines: [],
           stats: {
-            enrolledCourses: data.enrolledCourses ?? 0,
-            completedCourses: data.completedCourses ?? 0,
-            averageScore: data.averageScore ?? 0,
-            totalStudyHours: data.completedLessons ?? 0,
-            upcomingExams: data.upcomingExams?.length ?? 0,
+            enrolledCourses: 0,
+            completedCourses: 0,
+            averageScore: 0,
+            totalStudyHours: 0,
+            upcomingExams: 0,
             weeklyGoalMinutes: 600,
             weeklyStudiedMinutes: 450,
           },

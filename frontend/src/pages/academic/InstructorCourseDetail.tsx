@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Plus, MoreVertical, PlayCircle, FileText, UploadCloud, Edit, Trash2 } from 'lucide-react'
 import UploadZone from '../../components/UploadZone'
-import { dbGetCourseById, dbUpdateCourseSyllabus } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 interface Module {
   id: string
@@ -23,8 +23,9 @@ export default function InstructorCourseDetail() {
   const { courseId } = useParams()
   const navigate = useNavigate()
   
-  const course = dbGetCourseById(courseId || '')
-  const [modules, setModules] = useState<Module[]>(course ? course.syllabus as any : [])
+  const [course, setCourse] = useState<any>(null)
+  const [modules, setModules] = useState<Module[]>([])
+  const [loading, setLoading] = useState(true)
   
   // Modals
   const [showModuleModal, setShowModuleModal] = useState(false)
@@ -34,12 +35,30 @@ export default function InstructorCourseDetail() {
   const [showLessonModal, setShowLessonModal] = useState<{ moduleId: string } | null>(null)
   const [lessonData, setLessonData] = useState({ title: '', type: 'video' as 'video'|'pdf' })
 
-  // Sync to global state whenever modules change
+  // Fetch data
   useEffect(() => {
     if (courseId) {
-      dbUpdateCourseSyllabus(courseId, modules)
+      apiClient.get(`/courses/${courseId}`)
+        .then(res => {
+          setCourse(res.data)
+          setModules(res.data.syllabus || [])
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error("Error fetching course", err)
+          setLoading(false)
+        })
     }
-  }, [modules, courseId])
+  }, [courseId])
+
+  // Sync to global state whenever modules change
+  const handleSaveSyllabus = () => {
+    if (courseId) {
+      apiClient.put(`/courses/${courseId}/syllabus`, { modules })
+        .then(() => alert('Đã lưu đề cương thành công!'))
+        .catch(err => alert('Lỗi khi lưu đề cương: ' + err.message))
+    }
+  }
 
   // Mở modal tạo/sửa module
   const openModuleModal = (mod?: Module) => {
@@ -95,13 +114,22 @@ export default function InstructorCourseDetail() {
         </button>
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-[#1F3864]">Chỉnh sửa Đề cương Khóa học</h1>
+            <h1 className="text-2xl font-bold text-[#1F3864]">Chỉnh sửa Đề cương Khóa học {course?.title ? ` - ${course.title}` : ''}</h1>
             <span className="px-2.5 py-1 text-[10px] font-bold uppercase rounded-full bg-slate-100 text-slate-500">Draft</span>
           </div>
           <p className="text-sm text-slate-500 mt-1">Sắp xếp chương học, tải lên video và tài liệu</p>
         </div>
+        <button 
+          onClick={handleSaveSyllabus}
+          className="ml-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-sm"
+        >
+          Lưu Đề Cương
+        </button>
       </div>
 
+      {loading ? (
+        <div className="p-8 text-center">Đang tải dữ liệu...</div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Cột trái: Đề cương */}
         <div className="lg:col-span-2 space-y-4">
@@ -173,6 +201,7 @@ export default function InstructorCourseDetail() {
           </div>
         </div>
       </div>
+      )}
 
       {/* ── Modals ────────────────────────────────────────────── */}
       {/* Modal Module */}

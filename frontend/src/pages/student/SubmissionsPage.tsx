@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { FileUp, CheckCircle, Clock, FileText, UploadCloud, AlertCircle, Edit, Trash2 } from 'lucide-react'
-import { addAuditLog } from '../admin/mockData'
 
 import apiClient from '../../api/apiClient'
 

@@ -23,7 +23,7 @@ public class Course
 
     private Course() { }
 
-    public static Course Create(Guid instructorId, string title, string description, string thumbnailUrl = "")
+    public static Course Create(Guid instructorId, string title, string description, string category = "", string thumbnailUrl = "")
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
 
@@ -33,6 +33,7 @@ public class Course
             InstructorId = instructorId,
             Title        = title.Trim(),
             Description  = description.Trim(),
+            Category     = category.Trim(),
             ThumbnailUrl = thumbnailUrl,
             IsPublished  = false,
             CreatedAt    = DateTime.UtcNow

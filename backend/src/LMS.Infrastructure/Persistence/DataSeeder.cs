@@ -106,6 +106,7 @@ public sealed class DataSeeder(
                 instructorId: instructor.Id,
                 title:        "Lập trình ASP.NET Core từ cơ bản đến nâng cao",
                 description:  f.Lorem.Paragraph(3),
+                category:     "Lập trình Backend",
                 thumbnailUrl: "https://res.cloudinary.com/demo/image/upload/lms/course-dotnet.jpg"));
 
         var course = courseFaker.Generate();

@@ -5,7 +5,27 @@
 // ============================================================
 
 import { TrendingDown, AlertTriangle } from 'lucide-react'
-import { SECURITY_INCIDENTS } from '../../../pages/admin/mockData'
+
+export interface SecurityIncident {
+  month: string
+  bruteForce: number
+  authErrors: number
+}
+
+export const SECURITY_INCIDENTS: SecurityIncident[] = [
+  { month: 'T1', bruteForce: 12, authErrors: 34 },
+  { month: 'T2', bruteForce: 8,  authErrors: 27 },
+  { month: 'T3', bruteForce: 15, authErrors: 41 },
+  { month: 'T4', bruteForce: 6,  authErrors: 19 },
+  { month: 'T5', bruteForce: 20, authErrors: 53 },
+  { month: 'T6', bruteForce: 9,  authErrors: 31 },
+  { month: 'T7', bruteForce: 17, authErrors: 38 },
+  { month: 'T8', bruteForce: 22, authErrors: 60 },
+  { month: 'T9', bruteForce: 11, authErrors: 44 },
+  { month: 'T10', bruteForce: 5, authErrors: 22 },
+  { month: 'T11', bruteForce: 14, authErrors: 36 },
+  { month: 'T12', bruteForce: 9,  authErrors: 28 },
+]
 
 const CHART_H = 180   // chiều cao vùng vẽ cột (px)
 const BAR_W = 10      // width mỗi cột đơn (px)

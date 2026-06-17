@@ -1,24 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, PlayCircle, CheckCircle, FileText, MessageSquare, Download } from 'lucide-react'
 import SecureVideoPlayer from '../../components/SecureVideoPlayer'
-
-import { dbGetCourseById } from '../../data/mockDatabase'
+import apiClient from '../../api/apiClient'
 
 export default function LessonPlayer() {
   const { courseId } = useParams()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'overview' | 'qa'>('overview')
+  const [course, setCourse] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-  const course = dbGetCourseById(courseId || 'CRS-004')
+  useEffect(() => {
+    if (courseId) {
+      apiClient.get(`/courses/${courseId}`)
+        .then(res => {
+          setCourse(res.data)
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error("Error fetching course", err)
+          setLoading(false)
+        })
+    }
+  }, [courseId])
   
+  if (loading) {
+    return <div className="text-slate-900 p-8">Đang tải thông tin bài học...</div>
+  }
+
   if (!course) {
     return <div className="text-slate-900 p-8">Khóa học không tồn tại.</div>
   }
 
   // Find the current lesson for demo purposes
-  const currentChapter = course.syllabus.find(ch => ch.lessons.some(l => l.isCurrent)) || course.syllabus[0]
-  const currentLesson = currentChapter?.lessons.find(l => l.isCurrent) || currentChapter?.lessons[0]
+  const currentChapter = course.syllabus && course.syllabus.length > 0 ? course.syllabus[0] : null
+  const currentLesson = currentChapter?.lessons && currentChapter.lessons.length > 0 ? currentChapter.lessons[0] : null
 
   return (
     <div className="h-[calc(100vh-6rem)] -m-6 flex flex-col md:flex-row bg-[#0f172a]">

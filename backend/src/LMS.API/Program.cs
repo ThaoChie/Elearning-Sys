@@ -54,8 +54,14 @@ builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSc
                 if (string.IsNullOrWhiteSpace(currentSettings.PublicKeyPem) || currentSettings.PublicKeyPem.Contains("REPLACE_WITH"))
                     throw new SecurityTokenSignatureKeyNotFoundException("Public Key chưa được nạp từ Secret Manager.");
 
+                var publicKey = currentSettings.PublicKeyPem;
+                if (publicKey.EndsWith(".pem") && File.Exists(publicKey))
+                {
+                    publicKey = File.ReadAllText(publicKey);
+                }
+
                 var rsa = RSA.Create();
-                rsa.ImportFromPem(currentSettings.PublicKeyPem.AsSpan());
+                rsa.ImportFromPem(publicKey.AsSpan());
                 return new[] { new RsaSecurityKey(rsa) };
             }
         };

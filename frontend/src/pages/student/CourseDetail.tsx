@@ -1,17 +1,34 @@
 import { BookOpen, CheckCircle, Clock, Play, PlayCircle, Star, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import apiClient from '../../api/apiClient'
-
-import { dbGetCourseById } from '../../data/mockDatabase'
 import { sanitizeHtml } from '../../utils/sanitize'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
   const navigate = useNavigate()
   
-  const [courseData, setCourseData] = useState(dbGetCourseById(courseId || ''))
+  const [courseData, setCourseData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (courseId) {
+      apiClient.get(`/courses/${courseId}`)
+        .then(res => {
+          setCourseData(res.data)
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error("Error fetching course detail", err)
+          setLoading(false)
+        })
+    }
+  }, [courseId])
   
+  if (loading) {
+    return <div className="text-slate-900 p-8">Đang tải thông tin khóa học...</div>
+  }
+
   if (!courseData) {
     return <div className="text-slate-900 p-8">Khóa học không tồn tại.</div>
   }
