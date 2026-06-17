@@ -31,13 +31,11 @@ export function useStudentDashboard({ userId }: UseStudentDashboardOptions): Stu
     courses: [],
     exams: [],
     securityStatus: {
-      lastLogin: new Date().toISOString(),
-      ipAddress: '127.0.0.1',
-      device: 'Web Browser',
-      location: 'Unknown',
-      suspiciousLogins: 0,
       mfaEnabled: false,
-      activeSessions: 1
+      securityScore: 100,
+      activeSessions: [],
+      lastPasswordChangeAt: new Date().toISOString(),
+      recentFailedLogins: 0
     },
     deadlines: [],
     stats: {

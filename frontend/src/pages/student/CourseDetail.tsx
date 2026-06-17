@@ -1,9 +1,6 @@
+import { BookOpen, CheckCircle, Clock, Play, PlayCircle, Star, Users } from 'lucide-react'
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { Clock, Users, PlayCircle, BookOpen, Star, CheckCircle, Play } from 'lucide-react'
-import { enrollInMockCourse } from './mockData.student'
-
-import { addAuditLog } from '../admin/mockData'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { dbGetCourseById } from '../../data/mockDatabase'
 import { sanitizeHtml } from '../../utils/sanitize'
@@ -25,10 +22,6 @@ export default function CourseDetail() {
       // Gọi API Ghi danh
       alert(`Đã ghi danh khóa học ${courseId} thành công!`)
       setCourseData({ ...courseData, isEnrolled: true })
-      if (courseId) {
-        enrollInMockCourse(courseId)
-        addAuditLog(`ENROLL_COURSE - Ghi danh khóa học ${courseId}`, 'ENROLL_COURSE')
-      }
     }
   }
 

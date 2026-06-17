@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import type { ElementType } from 'react';
 import DOMPurify from 'dompurify';
 
 interface SafeHtmlProps {
@@ -7,7 +8,7 @@ interface SafeHtmlProps {
   /** Optional class name for the wrapper element */
   className?: string;
   /** Optional wrapper element type, defaults to 'div' */
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
 }
 
 /**

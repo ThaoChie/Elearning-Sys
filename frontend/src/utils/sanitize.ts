@@ -28,7 +28,7 @@ const ALLOWED_TAGS = [
 
 const ALLOWED_ATTR = ['href', 'title', 'target', 'rel', 'class']
 
-const DOMPURIFY_CONFIG: DOMPurify.Config = {
+const DOMPURIFY_CONFIG = {
   ALLOWED_TAGS,
   ALLOWED_ATTR,
   // Force tất cả link mở tab mới với rel="noopener noreferrer"
@@ -50,7 +50,7 @@ const DOMPURIFY_CONFIG: DOMPurify.Config = {
  */
 export function sanitizeHtml(dirty: string): string {
   if (!dirty) return ''
-  return DOMPurify.sanitize(dirty, DOMPURIFY_CONFIG) as string
+  return DOMPurify.sanitize(dirty, DOMPURIFY_CONFIG).toString()
 }
 
 // ── sanitizeText ───────────────────────────────────────────────────────────────

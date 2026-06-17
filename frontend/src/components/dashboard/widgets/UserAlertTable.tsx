@@ -18,8 +18,8 @@ function RoleBadge({ role }: { role: string }) {
   }
   const labels = { Admin: 'Quản trị viên', Instructor: 'Giảng viên', Student: 'Sinh viên' }
   return (
-    <span className={`inline-flex text-[11px] font-medium px-2 py-0.5 rounded-full border ${map[role]}`}>
-      {labels[role]}
+    <span className={`inline-flex text-[11px] font-medium px-2 py-0.5 rounded-full border ${map[role as keyof typeof map]}`}>
+      {labels[role as keyof typeof labels]}
     </span>
   )
 }
@@ -189,7 +189,7 @@ export default function UserAlertTable() {
       {/* Footer */}
       <div className="px-6 py-3 border-t border-slate-50 bg-slate-50/40 flex items-center justify-between shrink-0">
         <p className="text-xs text-slate-500">
-          Hiển thị {MOCK_USERS.length} / {MOCK_USERS.length} người dùng · Dashboard read-only
+          Hiển thị {users.length} người dùng · Dashboard read-only
         </p>
         <a
           href="/dashboard/system/users"

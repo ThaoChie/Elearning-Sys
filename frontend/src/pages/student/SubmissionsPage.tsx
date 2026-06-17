@@ -219,7 +219,6 @@ export default function SubmissionsPage() {
           </div>
           )}
         </div>
-        </div>
       </div>
     </div>
   )
