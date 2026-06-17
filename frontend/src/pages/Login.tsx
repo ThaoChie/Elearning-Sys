@@ -178,18 +178,25 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Brute-force tracking (BR-02)
-  const [failCount, setFailCount] = useState(0)
+  // Brute-force tracking (BR-02) per email
+  const [failCounts, setFailCounts] = useState<Record<string, number>>({})
   const [lockoutEndsAt, setLockoutEndsAt] = useState<Date | null>(null)
+  const [lockedEmail, setLockedEmail] = useState<string | null>(null)
   const { remaining: lockRemaining, formatted: lockFormatted } = useCountdown(lockoutEndsAt)
+
+  const currentNormalizedEmail = form.email.trim().toLowerCase()
+  const failCount = failCounts[currentNormalizedEmail] || 0
 
   // Tự động mở khoá khi countdown hết
   useEffect(() => {
     if (lockRemaining === 0 && lockoutEndsAt !== null) {
       setLockoutEndsAt(null)
-      setFailCount(0)
+      if (lockedEmail) {
+        setFailCounts(prev => ({ ...prev, [lockedEmail]: 0 }))
+        setLockedEmail(null)
+      }
     }
-  }, [lockRemaining, lockoutEndsAt])
+  }, [lockRemaining, lockoutEndsAt, lockedEmail])
 
   // MFA
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
@@ -249,16 +256,18 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
         // Backend khoá tài khoản – lấy thời điểm mở khoá
         const data = axiosErr.response!.data as AccountLockedError
         setLockoutEndsAt(new Date(data.lockoutEnd))
-        setFailCount(MAX_ATTEMPTS_BEFORE_CAPTCHA) // đảm bảo captcha hiện
+        setLockedEmail(currentNormalizedEmail)
+        setFailCounts(prev => ({ ...prev, [currentNormalizedEmail]: MAX_ATTEMPTS_BEFORE_CAPTCHA }))
       } else if (status === 401) {
         // BR-01: Generic error message – không tiết lộ email/password sai
         const data = axiosErr.response!.data as InvalidCredentialsError
         const newCount = failCount + 1
-        setFailCount(newCount)
+        setFailCounts(prev => ({ ...prev, [currentNormalizedEmail]: newCount }))
 
         // Client-side lockout fallback nếu backend không trả 423
         if (newCount >= 5) {
           setLockoutEndsAt(new Date(Date.now() + LOCKOUT_DURATION_MS))
+          setLockedEmail(currentNormalizedEmail)
         } else {
           setErrors({ general: data.message || 'Email hoặc mật khẩu không đúng.' })
         }
@@ -376,7 +385,15 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
 
               {/* ── Lockout UI (BR-02) ──────────────────────────────────── */}
               {isLockedOut ? (
-                <LockoutScreen countdown={lockFormatted} />
+                <LockoutScreen 
+                  countdown={lockFormatted} 
+                  onBack={() => {
+                    setLockoutEndsAt(null)
+                    setLockedEmail(null)
+                    setForm({ email: '', password: '' })
+                    setErrors({})
+                  }}
+                />
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
 
@@ -569,9 +586,10 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
 // ─────────────────────────────────────────────────────────────────────────────
 interface LockoutScreenProps {
   countdown: string
+  onBack: () => void
 }
 
-function LockoutScreen({ countdown }: LockoutScreenProps) {
+function LockoutScreen({ countdown, onBack }: LockoutScreenProps) {
   return (
     <div
       role="alert"
@@ -608,6 +626,13 @@ function LockoutScreen({ countdown }: LockoutScreenProps) {
         Nếu bạn không thực hiện những lần đăng nhập này,<br />
         vui lòng đổi mật khẩu ngay lập tức.
       </p>
+
+      <button 
+        onClick={onBack} 
+        className="mt-6 text-sm font-semibold text-[#2E75B6] hover:text-[#1F3864] transition-colors"
+      >
+        Đăng nhập bằng tài khoản khác
+      </button>
     </div>
   )
 }

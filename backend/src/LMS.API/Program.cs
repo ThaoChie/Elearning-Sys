@@ -13,6 +13,14 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Generate ephemeral keys if not present (for Render deployment)
+if (!File.Exists("private.pem") || !File.Exists("public.pem"))
+{
+    var rsa = System.Security.Cryptography.RSA.Create(2048);
+    File.WriteAllText("private.pem", new string(rsa.ExportRSAPrivateKeyPem()));
+    File.WriteAllText("public.pem", new string(rsa.ExportRSAPublicKeyPem()));
+}
+
 // ── Azure Key Vault (Nguyên tắc 2: Secret Manager) ──────────────────────────
 var keyVaultUri = builder.Configuration["KeyVault:VaultUri"];
 if (!string.IsNullOrWhiteSpace(keyVaultUri))
