@@ -23,21 +23,34 @@ namespace LMS.Infrastructure.Auth;
 /// </summary>
 public sealed class JwtTokenService : ITokenService
 {
-    private readonly JwtSettings _settings;
-    private readonly RsaSecurityKey _privateKey;
+    private readonly IOptionsMonitor<JwtSettings> _optionsMonitor;
+    private RsaSecurityKey _privateKey = null!;
 
-    public JwtTokenService(IOptions<JwtSettings> options)
+    public JwtTokenService(IOptionsMonitor<JwtSettings> optionsMonitor)
     {
-        _settings = options.Value;
+        _optionsMonitor = optionsMonitor;
 
-        // Load RSA private key từ PEM string trong cấu hình
+        LoadPrivateKey(_optionsMonitor.CurrentValue);
+
+        // Đăng ký callback khi cấu hình thay đổi (hỗ trợ Key Rotation)
+        _optionsMonitor.OnChange(LoadPrivateKey);
+    }
+
+    private void LoadPrivateKey(JwtSettings settings)
+    {
+        if (string.IsNullOrWhiteSpace(settings.PrivateKeyPem) || settings.PrivateKeyPem.Contains("REPLACE_WITH"))
+            return; // Bỏ qua nếu chưa có khóa thật
+
         var rsa = RSA.Create();
-        rsa.ImportFromPem(_settings.PrivateKeyPem.AsSpan());
+        rsa.ImportFromPem(settings.PrivateKeyPem.AsSpan());
         _privateKey = new RsaSecurityKey(rsa);
     }
 
     public string GenerateAccessToken(User user)
     {
+        if (_privateKey == null)
+            throw new InvalidOperationException("Private Key chưa được nạp từ Secret Manager.");
+
         var now = DateTime.UtcNow;
         var expires = now.AddMinutes(15);
 
@@ -57,8 +70,8 @@ public sealed class JwtTokenService : ITokenService
         var creds = new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _settings.Issuer,
-            audience: _settings.Audience,
+            issuer: _optionsMonitor.CurrentValue.Issuer,
+            audience: _optionsMonitor.CurrentValue.Audience,
             claims: claims,
             notBefore: now,
             expires: expires,

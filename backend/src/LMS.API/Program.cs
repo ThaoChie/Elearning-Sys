@@ -8,8 +8,19 @@ using LMS.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Azure.Identity;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ── Azure Key Vault (Nguyên tắc 2: Secret Manager) ──────────────────────────
+var keyVaultUri = builder.Configuration["KeyVault:VaultUri"];
+if (!string.IsNullOrWhiteSpace(keyVaultUri))
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultUri),
+        new DefaultAzureCredential());
+}
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -21,31 +32,39 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // ── JWT Bearer Authentication (đặt tại API layer vì dùng ASP.NET Core packages) ──
-var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
-    ?? throw new InvalidOperationException("Thiếu cấu hình Jwt trong appsettings.");
-
-var rsa = RSA.Create();
-rsa.ImportFromPem(jwtSettings.PublicKeyPem.AsSpan());
-var publicKey = new RsaSecurityKey(rsa);
-
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IOptionsMonitor<JwtSettings>>((options, jwtSettingsMonitor) =>
     {
+        var initialSettings = jwtSettingsMonitor.CurrentValue;
+        
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer           = true,
-            ValidIssuer              = jwtSettings.Issuer,
+            ValidIssuer              = initialSettings.Issuer,
             ValidateAudience         = true,
-            ValidAudience            = jwtSettings.Audience,
+            ValidAudience            = initialSettings.Audience,
             ValidateLifetime         = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey         = publicKey,
             ClockSkew                = TimeSpan.Zero,  // 15p là chính xác, không cho skew
             RequireExpirationTime    = true,
+            // Sử dụng Resolver để tự động lấy Public Key mới nhất khi Key Vault thay đổi (Rotation)
+            IssuerSigningKeyResolver = (token, securityToken, kid, validationParameters) =>
+            {
+                var currentSettings = jwtSettingsMonitor.CurrentValue;
+                if (string.IsNullOrWhiteSpace(currentSettings.PublicKeyPem) || currentSettings.PublicKeyPem.Contains("REPLACE_WITH"))
+                    throw new SecurityTokenSignatureKeyNotFoundException("Public Key chưa được nạp từ Secret Manager.");
+
+                var rsa = RSA.Create();
+                rsa.ImportFromPem(currentSettings.PublicKeyPem.AsSpan());
+                return new[] { new RsaSecurityKey(rsa) };
+            }
         };
         options.MapInboundClaims = false; // giữ nguyên "sub", "email" (không map sang ClaimTypes)
     });
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
 
 builder.Services.AddAuthorization(options =>
 {

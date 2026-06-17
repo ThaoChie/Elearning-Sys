@@ -313,6 +313,49 @@ const SecureVideoPlayer = memo(function SecureVideoPlayer({
     return () => ro.disconnect()
   }, [handleCanvasResize])
 
+  // ── MutationObserver (Anti-Tampering Alert & Stop) ─────────────────────────
+  useEffect(() => {
+    const container = wrapperRef.current
+    if (!container) return
+
+    const observer = new MutationObserver((mutations) => {
+      let isTampered = false
+      for (const m of mutations) {
+        // Phát hiện nếu thẻ canvas bị xóa khỏi DOM
+        if (m.type === 'childList') {
+          m.removedNodes.forEach((node) => {
+            if (node === canvasRef.current) isTampered = true
+          })
+        }
+        // Phát hiện nếu bị đổi CSS (ẩn đi)
+        if (m.type === 'attributes' && m.target === canvasRef.current) {
+          const style = window.getComputedStyle(canvasRef.current as Element)
+          if (style.display === 'none' || style.opacity === '0' || style.visibility === 'hidden') {
+            isTampered = true
+          }
+        }
+      }
+
+      if (isTampered) {
+        alert('CẢNH BÁO BẢO MẬT: Phát hiện can thiệp vào trình phát video! Phiên xem video đã bị dừng.')
+        if (videoRef.current) {
+          videoRef.current.pause()
+          videoRef.current.removeAttribute('src')
+          videoRef.current.load()
+        }
+      }
+    })
+
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
   // ── Render ───────────────────────────────────────────────────────────────────
 
   if (error) {

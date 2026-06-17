@@ -84,21 +84,32 @@ public sealed class FileSecurityService : IFileSecurityService
     // AES block size = 16 bytes → IV size = 16 bytes
     private const int IvSizeBytes = 16;
 
-    private readonly FileSecurityOptions _opts;
-    private readonly byte[]              _aesKey;
+    private readonly IOptionsMonitor<FileSecurityOptions> _optsMonitor;
+    private byte[] _aesKey = null!;
     private readonly ILogger<FileSecurityService> _logger;
 
     public FileSecurityService(
-        IOptions<FileSecurityOptions> opts,
+        IOptionsMonitor<FileSecurityOptions> optsMonitor,
         ILogger<FileSecurityService> logger)
     {
-        _opts = opts.Value;
+        _optsMonitor = optsMonitor;
         _logger = logger;
 
-        _aesKey = Convert.FromBase64String(_opts.AesKeyBase64);
-        if (_aesKey.Length != 32)
+        LoadAesKey(_optsMonitor.CurrentValue);
+        _optsMonitor.OnChange(LoadAesKey);
+    }
+
+    private void LoadAesKey(FileSecurityOptions opts)
+    {
+        if (string.IsNullOrWhiteSpace(opts.AesKeyBase64) || opts.AesKeyBase64.Contains("REPLACE_WITH"))
+            return; // Chưa có khóa thực
+
+        var newKey = Convert.FromBase64String(opts.AesKeyBase64);
+        if (newKey.Length != 32)
             throw new InvalidOperationException(
                 "FileSecurity:AesKeyBase64 phải là khoá AES-256 (đúng 32 byte / 256-bit).");
+
+        _aesKey = newKey;
     }
 
     // ── 1. ValidateMime ────────────────────────────────────────────────────────
@@ -170,10 +181,10 @@ public sealed class FileSecurityService : IFileSecurityService
         try
         {
             using var tcpClient = new TcpClient();
-            tcpClient.SendTimeout    = _opts.ClamAvTimeoutSeconds * 1000;
-            tcpClient.ReceiveTimeout = _opts.ClamAvTimeoutSeconds * 1000;
+            tcpClient.SendTimeout    = _optsMonitor.CurrentValue.ClamAvTimeoutSeconds * 1000;
+            tcpClient.ReceiveTimeout = _optsMonitor.CurrentValue.ClamAvTimeoutSeconds * 1000;
 
-            await tcpClient.ConnectAsync(_opts.ClamAvHost, _opts.ClamAvPort, cancellationToken);
+            await tcpClient.ConnectAsync(_optsMonitor.CurrentValue.ClamAvHost, _optsMonitor.CurrentValue.ClamAvPort, cancellationToken);
 
             await using var networkStream = tcpClient.GetStream();
 
@@ -230,6 +241,9 @@ public sealed class FileSecurityService : IFileSecurityService
     /// </remarks>
     public async Task<Stream> EncryptAsync(Stream plainStream)
     {
+        if (_aesKey == null)
+            throw new InvalidOperationException("AES Key chưa được nạp từ Secret Manager.");
+
         using var aes = Aes.Create();
         aes.KeySize = 256;
         aes.Key     = _aesKey;
@@ -265,6 +279,9 @@ public sealed class FileSecurityService : IFileSecurityService
     /// <inheritdoc/>
     public async Task<Stream> DecryptAsync(Stream encryptedStream)
     {
+        if (_aesKey == null)
+            throw new InvalidOperationException("AES Key chưa được nạp từ Secret Manager.");
+
         using var aes = Aes.Create();
         aes.KeySize = 256;
         aes.Key     = _aesKey;
