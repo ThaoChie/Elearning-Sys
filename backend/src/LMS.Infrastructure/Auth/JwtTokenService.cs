@@ -38,12 +38,36 @@ public sealed class JwtTokenService : ITokenService
 
     private void LoadPrivateKey(JwtSettings settings)
     {
-        if (string.IsNullOrWhiteSpace(settings.PrivateKeyPem) || settings.PrivateKeyPem.Contains("REPLACE_WITH"))
-            return; // Bỏ qua nếu chưa có khóa thật
+        try
+        {
+            if (string.IsNullOrWhiteSpace(settings.PrivateKeyPem) || settings.PrivateKeyPem.Contains("REPLACE_WITH"))
+            {
+                throw new InvalidOperationException("Chưa cấu hình Jwt:PrivateKeyPem hoặc sử dụng giá trị REPLACE_WITH.");
+            }
 
-        var rsa = RSA.Create();
-        rsa.ImportFromPem(settings.PrivateKeyPem.AsSpan());
-        _privateKey = new RsaSecurityKey(rsa);
+            var pemStr = settings.PrivateKeyPem.Replace("\\n", "\n").Trim();
+            
+            // Nếu người dùng cấu hình giá trị là đường dẫn file thay vì nội dung
+            if (pemStr.EndsWith(".pem") || pemStr.EndsWith(".key"))
+            {
+                if (File.Exists(pemStr))
+                {
+                    pemStr = File.ReadAllText(pemStr);
+                }
+            }
+
+            var rsa = RSA.Create();
+            rsa.ImportFromPem(pemStr.AsSpan());
+            _privateKey = new RsaSecurityKey(rsa);
+            Console.WriteLine("[JwtTokenService] Đã nạp Private Key thành công từ cấu hình.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[JwtTokenService Warning] Lỗi đọc Private Key: {ex.Message}. Sử dụng IN-MEMORY Ephemeral Key làm fallback.");
+            // Fallback tạo key ngẫu nhiên mỗi khi server start
+            var ephemeralRsa = RSA.Create(2048);
+            _privateKey = new RsaSecurityKey(ephemeralRsa);
+        }
     }
 
     public string GenerateAccessToken(User user)
