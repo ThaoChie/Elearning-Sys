@@ -504,23 +504,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
                     )}
                   </div>
 
-                  {/* hCaptcha placeholder (hiện sau BR-02 threshold) */}
-                  {showCaptchaPlaceholder && (
-                    <div
-                      className="mt-4 mb-2 p-4 rounded-xl border-2 border-dashed border-amber-300
-                                 bg-amber-50 text-amber-700 text-xs text-center"
-                    >
-                      <p className="font-semibold mb-1">Xác minh bảo mật</p>
-                      <p className="text-amber-600">
-                        Vui lòng hoàn thành captcha để tiếp tục đăng nhập.
-                      </p>
-                      {/* Mount hCaptcha widget tại đây khi tích hợp thực tế */}
-                      <div className="mt-3 h-16 rounded-lg bg-amber-100 flex items-center
-                                      justify-center text-amber-500 font-mono text-[11px]">
-                        [ hCaptcha Widget ]
-                      </div>
-                    </div>
-                  )}
+
 
                   {/* Nút Login */}
                   <button
