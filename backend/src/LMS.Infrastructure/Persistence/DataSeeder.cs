@@ -237,6 +237,10 @@ public sealed class DataSeeder(
 
         await db.Assignments.AddAsync(assignment, ct);
 
+        // ── 7b. Đăng ký khoá học (Enrollment) cho student@lms.vn ────────────
+        var enrollment = CourseEnrollment.Create(course.CourseId, studentUser.Id);
+        await db.CourseEnrollments.AddAsync(enrollment, ct);
+
         // ── 8. Tạo ExamSession hoạt động cho student@lms.vn ─────────────────
         var examSession = ExamSession.Create(
             examId: new Guid("00000000-0000-0000-0000-000000000002"),

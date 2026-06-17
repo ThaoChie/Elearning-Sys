@@ -235,8 +235,8 @@ export default function SecurityStatusWidget({ status }: SecurityStatusWidgetPro
         onClick={() => navigate('/dashboard/system/auth')}
         className="
           w-full py-2.5 rounded-lg text-xs font-semibold
-          bg-[#1F3864] border border-[#162a4a] text-slate-900
-          hover:bg-[#162a4a] hover:border-indigo-900
+          bg-[#1F3864] border border-[#162a4a] text-white
+          hover:bg-[#162a4a] hover:border-indigo-500
           active:scale-[0.98] transition-all duration-150
           flex items-center justify-center gap-2
         "

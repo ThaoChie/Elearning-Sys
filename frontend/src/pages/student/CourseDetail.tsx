@@ -1,6 +1,7 @@
 import { BookOpen, CheckCircle, Clock, Play, PlayCircle, Star, Users } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import apiClient from '../../api/apiClient'
 
 import { dbGetCourseById } from '../../data/mockDatabase'
 import { sanitizeHtml } from '../../utils/sanitize'
@@ -19,9 +20,12 @@ export default function CourseDetail() {
     if (courseData.isEnrolled) {
       navigate(`/dashboard/student/courses/${courseId}/learn`)
     } else {
-      // Gọi API Ghi danh
-      alert(`Đã ghi danh khóa học ${courseId} thành công!`)
-      setCourseData({ ...courseData, isEnrolled: true })
+      apiClient.post(`/student/courses/${courseId}/enroll`)
+        .then(() => {
+          alert(`Đã ghi danh khóa học ${courseId} thành công!`)
+          setCourseData({ ...courseData, isEnrolled: true })
+        })
+        .catch((err: any) => alert("Lỗi ghi danh: " + (err.response?.data || err.message)))
     }
   }
 

@@ -22,7 +22,8 @@ export default function CoursesPage({ user }: Props) {
 
   const fetchCourses = async () => {
     try {
-      const res = await apiClient.get('/courses')
+      const endpoint = user.role === 'Student' ? '/student/courses' : '/courses'
+      const res = await apiClient.get(endpoint)
       setCourses(res.data || [])
     } catch (err) {
       console.error("Failed to fetch courses", err)
