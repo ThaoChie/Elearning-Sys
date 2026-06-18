@@ -175,6 +175,11 @@ app.UseAuthentication();
 // Từ chối token có JTI trong Redis Blacklist hoặc User bị revoke toàn bộ.
 app.UseMiddleware<JwtBlacklistMiddleware>();
 
+// ── MFA Pending Guard (sau Blacklist, trước Authorization) ────────────────────
+// Từ chối token có claim "mfa_pending=true" trên mọi endpoint trừ POST /auth/verify-mfa.
+// Ngăn chặn frontend bypass bước OTP bằng cách dùng token tạm để gọi API thật.
+app.UseMiddleware<MfaPendingMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();

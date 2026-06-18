@@ -92,11 +92,11 @@ const InstructorDashboard: React.FC<Props> = ({ user }) => {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
             {/* Biểu đồ phân phối điểm (chiếm 3/5 width) */}
             <div className="lg:col-span-3" style={{ minHeight: '340px' }}>
-              <ScoreChart />
+              <ScoreChart data={data} loading={loading} />
             </div>
             {/* Recent Activities (chiếm 2/5 width) */}
             <div className="lg:col-span-2" style={{ minHeight: '340px' }}>
-              <RecentActivities />
+              <RecentActivities data={data} loading={loading} />
             </div>
           </div>
 

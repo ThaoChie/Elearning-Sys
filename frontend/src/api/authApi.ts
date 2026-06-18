@@ -15,6 +15,11 @@ export interface LoginResponse {
   requiresMfa?: boolean
 }
 
+export interface VerifyMfaRequest {
+  pendingToken: string
+  code: string
+}
+
 export interface AccountLockedError {
   error: 'account_locked'
   message: string
@@ -28,5 +33,11 @@ export interface InvalidCredentialsError {
 
 export async function loginApi(body: LoginRequest): Promise<LoginResponse> {
   const { data } = await apiClient.post<LoginResponse>('/auth/login', body)
+  return data
+}
+
+/** POST /api/auth/verify-mfa — xác thực TOTP sau bước login khi RequiresMfa=true */
+export async function verifyMfaApi(body: VerifyMfaRequest): Promise<LoginResponse> {
+  const { data } = await apiClient.post<LoginResponse>('/auth/verify-mfa', body)
   return data
 }

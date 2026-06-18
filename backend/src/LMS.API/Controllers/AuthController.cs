@@ -3,16 +3,18 @@ using System.Security.Claims;
 using LMS.Application.Features.Auth.Commands;
 using LMS.Application.Features.Auth.DTOs;
 using LMS.Domain.Exceptions;
+using LMS.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OtpNet;
 
 namespace LMS.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
 [Produces("application/json")]
-public sealed class AuthController(IMediator mediator) : ControllerBase
+public sealed class AuthController(IMediator mediator, IUserRepository userRepository, ITokenService tokenService) : ControllerBase
 {
     /// <summary>
     /// Đăng nhập và nhận Access Token (JWT RS256, 15 phút) + Refresh Token (UUID, 7 ngày).
@@ -117,13 +119,116 @@ public sealed class AuthController(IMediator mediator) : ControllerBase
             return Unauthorized(new { error = "invalid_token", message = "Subject claim không hợp lệ." });
 
         // Parse exp claim (Unix timestamp) → DateTime
-        var expiry = long.TryParse(expStr, out var expUnix)
-            ? DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime
-            : DateTime.UtcNow.AddMinutes(15); // fallback an toàn
+        if (!long.TryParse(expStr, out var expUnix))
+            return Unauthorized(new { error = "invalid_token", message = "Token thiếu claim 'exp' hợp lệ." });
+        var expiry = DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;
 
         var command = new LogoutCommand(userId, jti, expiry);
         await mediator.Send(command, ct);
 
         return NoContent();
     }
+
+    // ════════════════════════════════════════════════════════════════════════
+    //  POST /api/auth/verify-mfa
+    //  F-A02: Xác thực mã TOTP sau bước login khi user đã bật 2FA.
+    //
+    //  Luồng:
+    //    1. Login thành công + TwoFactorEnabled = true
+    //       → BE trả RequiresMfa=true + AccessToken tạm (claim mfa_pending=true, 5 phút)
+    //    2. Frontend gọi POST /auth/verify-mfa với pendingToken + code 6 số
+    //    3. BE xác thực pendingToken (valid JWT, chứa mfa_pending=true)
+    //    4. BE verify TOTP code với user.TwoFactorSecret
+    //    5. Thành công → trả access token chính thức (không có mfa_pending)
+    // ════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Xác thực mã TOTP (Google Authenticator) sau bước đăng nhập.
+    /// Chỉ dùng khi login trả về RequiresMfa=true.
+    /// </summary>
+    [HttpPost("verify-mfa")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> VerifyMfa(
+        [FromBody] VerifyMfaRequest request,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.PendingToken) || string.IsNullOrWhiteSpace(request.Code))
+            return BadRequest(new { error = "validation_error", message = "PendingToken và Code không được để trống." });
+
+        if (request.Code.Length != 6 || !request.Code.All(char.IsDigit))
+            return BadRequest(new { error = "validation_error", message = "Mã OTP phải gồm đúng 6 chữ số." });
+
+        try
+        {
+            // ── 1. Parse và validate pending JWT ────────────────────────────
+            var handler  = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwt;
+            try
+            {
+                jwt = handler.ReadJwtToken(request.PendingToken);
+            }
+            catch
+            {
+                return Unauthorized(new { error = "invalid_token", message = "Pending token không hợp lệ." });
+            }
+
+            // Kiểm tra claim mfa_pending = true
+            var mfaPendingClaim = jwt.Claims.FirstOrDefault(c => c.Type == "mfa_pending")?.Value;
+            if (mfaPendingClaim != "true")
+                return Unauthorized(new { error = "invalid_token", message = "Token không phải MFA pending token." });
+
+            // Kiểm tra hết hạn
+            if (jwt.ValidTo < DateTime.UtcNow)
+                return Unauthorized(new { error = "token_expired", message = "Phiên xác thực đã hết hạn. Vui lòng đăng nhập lại." });
+
+            // Lấy userId từ sub claim
+            var subClaim = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+            if (!Guid.TryParse(subClaim, out var userId))
+                return Unauthorized(new { error = "invalid_token", message = "Token không chứa User ID hợp lệ." });
+
+            // ── 2. Tải user và kiểm tra TwoFactorSecret ─────────────────────
+            var user = await userRepository.GetByIdAsync(userId, ct);
+            if (user is null || !user.TwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
+                return Unauthorized(new { error = "mfa_not_enabled", message = "Tài khoản chưa bật xác thực 2 yếu tố." });
+
+            // ── 3. Verify TOTP code ──────────────────────────────────────────
+            var secretBytes = Base32Encoding.ToBytes(user.TwoFactorSecret);
+            var totp        = new Totp(secretBytes);
+            // Window(1,1): chấp nhận code của 30s trước và 30s sau để bù clock skew
+            var isValid = totp.VerifyTotp(request.Code, out _, new VerificationWindow(1, 1));
+
+            if (!isValid)
+                return BadRequest(new { error = "invalid_otp", message = "Mã OTP không đúng hoặc đã hết hạn." });
+
+            // ── 4. Cấp access token chính thức ───────────────────────────────
+            var accessToken = tokenService.GenerateAccessToken(user, mfaPending: false);
+
+            return Ok(new LoginResponse(
+                AccessToken: accessToken,
+                RefreshToken: user.RefreshToken ?? string.Empty,
+                AccessTokenExpiresAt: DateTime.UtcNow.AddMinutes(15),
+                RefreshTokenExpiresAt: user.RefreshTokenExpiresAt ?? DateTime.UtcNow.AddDays(7),
+                UserId: user.Id,
+                Email: user.Email,
+                RequiresMfa: false
+            ));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = "internal_error", message = ex.Message });
+        }
+    }
+}
+
+// ── DTOs ─────────────────────────────────────────────────────────────────────
+
+public sealed class VerifyMfaRequest
+{
+    /// <summary>Access token tạm nhận từ bước login (RequiresMfa=true).</summary>
+    public string PendingToken { get; init; } = string.Empty;
+
+    /// <summary>Mã 6 chữ số từ Google Authenticator.</summary>
+    public string Code { get; init; } = string.Empty;
 }

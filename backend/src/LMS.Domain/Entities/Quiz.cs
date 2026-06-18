@@ -6,16 +6,16 @@ namespace LMS.Domain.Entities;
 /// </summary>
 public class Quiz
 {
-    public Guid     QuizId        { get; private set; }
-    public Guid     CourseId      { get; private set; }
-    public string   Title         { get; private set; } = string.Empty;
+    public Guid      QuizId           { get; private set; }
+    public Guid      CourseId         { get; private set; }
+    public string    Title            { get; private set; } = string.Empty;
 
-    /// <summary>Thời gian làm bài (phút).</summary>
-    public int      TimeLimitMin  { get; private set; }
-    public DateTime? StartAt      { get; private set; }
-    public DateTime? EndAt        { get; private set; }
-    public bool     AntiCheatEnabled { get; private set; }
-    public DateTime CreatedAt     { get; private set; }
+    /// <summary>Thời gian làm bài (phút). Phải > 0.</summary>
+    public int       TimeLimitMin     { get; private set; }
+    public DateTime? StartAt          { get; private set; }
+    public DateTime? EndAt            { get; private set; }
+    public bool      AntiCheatEnabled { get; private set; }
+    public DateTime  CreatedAt        { get; private set; }
 
     // EF Core navigation
     public Course Course { get; private set; } = null!;
@@ -25,7 +25,7 @@ public class Quiz
 
     private Quiz() { }
 
-    public static Quiz Create(Guid courseId, string title, int timeLimitMin)
+    public static Quiz Create(Guid courseId, string title, int timeLimitMin, bool antiCheatEnabled = true)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         if (timeLimitMin <= 0)
@@ -33,12 +33,43 @@ public class Quiz
 
         return new Quiz
         {
-            QuizId       = Guid.NewGuid(),
-            CourseId     = courseId,
-            Title        = title.Trim(),
-            TimeLimitMin = timeLimitMin,
-            CreatedAt    = DateTime.UtcNow
+            QuizId           = Guid.NewGuid(),
+            CourseId         = courseId,
+            Title            = title.Trim(),
+            TimeLimitMin     = timeLimitMin,
+            AntiCheatEnabled = antiCheatEnabled,
+            CreatedAt        = DateTime.UtcNow
         };
+    }
+
+    /// <summary>
+    /// Cập nhật metadata đề thi. Gọi từ Service layer sau khi đã xác thực quyền.
+    /// </summary>
+    public void UpdateMetadata(string? newTitle, int? newTimeLimitMin, bool? newAntiCheatEnabled)
+    {
+        if (!string.IsNullOrWhiteSpace(newTitle))
+            Title = newTitle.Trim();
+
+        if (newTimeLimitMin.HasValue)
+        {
+            if (newTimeLimitMin.Value <= 0)
+                throw new ArgumentOutOfRangeException(nameof(newTimeLimitMin), "Thời gian làm bài phải lớn hơn 0.");
+            TimeLimitMin = newTimeLimitMin.Value;
+        }
+
+        if (newAntiCheatEnabled.HasValue)
+            AntiCheatEnabled = newAntiCheatEnabled.Value;
+    }
+
+    /// <summary>
+    /// Đặt lịch thi (Window). StartAt và EndAt phải đồng thời được set.
+    /// </summary>
+    public void SetSchedule(DateTime? startAt, DateTime? endAt)
+    {
+        if (startAt.HasValue && endAt.HasValue && endAt <= startAt)
+            throw new ArgumentException("EndAt phải sau StartAt.");
+        StartAt = startAt;
+        EndAt   = endAt;
     }
 }
 
@@ -73,6 +104,25 @@ public class Question
             Order      = order,
             CreatedAt  = DateTime.UtcNow
         };
+    }
+
+    /// <summary>
+    /// Cập nhật nội dung câu hỏi. Chỉ gọi từ Service sau khi đã xác thực ownership.
+    /// </summary>
+    public void UpdateContent(string newContent)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newContent);
+        Content = newContent.Trim();
+    }
+
+    /// <summary>
+    /// Cập nhật thứ tự câu hỏi (dùng khi reorder).
+    /// </summary>
+    public void SetOrder(int order)
+    {
+        if (order <= 0)
+            throw new ArgumentOutOfRangeException(nameof(order), "Order phải lớn hơn 0.");
+        Order = order;
     }
 }
 
@@ -110,5 +160,15 @@ public class Answer
             IsCorrect  = isCorrect,
             Order      = order
         };
+    }
+
+    /// <summary>
+    /// Cập nhật nội dung và trạng thái đáp án.
+    /// </summary>
+    public void Update(string content, bool isCorrect)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
+        Content   = content.Trim();
+        IsCorrect = isCorrect;
     }
 }

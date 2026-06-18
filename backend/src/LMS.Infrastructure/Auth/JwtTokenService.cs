@@ -70,33 +70,39 @@ public sealed class JwtTokenService : ITokenService
         }
     }
 
-    public string GenerateAccessToken(User user)
+    public string GenerateAccessToken(User user, bool mfaPending = false)
     {
         if (_privateKey == null)
             throw new InvalidOperationException("Private Key chưa được nạp từ Secret Manager.");
 
-        var now = DateTime.UtcNow;
-        var expires = now.AddMinutes(15);
+        var now     = DateTime.UtcNow;
+        var expires = mfaPending
+            ? now.AddMinutes(5)   // Token tạm MFA: chỉ sống 5 phút
+            : now.AddMinutes(15); // Token chính thức: 15 phút
 
-        var claims = new[]
+        var claimList = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email),
             // role claim – nguồn chân lý cho RBAC; KHÔNG tin bất kỳ input nào từ client
-            new Claim("role", user.Role.ToString()),
+            new("role", user.Role.ToString()),
             // jti: JWT ID – unique per token, dùng để revoke (Blacklist) khi logout
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat,
-                      DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                      ClaimValueTypes.Integer64),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Iat,
+                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                ClaimValueTypes.Integer64),
         };
+
+        // Đánh dấu token tạm MFA — middleware sẽ từ chối token này trên các endpoint thường
+        if (mfaPending)
+            claimList.Add(new Claim("mfa_pending", "true"));
 
         var creds = new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
 
         var token = new JwtSecurityToken(
             issuer: _optionsMonitor.CurrentValue.Issuer,
             audience: _optionsMonitor.CurrentValue.Audience,
-            claims: claims,
+            claims: claimList,
             notBefore: now,
             expires: expires,
             signingCredentials: creds
@@ -107,8 +113,11 @@ public sealed class JwtTokenService : ITokenService
 
     public (string Token, DateTime ExpiresAt) GenerateRefreshToken()
     {
-        // UUID v4 shortened to 16 chars: 64-bit entropy, fits in 64 char database field when prepended with user ID.
-        var token = Guid.NewGuid().ToString("N")[..16]; // 16 hex chars, no dashes
+        // 32 random bytes = 256-bit entropy, Base64Url-encoded → 43 chars (no padding).
+        // OWASP khuyến nghị ≥128-bit; 256-bit đảm bảo an toàn lâu dài.
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        var token = Convert.ToBase64String(bytes)
+            .Replace('+', '-').Replace('/', '_').TrimEnd('='); // Base64Url-safe
         var expiresAt = DateTime.UtcNow.AddDays(7);
         return (token, expiresAt);
     }

@@ -14,35 +14,31 @@ import {
 // Đăng ký các thành phần Chart.js cần dùng (tree-shaking friendly)
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// --- Dữ liệu mô phỏng: phân phối điểm các bài thi đã kết thúc ---
-// Dữ liệu thực tế được lấy từ API /api/instructor/exams/{examId}/score-distribution
-// API được bảo vệ bởi [Authorize(Policy = "InstructorOnly")] và chỉ trả về exam
-// thuộc khóa học của Instructor hiện tại (kiểm tra ownership qua UserID từ JWT Claims).
-const MOCK_SCORE_DATA: ChartData<'bar'> = {
-  labels: ['0-2', '2-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10'],
+interface ScoreChartProps {
+  data: any;
+  loading: boolean;
+}
+
+// Rút ngắn tên quiz nếu quá dài
+const truncateLabel = (name: string, maxLen = 12) =>
+  name.length > maxLen ? name.slice(0, maxLen) + '…' : name;
+
+const buildChartData = (quizzes: any[]): ChartData<'bar'> => ({
+  labels: quizzes.map((q) => truncateLabel(q.title)),
   datasets: [
     {
-      label: 'An Toàn Thông Tin - Cuối kỳ',
-      data: [2, 3, 8, 15, 22, 28, 14, 6],
+      label: 'Số câu hỏi',
+      data: quizzes.map((q) => q.questions),
       backgroundColor: 'rgba(99, 102, 241, 0.75)',   // indigo
       borderColor: 'rgba(99, 102, 241, 1)',
       borderWidth: 1.5,
       borderRadius: 6,
       borderSkipped: false,
     },
-    {
-      label: 'Mật Mã Học - Giữa kỳ',
-      data: [1, 2, 5, 10, 18, 30, 20, 12],
-      backgroundColor: 'rgba(139, 92, 246, 0.6)',    // violet
-      borderColor: 'rgba(139, 92, 246, 1)',
-      borderWidth: 1.5,
-      borderRadius: 6,
-      borderSkipped: false,
-    },
   ],
-};
+});
 
-const CHART_OPTIONS: ChartOptions<'bar'> = {
+const buildChartOptions = (): ChartOptions<'bar'> => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -63,7 +59,7 @@ const CHART_OPTIONS: ChartOptions<'bar'> = {
       padding: 10,
       cornerRadius: 8,
       callbacks: {
-        label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} sinh viên`,
+        label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y} câu`,
       },
     },
   },
@@ -71,7 +67,7 @@ const CHART_OPTIONS: ChartOptions<'bar'> = {
     x: {
       title: {
         display: true,
-        text: 'Khoảng điểm',
+        text: 'Tên đề thi',
         font: { size: 11, family: 'Inter, sans-serif' },
         color: '#94a3b8',
       },
@@ -85,7 +81,7 @@ const CHART_OPTIONS: ChartOptions<'bar'> = {
     y: {
       title: {
         display: true,
-        text: 'Số sinh viên',
+        text: 'Số câu hỏi',
         font: { size: 11, family: 'Inter, sans-serif' },
         color: '#94a3b8',
       },
@@ -94,22 +90,28 @@ const CHART_OPTIONS: ChartOptions<'bar'> = {
       ticks: {
         color: '#94a3b8',
         font: { size: 10, family: 'Inter, sans-serif' },
-        stepSize: 5,
+        stepSize: 1,
       },
       border: { color: 'transparent', dash: [4, 4] },
     },
   },
-};
+});
 
 // ============================================================
-// SCORE CHART - Biểu đồ phân phối điểm thi
+// SCORE CHART - Biểu đồ đề thi / câu hỏi
 // ============================================================
-const ScoreChart: React.FC = () => {
+const ScoreChart: React.FC<ScoreChartProps> = ({ data, loading }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart<'bar'> | null>(null);
 
+  const quizzes: any[] = data?.recentQuizzes ?? [];
+  const totalQuizzes = quizzes.length;
+  const totalQuestions = quizzes.reduce((sum: number, q: any) => sum + (q.questions ?? 0), 0);
+  const avgQuestions = totalQuizzes > 0 ? (totalQuestions / totalQuizzes).toFixed(1) : '0';
+  const totalAssignments = data?.totalAssignments ?? 0;
+
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (loading || !canvasRef.current || quizzes.length === 0) return;
 
     // Hủy chart cũ trước khi tạo mới (tránh lỗi "Canvas already in use")
     if (chartRef.current) {
@@ -118,8 +120,8 @@ const ScoreChart: React.FC = () => {
 
     chartRef.current = new Chart(canvasRef.current, {
       type: 'bar',
-      data: MOCK_SCORE_DATA,
-      options: CHART_OPTIONS,
+      data: buildChartData(quizzes),
+      options: buildChartOptions(),
     });
 
     // Cleanup khi component unmount
@@ -127,17 +129,18 @@ const ScoreChart: React.FC = () => {
       chartRef.current?.destroy();
       chartRef.current = null;
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, JSON.stringify(quizzes)]);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-slate-700">Phân Phối Điểm Thi</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Các bài thi đã kết thúc trong học kỳ</p>
+          <h3 className="text-sm font-semibold text-slate-700">Thống Kê Đề Thi</h3>
+          <p className="text-xs text-slate-500 mt-0.5">Số câu hỏi theo từng đề thi gần đây</p>
         </div>
-        {/* Security badge: dữ liệu điểm thi được mã hóa phía server */}
+        {/* Security badge */}
         <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -148,17 +151,34 @@ const ScoreChart: React.FC = () => {
       </div>
 
       {/* Chart area */}
-      <div className="flex-1 min-h-0" style={{ minHeight: '220px' }}>
-        <canvas ref={canvasRef} />
+      <div className="flex-1 min-h-0 flex items-center justify-center" style={{ minHeight: '220px' }}>
+        {loading ? (
+          /* Skeleton spinner */
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 rounded-full border-4 border-indigo-200 border-t-indigo-500 animate-spin" />
+            <p className="text-xs text-slate-400">Đang tải dữ liệu…</p>
+          </div>
+        ) : quizzes.length === 0 ? (
+          /* Empty state */
+          <div className="flex flex-col items-center gap-2 text-center">
+            <svg className="w-10 h-10 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p className="text-xs text-slate-400 font-medium">Chưa có đề thi nào</p>
+          </div>
+        ) : (
+          <canvas ref={canvasRef} className="w-full h-full" />
+        )}
       </div>
 
       {/* Summary row */}
       <div className="mt-4 flex gap-4 pt-4 border-t border-slate-50">
         {[
-          { label: 'Điểm TB', value: '7.4', color: 'text-indigo-600' },
-          { label: 'Cao nhất', value: '10.0', color: 'text-emerald-600' },
-          { label: 'Thấp nhất', value: '1.5', color: 'text-red-500' },
-          { label: 'Tổng SV', value: '183', color: 'text-slate-700' },
+          { label: 'Tổng đề thi', value: String(totalQuizzes), color: 'text-indigo-600' },
+          { label: 'Tổng câu hỏi', value: String(totalQuestions), color: 'text-violet-600' },
+          { label: 'TB câu hỏi/đề', value: avgQuestions, color: 'text-emerald-600' },
+          { label: 'Tổng bài tập', value: String(totalAssignments), color: 'text-slate-700' },
         ].map((s) => (
           <div key={s.label} className="flex-1 text-center">
             <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>

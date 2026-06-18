@@ -65,6 +65,30 @@ public sealed class LoginCommandHandler(
         // ── Đăng nhập thành công ─────────────────────────────────────────────
         user!.RecordSuccessfulLogin();
 
+        // ── Kiểm tra MFA ────────────────────────────────────────────────────
+        // Nếu user đã bật 2FA: trả access token tạm (pending) + RequiresMfa=true.
+        // Frontend phải gọi POST /auth/verify-mfa để hoàn tất.
+        // Token tạm chứa claim "mfa_pending=true" — middleware sẽ reject nếu
+        // dùng token này để truy cập endpoint bình thường.
+        if (user.TwoFactorEnabled)
+        {
+            var pendingToken = tokenService.GenerateAccessToken(user, mfaPending: true);
+            // Lưu RefreshToken TRƯỚC để user không bị hỏi mật khẩu lại sau MFA
+            var (refreshToken2, refreshExpiresAt2) = tokenService.GenerateRefreshToken();
+            user.SetRefreshToken(refreshToken2, refreshExpiresAt2);
+            await userRepository.SaveChangesAsync(ct);
+
+            return new LoginResponse(
+                AccessToken: pendingToken,
+                RefreshToken: user.RefreshToken!,
+                AccessTokenExpiresAt: DateTime.UtcNow.AddMinutes(5),   // token tạm chỉ sống 5 phút
+                RefreshTokenExpiresAt: refreshExpiresAt2,
+                UserId: user.Id,
+                Email: user.Email,
+                RequiresMfa: true
+            );
+        }
+
         var accessToken = tokenService.GenerateAccessToken(user);
         var (refreshToken, refreshExpiresAt) = tokenService.GenerateRefreshToken();
 

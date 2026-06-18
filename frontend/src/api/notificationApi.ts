@@ -1,25 +1,36 @@
-import type { Notification } from '../types/notification';
+import apiClient from './apiClient'
+import type { Notification } from '../types/notification'
 
 export const notificationApi = {
-  getMyNotifications: async (_limit: number = 50, _unreadOnly: boolean = false) => {
-    return [
-      {
-        id: 'n1',
-        title: 'Chào mừng bạn',
-        message: 'Chào mừng bạn đến với hệ thống LMS Security!',
-        type: 'System' as const,
-        createdAt: new Date().toISOString(),
-        isRead: false,
-        relatedEntityId: null,
-      }
-    ] as Notification[];
+  // ── F-N01: Lấy danh sách thông báo ────────────────────────────────────────
+  getMyNotifications: async (
+    limit: number = 50,
+    unreadOnly: boolean = false
+  ): Promise<Notification[]> => {
+    const params = new URLSearchParams()
+    if (limit !== 50)    params.set('limit', String(limit))
+    if (unreadOnly)      params.set('unreadOnly', 'true')
+
+    const url = `/notifications${params.toString() ? '?' + params.toString() : ''}`
+    const { data } = await apiClient.get<Notification[]>(url)
+    return data || []
   },
 
-  markAsRead: async (_id: string) => {
-    // Mock
+  // ── F-N02: Đánh dấu 1 thông báo đã đọc ───────────────────────────────────
+  markAsRead: async (id: string): Promise<void> => {
+    await apiClient.patch(`/notifications/${id}/read`)
   },
 
-  markAllAsRead: async () => {
-    // Mock
+  // ── F-N03: Đánh dấu tất cả đã đọc ────────────────────────────────────────
+  markAllAsRead: async (): Promise<void> => {
+    await apiClient.post('/notifications/mark-all-read')
   },
-};
+
+  // ── Tiện ích: lấy số lượng thông báo chưa đọc (dùng cho badge header) ────
+  getUnreadCount: async (): Promise<number> => {
+    const { data } = await apiClient.get<{ unreadCount: number }>(
+      '/notifications/unread-count'
+    )
+    return data.unreadCount ?? 0
+  },
+}

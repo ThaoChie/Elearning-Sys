@@ -65,21 +65,40 @@ export default function UsersPage() {
 
   const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: implement real POST/PUT users to backend
-    if (editingUser) {
-      setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...formData } : u))
-    } else {
-      const newUser: UserItem = {
-        id: `usr-${Date.now()}`,
-        fullName: formData.fullName,
-        email: formData.email,
-        role: formData.role,
-        status: 'Active',
-        createdAt: new Date().toLocaleDateString('vi-VN')
+    try {
+      if (editingUser) {
+        // F-U01: Gọi PUT /api/admin/users/{id} thay vì chỉ setState
+        const res = await apiClient.put(`/admin/users/${editingUser.id}`, {
+          role: formData.role,
+        })
+        setUsers(users.map(u => u.id === editingUser.id
+          ? { ...u, ...formData, role: res.data.role || formData.role }
+          : u
+        ))
+      } else {
+        // F-U01: Gọi POST /api/admin/users thay vì chỉ setState
+        const res = await apiClient.post('/admin/users', {
+          fullName: formData.fullName,
+          email: formData.email,
+          role: formData.role,
+          // Admin tạo user với mật khẩu tạm — user sẽ đổi sau lần đầu đăng nhập
+          password: `Temp@${Math.random().toString(36).slice(2, 8)}!`
+        })
+        // F-U02: Dùng ID thật từ response thay vì Date.now()
+        const newUser: UserItem = {
+          id: res.data.id,
+          fullName: res.data.fullName || formData.fullName,
+          email: res.data.email || formData.email,
+          role: res.data.role || formData.role,
+          status: 'Active',
+          createdAt: new Date().toLocaleDateString('vi-VN')
+        }
+        setUsers([newUser, ...users])
       }
-      setUsers([newUser, ...users])
+      setShowUserForm(false)
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Lỗi khi lưu người dùng. Vui lòng thử lại.')
     }
-    setShowUserForm(false)
   }
 
   const roleColors = {

@@ -27,7 +27,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(0);
 
         builder.Property(u => u.RefreshToken)
-            .HasMaxLength(64); // UUID "N" format = 32 chars
+            .HasMaxLength(128); // UUID(32) + "_" + Base64Url(43) = 76 chars — padded to 128
 
         // 2FA optional: mặc định false, người dùng tự bật/tắt trong Profile.
         builder.Property(u => u.TwoFactorEnabled)

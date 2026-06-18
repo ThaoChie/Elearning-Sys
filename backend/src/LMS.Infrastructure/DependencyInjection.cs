@@ -1,8 +1,10 @@
+using LMS.Application.Features.Quiz.Services;
 using LMS.Domain.Interfaces;
 using LMS.Infrastructure.Audit;
 using LMS.Infrastructure.Auth;
 using LMS.Infrastructure.Persistence;
 using LMS.Infrastructure.Persistence.Repositories;
+using LMS.Infrastructure.Persistence.Services;
 using LMS.Infrastructure.Security;
 using LMS.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +65,9 @@ public static class DependencyInjection
         services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         services.AddScoped<IAssignmentSubmissionRepository, AssignmentSubmissionRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+
+        // ── Feature Services ──────────────────────────────────────────────────
+        services.AddScoped<IQuizService, QuizService>();
 
         // ── Storage / Video Signing ────────────────────────────────────────────
         services.Configure<VideoSigningOptions>(

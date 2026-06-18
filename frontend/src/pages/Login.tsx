@@ -7,6 +7,7 @@ import {
   type ChangeEvent,
 } from 'react'
 import { useNavigate } from 'react-router-dom'
+import apiClient from '../api/apiClient'
 import {
   Eye,
   EyeOff,
@@ -203,6 +204,30 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
   const [loadingMfa, setLoadingMfa] = useState(false)
   const [mfaError, setMfaError] = useState<string | null>(null)
   const loggedEmail = useRef<string>('')
+  // Lưu access token tạm khi MFA bắt buộc (chưa hoàn tất xác thực)
+  const pendingToken = useRef<string>('')
+
+  // ── Helper: hoàn tất login sau khi có token hợp lệ ──────────────────────────
+  const finalizeLogin = useCallback((accessToken: string) => {
+    let payload: Record<string, string> = {}
+    try {
+      payload = JSON.parse(atob(accessToken.split('.')[1]))
+    } catch {
+      setErrors({ general: 'Phản hồi từ máy chủ không hợp lệ. Vui lòng thử lại.' })
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      return
+    }
+    if (onLoginSuccess) {
+      onLoginSuccess({
+        id: payload.sub || 'unknown',
+        email: payload.email || '',
+        name: payload.email?.split('@')[0] || 'Người dùng',
+        role: payload.role || 'Student'
+      })
+    }
+    navigate('/dashboard')
+  }, [onLoginSuccess, navigate])
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -232,12 +257,23 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
 
       if (res.requiresMfa) {
         loggedEmail.current = res.email
+        // Lưu token tạm — chỉ dùng sau khi MFA thành công
+        pendingToken.current = res.accessToken
         setStep('mfa')
         return
       }
 
-      // Decode JWT
-      const payload = JSON.parse(atob(res.accessToken.split('.')[1]))
+      // Decode JWT — bọc try/catch để tránh crash nếu token malformed
+      let payload: Record<string, string> = {}
+      try {
+        payload = JSON.parse(atob(res.accessToken.split('.')[1]))
+      } catch {
+        // Token malformed — logout và báo lỗi
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        setErrors({ general: 'Phản hồi từ máy chủ không hợp lệ. Vui lòng thử lại.' })
+        return
+      }
       if (onLoginSuccess) {
         onLoginSuccess({
           id: payload.sub || 'unknown',
@@ -287,12 +323,42 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
     setLoadingMfa(true)
     setMfaError(null)
     try {
-      // TODO: gọi POST /api/auth/verify-mfa khi backend triển khai
-      console.log('MFA code submitted:', code)
-      navigate('/dashboard')
-    } catch {
-      setMfaError('Mã OTP không đúng hoặc đã hết hạn. Vui lòng thử lại.')
-      setOtp(Array(6).fill(''))
+      if (!pendingToken.current) {
+        setMfaError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.')
+        setStep('credentials')
+        return
+      }
+
+      // Gọi POST /api/auth/verify-mfa với pendingToken + code TOTP
+      const { data } = await apiClient.post<{
+        accessToken: string
+        refreshToken: string
+        accessTokenExpiresAt: string
+        refreshTokenExpiresAt: string
+        userId: string
+        email: string
+        requiresMfa: boolean
+      }>('/auth/verify-mfa', {
+        pendingToken: pendingToken.current,
+        code,
+      })
+
+      // Lưu access token chính thức (thay thế token tạm)
+      localStorage.setItem('access_token', data.accessToken)
+      localStorage.setItem('refresh_token', data.refreshToken)
+      pendingToken.current = ''
+
+      finalizeLogin(data.accessToken)
+    } catch (err: any) {
+      const msg = err.response?.data?.message
+      if (err.response?.status === 401 && err.response?.data?.error === 'token_expired') {
+        setMfaError('Phiên xác thực đã hết hạn. Vui lòng đăng nhập lại.')
+        setStep('credentials')
+        setOtp(Array(6).fill(''))
+      } else {
+        setMfaError(msg || 'Mã OTP không đúng hoặc đã hết hạn. Vui lòng thử lại.')
+        setOtp(Array(6).fill(''))
+      }
     } finally {
       setLoadingMfa(false)
     }
@@ -557,6 +623,95 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps = {}) {
                 </form>
               )}
             </>
+          )}
+
+          {/* ── MFA step ─────────────────────────────────────────────────── */}
+          {step === 'mfa' && (
+            <div className="animate-[fadeIn_0.3s_ease]">
+              <div className="mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-[#EBF3FA] flex items-center justify-center mb-4">
+                  <ShieldCheck className="w-6 h-6 text-[#2E75B6]" />
+                </div>
+                <h2 className="text-2xl font-light text-[#1F3864] tracking-tight">
+                  Xác thực 2 bước
+                </h2>
+                <p className="mt-1 text-sm text-gray-400">
+                  Nhập mã 6 chữ số từ ứng dụng xác thực cho tài khoản{' '}
+                  <span className="font-semibold text-[#1F3864]">{loggedEmail.current}</span>
+                </p>
+              </div>
+
+              {mfaError && (
+                <div
+                  role="alert"
+                  className="mb-5 flex items-start gap-2.5 px-4 py-3 rounded-xl
+                             bg-[#FCE4D6] border border-[#C00000]/20 text-[#C00000] text-sm"
+                >
+                  <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+                  <span>{mfaError}</span>
+                </div>
+              )}
+
+              {/* OTP inputs */}
+              <div className="flex gap-2 justify-center mb-6">
+                {otp.map((digit, idx) => (
+                  <input
+                    key={idx}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    aria-label={`Chữ số ${idx + 1}`}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '')
+                      const next = [...otp]
+                      next[idx] = val
+                      setOtp(next)
+                      // Auto-focus next input
+                      if (val && idx < 5) {
+                        const inputs = document.querySelectorAll<HTMLInputElement>('.mfa-digit')
+                        inputs[idx + 1]?.focus()
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
+                        const inputs = document.querySelectorAll<HTMLInputElement>('.mfa-digit')
+                        inputs[idx - 1]?.focus()
+                      }
+                    }}
+                    className="mfa-digit w-11 h-14 text-center text-xl font-bold border-2 rounded-xl
+                               border-gray-200 focus:border-[#2E75B6] focus:ring-1 focus:ring-[#2E75B6]/30
+                               outline-none transition-all text-[#1F3864]"
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={handleMfaSubmit}
+                disabled={loadingMfa || otp.join('').length < 6}
+                className="w-full bg-[#2E75B6] text-white font-semibold py-3.5 rounded-full
+                           shadow-md hover:bg-[#1F3864] transition-all duration-200
+                           disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingMfa ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Đang xác thực…
+                  </span>
+                ) : 'Xác nhận'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { setStep('credentials'); setOtp(Array(6).fill('')); setMfaError(null) }}
+                className="mt-4 w-full text-sm font-semibold text-gray-400 hover:text-[#1F3864] transition-colors"
+              >
+                ← Quay lại đăng nhập
+              </button>
+            </div>
           )}
         </div>
 
